@@ -66,7 +66,7 @@
           <Property Name="ScopeType" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="HowKnow" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="RmsStoreID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ManagerId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ManagerId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="ManagerDeptId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="IsChecked" Type="bit" Nullable="false" />
           <Property Name="IsRestricted" Type="bit" Nullable="false" />
@@ -112,6 +112,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="spGetFranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api" />
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
           <Parameter Name="ShowAnalogs" Type="bit" Mode="In" />
@@ -169,6 +170,7 @@
           </AssociationSet>
           <EntitySet Name="BrandEquivalents" EntityType="ex_rmsauto_storeModel.BrandEquivalents" />
           <EntitySet Name="LogRequests" EntityType="ex_rmsauto_storeModel.LogRequests" />
+          <FunctionImport Name="spGetFranches" ReturnType="Collection(ex_rmsauto_storeModel.spGetFranches_Result)" />
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -245,7 +247,7 @@
           <Property Name="ScopeType" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="HowKnow" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="RmsStoreID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ManagerDeptId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IsChecked" Type="Boolean" Nullable="false" />
           <Property Name="IsRestricted" Type="Boolean" Nullable="false" />
@@ -298,6 +300,11 @@
           <Property Name="OrderID" Type="Int32" />
           <Property Name="ResponseData" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="spGetFranches_Result">
+          <Property Type="String" Name="City" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Franch" Nullable="true" MaxLength="255" />
+          <Property Type="String" Name="InternalFranchName" Nullable="true" MaxLength="14" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -417,6 +424,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetFranches" FunctionName="ex_rmsauto_storeModel.Store.spGetFranches">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ex_rmsauto_storeModel.spGetFranches_Result">
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Franch" ColumnName="Franch" />
+                <ScalarProperty Name="InternalFranchName" ColumnName="InternalFranchName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

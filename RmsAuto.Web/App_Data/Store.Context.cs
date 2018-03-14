@@ -74,5 +74,10 @@ namespace RMSAutoAPI.App_Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSearchBrands_Result>("spSearchBrands", partNumberParameter, showAnalogsParameter);
         }
+    
+        public virtual ObjectResult<spGetFranches_Result> spGetFranches()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetFranches_Result>("spGetFranches");
+        }
     }
 }

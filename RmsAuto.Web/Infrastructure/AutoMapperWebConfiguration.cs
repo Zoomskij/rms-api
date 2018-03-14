@@ -24,12 +24,17 @@ namespace RMSAutoAPI.Infrastructure
                          .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
 
                 cfg.CreateMap<spSearchCrossesWithPriceSVC_Result, PartNumber>()
-                     .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
-                     .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
-                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
-                     .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.QtyInStock))
-                     .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.CrossType))
-                     .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
+                         .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
+                         .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
+                         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
+                         .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.QtyInStock))
+                         .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.CrossType))
+                         .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Price));
+
+                cfg.CreateMap<spGetFranches_Result, Partner>()
+                         .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                         .ForMember(dest => dest.Franch, opt => opt.MapFrom(src => src.Franch))
+                         .ForMember(dest => dest.InternalFranchName, opt => opt.MapFrom(src => src.InternalFranchName));
             });
 
         }
