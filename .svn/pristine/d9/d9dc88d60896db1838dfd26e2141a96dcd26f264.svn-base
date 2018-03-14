@@ -1,0 +1,38 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Статистика</h2>
+
+
+
+<div class="container">
+    <h3>Статистика запросов API</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Уже использовано</th>
+                <th>Доступно на тарифе</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>В минуту</b></td>
+                <td>@ViewBag.PerMinute</td>
+                <td>@ViewBag.AllowInMinute</td>
+            </tr>
+            <tr>
+                <td><b>В час</b></td>
+                <td>@ViewBag.PerHour</td>
+                <td>@ViewBag.AllowInHour</td>
+            </tr>
+            <tr>
+                <td><b>В сутки</b></td>
+                <td>@ViewBag.PerDay</td>
+                <td>@ViewBag.AllowInDay</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
