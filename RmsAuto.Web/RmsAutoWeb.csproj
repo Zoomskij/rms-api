@@ -209,6 +209,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Data\Franch.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\LogRequests.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
@@ -256,6 +259,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Log.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\PartNumber.cs" />

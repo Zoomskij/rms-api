@@ -23,8 +23,8 @@ namespace RMSAutoAPI.Controllers
 		/// <response code="200">OK result</response>
 		/// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<spGetFranches_Result>))]
-        [Authorize(Roles = "Client_SearchApi, NoAccess")]
+        [ResponseType(typeof(IEnumerable<Partner>))]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult GetPartners()
         {
             var partners = db.spGetFranches();

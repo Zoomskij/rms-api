@@ -12,6 +12,7 @@
         <AssociationConnector Association="ex_rmsauto_storeModel.FK__Settings__UserId__6E63ABE5" />
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.BrandEquivalents" Width="1.5" PointX="3.375" PointY="3.75" />
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.LogRequests" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.Franch" Width="1.5" PointX="5.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

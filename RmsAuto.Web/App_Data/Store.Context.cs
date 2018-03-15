@@ -32,6 +32,7 @@ namespace RMSAutoAPI.App_Data
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<BrandEquivalents> BrandEquivalents { get; set; }
         public virtual DbSet<LogRequests> LogRequests { get; set; }
+        public virtual DbSet<Franch> Franch { get; set; }
     
         public virtual ObjectResult<spSearchCrossesWithPriceSVC_Result> spSearchCrossesWithPriceSVC(string partNumber, string manufacturer, Nullable<bool> showAnalogs, string selectedBrands, string acctgID, Nullable<int> clientGroup)
         {

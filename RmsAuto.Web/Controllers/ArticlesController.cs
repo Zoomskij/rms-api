@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Helpers;
+using RMSAutoAPI.Infrastructure;
 using RMSAutoAPI.Models;
 using RMSAutoAPI.Properties;
 using RMSAutoAPI.Services;
@@ -8,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -44,7 +44,7 @@ namespace RMSAutoAPI.Controllers
 		/// </summary>
 		/// <param name="article">Артикул (номер запчасти).</param>
 		/// <param name="analogues">Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.</param>
-		/// <remarks>Возвращает только те бренды по которым имеются в наличие детали (на складе или у транзитных поставщиков). Для авторизации в HTTP-заголовок необходимо передавать пару key = "Authorization" value = "Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%"</remarks>
+		/// <remarks>Возвращает только те бренды по которым имеются     в наличие детали (на складе или у транзитных поставщиков). Для авторизации в HTTP-заголовок необходимо передавать пару key = "Authorization" value = "Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%"</remarks>
 		/// <response code="200">OK result</response>
 		/// <returns></returns>
 		[HttpGet]
@@ -71,21 +71,22 @@ namespace RMSAutoAPI.Controllers
             return Ok(brandsMap);
         }
 
-		/*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
-		/// <summary>
-		/// Возвращает список запчастей
-		/// </summary>
-		/// <param name="article">Артикул (номер запчасти).</param>
-		/// <param name="brand">Бренд</param>
-		/// <param name="analogues">Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.</param>
-		/// <remarks>Для авторизации в HTTP-заголовок необходимо передавать пару key = "Authorization" value = "Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%"</remarks>
-		/// <response code="200">OK result</response>
-		/// <returns></returns>
-		[HttpGet]
+        /*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
+        /// <summary>
+        /// Возвращает список запчастей
+        /// </summary>
+        /// <param name="article">Артикул (номер запчасти).</param>
+        /// <param name="brand">Бренд</param>
+        /// <param name="analogues">Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.</param>
+        /// <param name="franch">Internal Franch Name. rmsauto </param>
+        /// <remarks>Для авторизации в HTTP-заголовок необходимо передавать пару key = "Authorization" value = "Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%"</remarks>
+        /// <response code="200">OK result</response>
+        /// <returns></returns>
+        [HttpGet]
         [ResponseType(typeof(IEnumerable<PartNumber>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
-        public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
+        public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false, string franch = "rmsauto")
         {
             if (CurrentSettings != null)
             {
@@ -96,17 +97,29 @@ namespace RMSAutoAPI.Controllers
             var mainBrand = db.BrandEquivalents.FirstOrDefault(x => x.Equivalent.Equals(brand))?.Brand;
             mainBrand = string.IsNullOrWhiteSpace(mainBrand) ? brand : mainBrand;
 
-            var crosses = db.spSearchCrossesWithPriceSVC(article, brand, analogues, string.Empty, CurrentUser.AcctgID, CurrentUser.ClientGroup);
-            if (crosses == null)
+            try
             {
-                return NotFound();
+                if (!franch.Equals("rmsauto"))
+                {
+                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.Equals(franch));
+                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                }
+                var crosses = db.spSearchCrossesWithPriceSVC(article, brand, analogues, string.Empty, CurrentUser.AcctgID, CurrentUser.ClientGroup);
+                if (crosses == null)
+                {   
+                    return NotFound();
+                }
+                _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID);
+
+                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<PartNumber>>(crosses.ToList());
+
+                return Ok(crossesMap);
             }
-
-            _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID);
-
-            var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<PartNumber>>(crosses.ToList());
-
-            return Ok(crossesMap);
+            catch (Exception ex)
+            {
+                var message = ex.InnerException.Message;
+                return Content(HttpStatusCode.BadRequest, message);
+            }
         }
     }
 }
