@@ -51,24 +51,36 @@ namespace RMSAutoAPI.Controllers
         [ResponseType(typeof(IEnumerable<Brand>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Route("articles/{article:maxlength(50)}/brands")]
-        public IHttpActionResult GetBrands(string article, bool analogues = false)
+        public IHttpActionResult GetBrands(string article, bool analogues = false, string region = "rmsauto")
         {
             if (CurrentSettings != null)
             {
                 if (_settingsHelper.IsAccess(PerMinute, PerHour, PerDay, CurrentSettings.Rates.PerMinute, CurrentSettings.Rates.PerHour, CurrentSettings.Rates.PerDay) == false)
                     return Content(HttpStatusCode.Forbidden, Resources.ErrorMaxRequests);
             }
-
-            var brands = db.spSearchBrands(article, analogues);
-            if (brands == null)
+            try
             {
-                return NotFound();
+                if (!region.Equals("rmsauto"))
+                {
+                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                }
+                var brands = db.spSearchBrands(article, analogues, CurrentUser.AcctgID, region);
+                if (brands == null)
+                {
+                    return NotFound();
+                }
+                _log.Add(article, string.Empty, HttpContext.Current.Request.UserHostAddress, Resources.LogTypeBrand, CurrentUser.AcctgID);
+
+                var brandsMap = Mapper.Map<List<spSearchBrands_Result>, List<Brand>>(brands.ToList());
+
+                return Ok(brandsMap);
             }
-            _log.Add(article, string.Empty, HttpContext.Current.Request.UserHostAddress, Resources.LogTypeBrand, CurrentUser.AcctgID);
-
-            var brandsMap = Mapper.Map<List<spSearchBrands_Result>, List<Brand>>(brands.ToList());
-
-            return Ok(brandsMap);
+            catch (Exception ex)
+            {
+                var message = ex.InnerException.Message;
+                return Content(HttpStatusCode.BadRequest, message);
+            }
         }
 
         /*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
@@ -86,7 +98,7 @@ namespace RMSAutoAPI.Controllers
         [ResponseType(typeof(IEnumerable<PartNumber>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
-        public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false, string franch = "rmsauto")
+        public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false, string region = "rmsauto")
         {
             if (CurrentSettings != null)
             {
@@ -99,12 +111,12 @@ namespace RMSAutoAPI.Controllers
 
             try
             {
-                if (!franch.Equals("rmsauto"))
+                if (!region.Equals("rmsauto"))
                 {
-                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.Equals(franch));
+                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
                     db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
                 }
-                var crosses = db.spSearchCrossesWithPriceSVC(article, brand, analogues, string.Empty, CurrentUser.AcctgID, CurrentUser.ClientGroup);
+                var crosses = db.spSearchCrossesWithPriceSVC(article, brand, analogues, string.Empty, CurrentUser.AcctgID, CurrentUser.ClientGroup, region);
                 if (crosses == null)
                 {   
                     return NotFound();

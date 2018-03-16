@@ -54,6 +54,10 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     background: #61affe;
 }
 
+.opblock.opblock-get .opblock-summary {
+    border-color: #61affe;
+}
+
 .opblock .opblock-summary-method {
     font-size: 14px;
     font-weight: 700;
@@ -112,3 +116,28 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     font-family: Open Sans,sans-serif;
     color: #3b4151;
 }
+.opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {
+    font-size: 12px;
+    margin: 0 0 5px;
+    padding: 15px 20px;
+    font-family: Open Sans,sans-serif;
+    color: #3b4151;
+}
+
+
+.required {
+    font-size: 11px;
+    position: relative;
+    top: -4px;
+    padding: 5px;
+    color: rgb(255,0,0);
+}
+
+.opblock .opblock-section-header {
+    padding: 8px 20px;
+    min-height: 50px;
+    background: hsla(0,0%,100%,.8);
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+}
+

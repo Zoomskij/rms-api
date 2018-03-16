@@ -50,42 +50,59 @@
                     <hr />
                     foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
                     {
-                        <a class="nostyle" href="#/@group.Key/@item.Name">
                             <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
-                                <div class="opblock-summary opblock-summary-get">
-                                    <span class="opblock-summary-method">@item.Type</span>
-                                    <span class="opblock-summary-path">@item.Uri</span>
-                                    <div class="opblock-summary-description">Возвращает список брендов по артикулу</div>
-                                    <br /><br />
-                                </div>
-                            </div>
-                        </a>
+                                <a class="nostyle" href="#/@group.Key/@item.Name">
+                                    <div class="opblock-summary opblock-summary-get">
+                                        <span class="opblock-summary-method">@item.Type</span>
+                                        <span class="opblock-summary-path">@item.Uri</span>
+                                        <div class="opblock-summary-description">@item.Description</div>
+                                    </div>
+                                </a>
                         
-                            foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
-                            {
-                                <div class="col-lg-12">
-                                    <div class="col-lg-2">
-                                        <b>Name</b>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <b>Description</b>
-                                    </div>
-                                </div>
-                                foreach (var param in parameter.Key)
-                                {
-                                    <div class="col-lg-12">
-                                        <div class="col-lg-2">
-                                            @param.Name 
+                                <div style="height: auto; border: none; margin: 0px; padding: 0px;">
+                                    <div class="opblock-body">
+                                        <div class="opblock-description-wrapper">
+                                            <div class="opblock-description">
+                                                @item.TitleDescription
+                                            </div>
                                         </div>
-                                        <div class="col-lg-2">
-                                            @param.Description
+                                        <div class="opblock-section-header">
+                                            <div class="tab-header">
+                                                <h4 class="opblock-title">Parameters</h4>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
+                                        @foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
+                                        {
+                                            <div class="col-lg-12 row">
+                                                <div class="col-lg-2">
+                                                    <b>Name</b>
+                                                </div>
+                                                <div class="col-lg-10">
+                                                    <b>Description</b>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            foreach (var param in parameter.Key)
+                                            {
+                                                <div class="col-lg-12 row">
+                                                    <div class="col-lg-2">
+                                                        <b>@param.Name </b>
+                                                        @if (param.isRequired == true)
+                                                        {
+                                                            <span class="required">&nbsp;*&nbsp;required</span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-10">
+                                                        @param.Description
+                                                    </div>
+                                                </div>
+                                            }
 
 
-                            }
-                        
+                                        }
+                                    </div>
+                                </div>
+                        </div>
                     }
                 }
 

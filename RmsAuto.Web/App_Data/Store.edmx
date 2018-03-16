@@ -53,27 +53,28 @@
           <Property Name="LogName" Type="nvarchar" MaxLength="50" />
           <Property Name="ImgTel" Type="nvarchar" MaxLength="100" />
           <Property Name="lnkHeadUrl" Type="nvarchar" MaxLength="100" />
+          <Property Name="isLite" Type="bit" Nullable="false" />
           <Property Name="BankAccount" Type="nvarchar" MaxLength="100" />
           <Property Name="BankCode" Type="nvarchar" MaxLength="100" />
           <Property Name="BankName" Type="nvarchar" MaxLength="100" />
           <Property Name="CompanyName" Type="nvarchar" MaxLength="100" />
           <Property Name="CorrAccount" Type="nvarchar" MaxLength="100" />
-          <Property Name="KPP" Type="nvarchar" MaxLength="100" />
           <Property Name="INN" Type="nvarchar" MaxLength="100" />
-          <Property Name="isLite" Type="bit" Nullable="false" />
+          <Property Name="KPP" Type="nvarchar" MaxLength="100" />
           <Property Name="PriceSearchCommandTimeOut" Type="int" Nullable="false" />
           <Property Name="ClientGroup" Type="int" Nullable="false" />
-          <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="visible" Type="bit" />
           <Property Name="IsConsultantOn" Type="bit" />
           <Property Name="liveTexID" Type="int" />
           <Property Name="SBRFPaymentAPIEnabled" Type="bit" Nullable="false" />
           <Property Name="SBRFPaymentUserName" Type="varchar" MaxLength="100" />
           <Property Name="SBRFPaymentUserPassword" Type="varchar" MaxLength="100" />
-          <Property Name="ShowSupplyPriceClientCartRMM" Type="bit" Nullable="false" />
           <Property Name="AdditionalPeriodAvia" Type="int" />
           <Property Name="CustomFactorAvia" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="ShowSupplyPriceClientCartRMM" Type="bit" Nullable="false" />
           <Property Name="RestrictionsOnRMM" Type="bit" Nullable="false" />
           <Property Name="IsStandAlone" Type="bit" Nullable="false" />
+          <Property Name="SBRFPaymentApiUrl" Type="varchar" MaxLength="100" />
           <Property Name="PaymentApiUrl" Type="varchar" MaxLength="100" />
           <Property Name="PaymentAPIEnabled" Type="bit" Nullable="false" />
           <Property Name="PaymentUserName" Type="varchar" MaxLength="100" />
@@ -112,7 +113,7 @@
           <Property Name="ScopeType" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="HowKnow" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="RmsStoreID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ManagerId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ManagerId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="ManagerDeptId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="IsChecked" Type="bit" Nullable="false" />
           <Property Name="IsRestricted" Type="bit" Nullable="false" />
@@ -162,6 +163,8 @@
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
           <Parameter Name="ShowAnalogs" Type="bit" Mode="In" />
+          <Parameter Name="AcctgID" Type="varchar" Mode="In" />
+          <Parameter Name="Region" Type="varchar" Mode="In" />
         </Function>
         <Function Name="spSearchCrossesWithPriceSVC" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
@@ -170,6 +173,7 @@
           <Parameter Name="SelectedBrands" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="AcctgID" Type="varchar" Mode="In" />
           <Parameter Name="ClientGroup" Type="int" Mode="In" />
+          <Parameter Name="Region" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="ex_rmsauto_storeModelStoreContainer">
           <EntitySet Name="LogRequests" EntityType="Self.LogRequests" Schema="Acctg" store:Type="Tables" />
@@ -193,16 +197,19 @@
       <Schema Namespace="ex_rmsauto_storeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ex_rmsauto_storeEntities" annotation:LazyLoadingEnabled="true">
           <FunctionImport Name="spSearchCrossesWithPriceSVC" ReturnType="Collection(ex_rmsauto_storeModel.spSearchCrossesWithPriceSVC_Result)">
-          <Parameter Name="PartNumber" Mode="In" Type="String" />
+            <Parameter Name="PartNumber" Mode="In" Type="String" />
             <Parameter Name="Manufacturer" Mode="In" Type="String" />
             <Parameter Name="ShowAnalogs" Mode="In" Type="Boolean" />
             <Parameter Name="SelectedBrands" Mode="In" Type="String" />
             <Parameter Name="AcctgID" Mode="In" Type="String" />
             <Parameter Name="ClientGroup" Mode="In" Type="Int32" />
+            <Parameter Name="Region" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="spSearchBrands" ReturnType="Collection(ex_rmsauto_storeModel.spSearchBrands_Result)">
-          <Parameter Name="PartNumber" Mode="In" Type="String" />
+            <Parameter Name="PartNumber" Mode="In" Type="String" />
             <Parameter Name="ShowAnalogs" Mode="In" Type="Boolean" />
+            <Parameter Name="AcctgID" Mode="In" Type="String" />
+            <Parameter Name="Region" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="Rates" EntityType="ex_rmsauto_storeModel.Rates" />
           <EntitySet Name="Settings" EntityType="ex_rmsauto_storeModel.Settings" />
@@ -295,7 +302,7 @@
           <Property Name="ScopeType" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="HowKnow" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="RmsStoreID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ManagerDeptId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IsChecked" Type="Boolean" Nullable="false" />
           <Property Name="IsRestricted" Type="Boolean" Nullable="false" />
@@ -373,27 +380,28 @@
           <Property Name="LogName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ImgTel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="lnkHeadUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="isLite" Type="Boolean" Nullable="false" />
           <Property Name="BankAccount" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="BankCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="BankName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CompanyName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="CorrAccount" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="KPP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="INN" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="isLite" Type="Boolean" Nullable="false" />
+          <Property Name="KPP" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="PriceSearchCommandTimeOut" Type="Int32" Nullable="false" />
           <Property Name="ClientGroup" Type="Int32" Nullable="false" />
-          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="visible" Type="Boolean" />
           <Property Name="IsConsultantOn" Type="Boolean" />
           <Property Name="liveTexID" Type="Int32" />
           <Property Name="SBRFPaymentAPIEnabled" Type="Boolean" Nullable="false" />
           <Property Name="SBRFPaymentUserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="SBRFPaymentUserPassword" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ShowSupplyPriceClientCartRMM" Type="Boolean" Nullable="false" />
           <Property Name="AdditionalPeriodAvia" Type="Int32" />
           <Property Name="CustomFactorAvia" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="ShowSupplyPriceClientCartRMM" Type="Boolean" Nullable="false" />
           <Property Name="RestrictionsOnRMM" Type="Boolean" Nullable="false" />
           <Property Name="IsStandAlone" Type="Boolean" Nullable="false" />
+          <Property Name="SBRFPaymentApiUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PaymentApiUrl" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="PaymentAPIEnabled" Type="Boolean" Nullable="false" />
           <Property Name="PaymentUserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -534,27 +542,28 @@
                 <ScalarProperty Name="PaymentUserName" ColumnName="PaymentUserName" />
                 <ScalarProperty Name="PaymentAPIEnabled" ColumnName="PaymentAPIEnabled" />
                 <ScalarProperty Name="PaymentApiUrl" ColumnName="PaymentApiUrl" />
+                <ScalarProperty Name="SBRFPaymentApiUrl" ColumnName="SBRFPaymentApiUrl" />
                 <ScalarProperty Name="IsStandAlone" ColumnName="IsStandAlone" />
                 <ScalarProperty Name="RestrictionsOnRMM" ColumnName="RestrictionsOnRMM" />
+                <ScalarProperty Name="ShowSupplyPriceClientCartRMM" ColumnName="ShowSupplyPriceClientCartRMM" />
                 <ScalarProperty Name="CustomFactorAvia" ColumnName="CustomFactorAvia" />
                 <ScalarProperty Name="AdditionalPeriodAvia" ColumnName="AdditionalPeriodAvia" />
-                <ScalarProperty Name="ShowSupplyPriceClientCartRMM" ColumnName="ShowSupplyPriceClientCartRMM" />
                 <ScalarProperty Name="SBRFPaymentUserPassword" ColumnName="SBRFPaymentUserPassword" />
                 <ScalarProperty Name="SBRFPaymentUserName" ColumnName="SBRFPaymentUserName" />
                 <ScalarProperty Name="SBRFPaymentAPIEnabled" ColumnName="SBRFPaymentAPIEnabled" />
                 <ScalarProperty Name="liveTexID" ColumnName="liveTexID" />
                 <ScalarProperty Name="IsConsultantOn" ColumnName="IsConsultantOn" />
-                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="visible" ColumnName="visible" />
                 <ScalarProperty Name="ClientGroup" ColumnName="ClientGroup" />
                 <ScalarProperty Name="PriceSearchCommandTimeOut" ColumnName="PriceSearchCommandTimeOut" />
-                <ScalarProperty Name="isLite" ColumnName="isLite" />
-                <ScalarProperty Name="INN" ColumnName="INN" />
                 <ScalarProperty Name="KPP" ColumnName="KPP" />
+                <ScalarProperty Name="INN" ColumnName="INN" />
                 <ScalarProperty Name="CorrAccount" ColumnName="CorrAccount" />
                 <ScalarProperty Name="CompanyName" ColumnName="CompanyName" />
                 <ScalarProperty Name="BankName" ColumnName="BankName" />
                 <ScalarProperty Name="BankCode" ColumnName="BankCode" />
                 <ScalarProperty Name="BankAccount" ColumnName="BankAccount" />
+                <ScalarProperty Name="isLite" ColumnName="isLite" />
                 <ScalarProperty Name="lnkHeadUrl" ColumnName="lnkHeadUrl" />
                 <ScalarProperty Name="ImgTel" ColumnName="ImgTel" />
                 <ScalarProperty Name="LogName" ColumnName="LogName" />
