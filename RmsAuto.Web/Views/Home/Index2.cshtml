@@ -60,12 +60,32 @@
                                 </div>
                             </div>
                         </a>
-                        foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
-                        {
-                            @parameter.Key
+                        
+                            foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
+                            {
+                                <div class="col-lg-12">
+                                    <div class="col-lg-2">
+                                        <b>Name</b>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <b>Description</b>
+                                    </div>
+                                </div>
+                                foreach (var param in parameter.Key)
+                                {
+                                    <div class="col-lg-12">
+                                        <div class="col-lg-2">
+                                            @param.Name 
+                                        </div>
+                                        <div class="col-lg-2">
+                                            @param.Description
+                                        </div>
+                                    </div>
+                                }
 
-                        }
 
+                            }
+                        
                     }
                 }
 
