@@ -11,5 +11,8 @@ namespace RMSAutoAPI.Models
         public string Type { get; set; }
         public string Name { get; set; }
         public string Uri { get; set; }
+        public string Description { get; set; }
+        public string TitleDescription { get; set; }
+        public List<ApiParameter> Parameters { get; set; } = new List<ApiParameter>();
     }
 }

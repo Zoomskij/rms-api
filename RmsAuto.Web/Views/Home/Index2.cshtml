@@ -50,14 +50,22 @@
                     <hr />
                     foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
                     {
-                        <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
-                            <div class="opblock-summary opblock-summary-get">
-                                <span class="opblock-summary-method">@item.Type</span>
-                                <span class="opblock-summary-path">@item.Uri</span>
-                                <div class="opblock-summary-description">Возвращает список брендов по артикулу</div>
-                                <br /><br />
+                        <a class="nostyle" href="#/@group.Key/@item.Name">
+                            <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
+                                <div class="opblock-summary opblock-summary-get">
+                                    <span class="opblock-summary-method">@item.Type</span>
+                                    <span class="opblock-summary-path">@item.Uri</span>
+                                    <div class="opblock-summary-description">Возвращает список брендов по артикулу</div>
+                                    <br /><br />
+                                </div>
                             </div>
-                        </div>
+                        </a>
+                        foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
+                        {
+                            @parameter.Key
+
+                        }
+
                     }
                 }
 

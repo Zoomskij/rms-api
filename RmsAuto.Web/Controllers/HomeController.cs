@@ -9,6 +9,7 @@ using System.Web.Mvc;
 namespace RMSAutoAPI.Controllers
 {
 
+
     public class HomeController : Controller
     {
         public ActionResult Index()
@@ -26,6 +27,9 @@ namespace RMSAutoAPI.Controllers
             methods.Add(new ApiMethod() { Type = "GET", Name = "Ge tBrands", Uri = "/api/articles/{article}/brands", Group = "Articles" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "Get Spare Parts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "Get Partners", Uri = "/api/Partners", Group = "Partners" });
+
+            methods[0].Parameters.Add(new ApiParameter() { Name = "article", Description = "Артикул (номер запчасти)", isRequired = true, Type = "string" });
+            methods[0].Parameters.Add(new ApiParameter() { Name = "analogues", Description = "Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.", isRequired = false, Type = "boolean" });
 
             return View(methods);
         }

@@ -260,6 +260,7 @@
       <DependentUpon>Log.edmx</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
+    <Compile Include="Models\ApiParameter.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
     <Compile Include="Models\Partner.cs" />
@@ -267,6 +268,7 @@
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\SparePartItemType.cs" />
     <Compile Include="Models\Quality.cs" />
+    <Compile Include="Models\TypeParameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
