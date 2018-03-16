@@ -1,0 +1,114 @@
+﻿.wrapper {
+    width: 100%;
+    max-width: 1460px;
+    margin: 0 auto;
+    padding: 0 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.info .title {
+    font-size: 36px;
+    margin: 0;
+    font-family: Open Sans,sans-serif;
+    color: #3b4151;
+}
+
+.scheme-container {
+    margin: 0 0 20px;
+    padding: 30px 0;
+    background: #fff;
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.15);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.15);
+}
+
+.opblock-tag-section {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.opblock-tag {
+    font-size: 24px;
+    margin: 0 0 5px;
+    font-family: Titillium Web,sans-serif;
+    color: #3b4151;
+}
+
+a.nostyle, .swagger-ui a.nostyle:visited {
+    text-decoration: inherit;
+    color: inherit;
+    cursor: pointer;
+}
+
+.opblock.opblock-get {
+    border-color: #61affe;
+    background: rgba(97,175,254,.1);
+}
+
+.opblock.opblock-get .opblock-summary-method {
+    background: #61affe;
+}
+
+.opblock .opblock-summary-method {
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 80px;
+    padding: 6px 15px;
+    text-align: center;
+    border-radius: 3px;
+    background: #000;
+    text-shadow: 0 1px 0 rgba(0,0,0,.1);
+    font-family: Titillium Web,sans-serif;
+    color: #fff;
+}
+
+.opblock {
+    margin: 0 0 15px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 0 3px rgba(0,0,0,.19);
+    box-shadow: 0 0 3px rgba(0,0,0,.19);
+}
+
+.opblock-summary-path, .opblock .opblock-summary-path__deprecated {
+    font-size: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 3 auto;
+    flex: 0 3 auto;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    word-break: break-all;
+    padding: 0 10px;
+    font-family: Source Code Pro,monospace;
+    font-weight: 600;
+    color: #3b4151;
+}
+
+.opblock .opblock-summary {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 5px;
+    cursor: pointer;
+}
+
+.opblock .opblock-summary-description {
+    font-size: 13px;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    font-family: Open Sans,sans-serif;
+    color: #3b4151;
+}

@@ -1,0 +1,73 @@
+﻿@model List<RMSAutoAPI.Models.ApiMethod>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index2</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/api.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="wrapper">
+        <div>
+            <h2 class="title"> API.RMSAUTO </h2>
+        </div>
+
+
+        <div class="scheme-container">
+            <section class="schemes wrapper block col-12">
+                <label for="schemes">
+                    <span class="schemes-title">Schemes</span>
+                    <select><option value="http">http</option></select>
+                </label>
+                <div class="auth-wrapper">
+                    <button class="btn authorize unlocked">
+                        <span>Authorize</span>
+                        <svg width="20" height="20"><use href="#unlocked" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#unlocked"></use></svg>
+                    </button>
+                </div>
+            </section>
+        </div>
+
+
+        <div class="opblock-tag-section">
+            <div style="height: auto; border: none; margin: 0px; padding: 0px;">
+                @foreach (var group in Model.GroupBy(x => x.Group))
+                {
+
+                    <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
+                        <a class="nostyle" href="#/@group.Key"><span>@group.Key</span></a>
+                    </h4>
+                    <hr />
+                    foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
+                    {
+                        <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
+                            <div class="opblock-summary opblock-summary-get">
+                                <span class="opblock-summary-method">@item.Type</span>
+                                <span class="opblock-summary-path">@item.Uri</span>
+                                <div class="opblock-summary-description">Возвращает список брендов по артикулу</div>
+                                <br /><br />
+                            </div>
+                        </div>
+                    }
+                }
+
+
+            </div>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>

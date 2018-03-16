@@ -261,6 +261,7 @@
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\Brand.cs" />
+    <Compile Include="Models\ApiMethod.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\PartNumber.cs" />
     <Compile Include="Models\LoginModel.cs" />
@@ -315,6 +316,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\api.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -402,6 +404,8 @@
     <Content Include="Swagger\swagger-ui-standalone-preset.js.map" />
     <Content Include="Swagger\swagger-ui.css.map" />
     <Content Include="Swagger\swagger-ui.js.map" />
+    <Content Include="Views\Home\Index2.cshtml" />
+    <Content Include="Views\Home\Authorization.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
