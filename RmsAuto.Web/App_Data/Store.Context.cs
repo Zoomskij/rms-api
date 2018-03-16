@@ -34,7 +34,7 @@ namespace RMSAutoAPI.App_Data
         public virtual DbSet<LogRequests> LogRequests { get; set; }
         public virtual DbSet<Franch> Franch { get; set; }
     
-        public virtual ObjectResult<spSearchCrossesWithPriceSVC_Result> spSearchCrossesWithPriceSVC(string partNumber, string manufacturer, Nullable<bool> showAnalogs, string selectedBrands, string acctgID, Nullable<int> clientGroup)
+        public virtual ObjectResult<spSearchCrossesWithPriceSVC_Result> spSearchCrossesWithPriceSVC(string partNumber, string manufacturer, Nullable<bool> showAnalogs, string selectedBrands, string acctgID, Nullable<int> clientGroup, string region)
         {
             var partNumberParameter = partNumber != null ?
                 new ObjectParameter("PartNumber", partNumber) :
@@ -60,10 +60,14 @@ namespace RMSAutoAPI.App_Data
                 new ObjectParameter("ClientGroup", clientGroup) :
                 new ObjectParameter("ClientGroup", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSearchCrossesWithPriceSVC_Result>("spSearchCrossesWithPriceSVC", partNumberParameter, manufacturerParameter, showAnalogsParameter, selectedBrandsParameter, acctgIDParameter, clientGroupParameter);
+            var regionParameter = region != null ?
+                new ObjectParameter("Region", region) :
+                new ObjectParameter("Region", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSearchCrossesWithPriceSVC_Result>("spSearchCrossesWithPriceSVC", partNumberParameter, manufacturerParameter, showAnalogsParameter, selectedBrandsParameter, acctgIDParameter, clientGroupParameter, regionParameter);
         }
     
-        public virtual ObjectResult<spSearchBrands_Result> spSearchBrands(string partNumber, Nullable<bool> showAnalogs)
+        public virtual ObjectResult<spSearchBrands_Result> spSearchBrands(string partNumber, Nullable<bool> showAnalogs, string acctgID, string region)
         {
             var partNumberParameter = partNumber != null ?
                 new ObjectParameter("PartNumber", partNumber) :
@@ -73,7 +77,15 @@ namespace RMSAutoAPI.App_Data
                 new ObjectParameter("ShowAnalogs", showAnalogs) :
                 new ObjectParameter("ShowAnalogs", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSearchBrands_Result>("spSearchBrands", partNumberParameter, showAnalogsParameter);
+            var acctgIDParameter = acctgID != null ?
+                new ObjectParameter("AcctgID", acctgID) :
+                new ObjectParameter("AcctgID", typeof(string));
+    
+            var regionParameter = region != null ?
+                new ObjectParameter("Region", region) :
+                new ObjectParameter("Region", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spSearchBrands_Result>("spSearchBrands", partNumberParameter, showAnalogsParameter, acctgIDParameter, regionParameter);
         }
     
         public virtual ObjectResult<spGetFranches_Result> spGetFranches()

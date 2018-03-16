@@ -30,27 +30,28 @@ namespace RMSAutoAPI.App_Data
         public string LogName { get; set; }
         public string ImgTel { get; set; }
         public string lnkHeadUrl { get; set; }
+        public bool isLite { get; set; }
         public string BankAccount { get; set; }
         public string BankCode { get; set; }
         public string BankName { get; set; }
         public string CompanyName { get; set; }
         public string CorrAccount { get; set; }
-        public string KPP { get; set; }
         public string INN { get; set; }
-        public bool isLite { get; set; }
+        public string KPP { get; set; }
         public int PriceSearchCommandTimeOut { get; set; }
         public int ClientGroup { get; set; }
-        public bool Visible { get; set; }
+        public Nullable<bool> visible { get; set; }
         public Nullable<bool> IsConsultantOn { get; set; }
         public Nullable<int> liveTexID { get; set; }
         public bool SBRFPaymentAPIEnabled { get; set; }
         public string SBRFPaymentUserName { get; set; }
         public string SBRFPaymentUserPassword { get; set; }
-        public bool ShowSupplyPriceClientCartRMM { get; set; }
         public Nullable<int> AdditionalPeriodAvia { get; set; }
         public Nullable<decimal> CustomFactorAvia { get; set; }
+        public bool ShowSupplyPriceClientCartRMM { get; set; }
         public bool RestrictionsOnRMM { get; set; }
         public bool IsStandAlone { get; set; }
+        public string SBRFPaymentApiUrl { get; set; }
         public string PaymentApiUrl { get; set; }
         public bool PaymentAPIEnabled { get; set; }
         public string PaymentUserName { get; set; }
