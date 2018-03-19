@@ -141,3 +141,21 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     box-shadow: 0 1px 2px rgba(0,0,0,.1);
 }
 
+.example {
+    font-size: 12px;
+    margin: 0;
+    padding: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    border-radius: 4px;
+    background: #41444e;
+    overflow-wrap: break-word;
+    font-family: Source Code Pro,monospace;
+    font-weight: 600;
+    color: #fff;
+}
