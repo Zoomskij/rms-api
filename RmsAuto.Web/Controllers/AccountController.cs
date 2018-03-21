@@ -76,7 +76,7 @@ namespace RMSAutoAPI.Controllers
                     var principal = new GenericPrincipal(identity, rolesTechnicalNamesUser.ToArray());
 
                     Thread.CurrentPrincipal = principal;
-                    return RedirectToAction("Index", "Stats");
+                    return RedirectToAction("Index2", "Home");
                 }
             }
             ViewBag.returnUrl = returnUrl;

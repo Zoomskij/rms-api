@@ -159,3 +159,82 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     font-weight: 600;
     color: #fff;
 }
+
+button {
+    cursor: pointer;
+    outline: none;
+}
+
+.btn {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 23px;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    border: 2px solid gray;
+    border-radius: 4px;
+    background: transparent;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,.1);
+    font-family: Titillium Web,sans-serif;
+    color: #3b4151;
+}
+
+.btn.cancel {
+    border-color: #ff6060;
+    background-color: transparent;
+    font-family: Titillium Web,sans-serif;
+    color: #ff6060;
+}
+
+.execute-wrapper {
+    padding: 20px;
+    text-align: right;
+}
+
+.btn.execute {
+    -webkit-animation: swagger-ui-pulse 2s infinite;
+    animation: swagger-ui-pulse 2s infinite;
+    will-change: transform;
+    background-color: #4990e2;
+    color: #fff;
+    border-color: #4990e2;
+}
+
+input[type=text] {
+    min-width: 100px;
+    margin: 5px 0;
+    padding: 8px 10px;
+    border: 1px solid #d9d9d9;
+    border-radius: 4px;
+    background: #fff;
+}
+
+select {
+    font-size: 14px;
+    font-weight: 700;
+    padding: 5px 40px 5px 10px;
+    border: 2px solid #41444e;
+    border-radius: 4px;
+    background: #f7f7f7 url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zd…45NjkuMjcxLS4yNjguNzA5LS4yNjguOTc4IDBMMTAgMTFsMy40MTgtMy4xNDF6Ii8+PC9zdmc+) right 10px center no-repeat;
+    background-size: 20px;
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.25);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,.25);
+    font-family: Titillium Web,sans-serif;
+    color: #3b4151;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.response-label {
+    font-weight:bold;
+    font-size: 12px;
+    margin: 10px 0 5px;
+    font-family: Open Sans,sans-serif;
+    color: #3b4151;
+}
+
+.request-url {
+
+}

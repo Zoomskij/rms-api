@@ -1,6 +1,6 @@
 ﻿@model List<RMSAutoAPI.Models.ApiMethod>
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
 }
 
@@ -25,16 +25,20 @@
 
 
         <div class="scheme-container">
-            <section class="schemes wrapper block col-12">
-                <label for="schemes">
-                    <span class="schemes-title">Schemes</span>
-                    <select><option value="http">http</option></select>
-                </label>
-                <div class="auth-wrapper">
-                    <button class="btn authorize unlocked">
-                        <span>Authorize</span>
-                        <svg width="20" height="20"><use href="#unlocked" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#unlocked"></use></svg>
-                    </button>
+            <section class="schemes wrapper block col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+                    <label for="schemes">
+                        <span class="schemes-title">Schemes</span>
+                        <select><option value="http">http</option></select>
+                    </label>
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
+                    <div class="auth-wrapper">
+                        <button class="btn authorize unlocked pull-right" onclick="showPopup()">
+                            <span>Authorize</span>
+                            @*<svg width="20" height="20"><use href="#unlocked" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#unlocked"></use></svg>*@
+                        </button>
+                    </div>
                 </div>
             </section>
         </div>
@@ -48,7 +52,7 @@
                     <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
                         <a class="nostyle" href="#/@group.Key"><span>@group.Key</span></a>
                     </h4>
-                    <hr />
+                    <hr style="margin-bottom:10px; margin-top:15px;" />
                     foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
                     {
                         <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
@@ -60,18 +64,22 @@
                                 </div>
                             </a>
 
-                            <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;" >
+                            <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
                                 <div class="opblock-body">
                                     <div class="opblock-description-wrapper">
                                         <div class="opblock-description">
                                             @item.TitleDescription
                                         </div>
                                     </div>
-                                    <div class="opblock-section-header">
-                                        <div class="tab-header">
-                                            <h4 class="opblock-title">Parameters</h4>
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="opblock-section-header">
+                                            <div class="tab-header">
+                                                <span class="opblock-title"><b>Parameters</b></span>
+                                                <button class="btn try-out__btn pull-right">Try it out </button>
+                                            </div>
                                         </div>
                                     </div>
+                                    @*============PARAMETERS=============*@
                                     @foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
                                     {
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
@@ -101,6 +109,22 @@
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                     @param.Type
                                                 </div>
+                                                <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                                    @if (param.Name != "analogues")
+                                                    {
+                                                        <input type="text" class="" title="" value="" placeholder="article - Артикул (номер запчасти).">
+                                                    }
+                                                    @if (param.Name == "analogues")
+                                                    {
+                                                        <select class="">
+                                                            <option value="">--</option>
+                                                            <option value="true">true</option>
+                                                            <option value="false">false</option>
+                                                        </select>
+                                                    }
+                                                </div>
+
+
                                             </div>
                                             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
@@ -111,22 +135,96 @@
                                             <div style="padding-top:20px"></div>
                                         }
                                     }
+                                    @*onclick="executeMethod()"*@
+                                    @*==============EXECUTE================*@
+                                    <div class="execute-wrapper">
+                                        <button class="btn execute opblock-control__btn" data-bind="click: loadBrands">Execute</button>
+                                    </div>
+
+
+
+                                    @*===============RESPONSES===============*@
                                     <div class="opblock-section-header">
                                         <div class="tab-header">
                                             <h4 class="opblock-title">Responses</h4>
                                         </div>
                                     </div>
-                                    
-                                    <div style="margin-top:20px"></div>
+
+
+                                    @*  CURL *@
+                                    <br />
                                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                            <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-                                               
-                                            </div>
-                                            <div class="col-lg-8 col-md-8 col-xs-8 col-sm-8">
-                                                <pre class="example">
+                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                            <span class="response-label"> Curl</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                                            <pre class="example">
+                                            <div id="curl"></div>
+                                                    
+                                                </pre>
+                                        </div>
+                                    </div>
+                                    @* ====================== *@
+
+
+                                    @*  REQUEST URL *@
+                                    <br />
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                            <span class="response-label"> Request URL</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                                            <pre class="example">
+                                            <div class="request-url" id="request-url"></div>
+                                                    
+                                                </pre>
+                                        </div>
+                                    </div>
+                                    @* ====================== *@
+
+
+
+                                    <br />
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                            <span class="response-label"> Server response</span>
+                                        </div>
+                                    </div>
+
+                                    <br />
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                            <b>Code</b>
+                                        </div>
+                                        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                            <b>Details</b>
+                                        </div>
+                                    </div>
+                                    <hr style="margin-top:5px; margin-bottom:10px" />
+
+                                    <div style="margin-top:20px"></div>
+
+
+                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+
+                                        </div>
+                                        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                            <pre class="example">
+                                                    @*<strong class="pull-left" data-bind="text: firstName"></strong><br />*@
+                                            <div id="resp"></div>
+                                                    
+
+
 
                                                 </pre>
-                                            </div>
+                                        </div>
                                     </div>
 
                                     <div style="padding-bottom:20px"></div>
@@ -141,14 +239,27 @@
         </div>
     </div>
 
-    <ul data-bind="foreach: items">
-        <a href="#" data-bind="click: toggle, text:linkLabel"></a>
+    <ul data-bind="foreach: methods">
+        <strong data-bind="text: Name"></strong>
+        @*<a href="#" data-bind="click: toggle, text:linkLabel"></a>
         <button data-bind="text:name"></button>
         <div data-bind="visible:expanded">
             <input data-bind="value:name"></input>
-        </div>
+        </div>*@
     </ul>
 
+    <ul data-bind="foreach: items">
+        <strong data-bind="text: Name"></strong>
+        @*<a href="#" data-bind="click: toggle, text:linkLabel"></a>*@
+        @*<button data-bind="text:name"></button>
+        <div data-bind="visible:expanded">
+            <input data-bind="value:name"></input>
+        </div>*@
+    </ul>
+
+    <script type="text/javascript">
+        var jsonModel = @Html.Raw(Json.Encode(@Model));
+    </script>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")

@@ -49,7 +49,7 @@ namespace RMSAutoAPI.Controllers
 		/// <returns></returns>
 		[HttpGet]
         [ResponseType(typeof(IEnumerable<Brand>))]
-        [Authorize(Roles = "Client_SearchApi, NoAccess")]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Route("articles/{article:maxlength(50)}/brands")]
         public IHttpActionResult GetBrands(string article, bool analogues = false, string region = "rmsauto")
         {
