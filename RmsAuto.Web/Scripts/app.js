@@ -108,8 +108,17 @@ var viewModel = function () {
         })
 
     }
-        loadBrands = function () {
-            $.getJSON("/api/Articles/333310/Brands", function (data) {
+        Get_Brands = function () {
+            var pathname = window.location.pathname; 
+            var mainUrl = replaceString(pathname, '', window.location.href);
+
+            article = document.getElementById('article').value;
+            analogues = document.getElementById('analogues').value;
+            var url = "/api/Articles/" + article + "/Brands";
+            if (analogues != "") {
+                url += "?analogues=" + analogues + "";
+            }
+            $.getJSON(url, function (data) {
 
                 $('#resp').html("[\n");
 
@@ -127,11 +136,22 @@ var viewModel = function () {
                 }
                 $('#resp').append("]");
 
-               
+
+                $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
+
+                $('#request-url').html(mainUrl + url + "");
+                
+                
+
+
               
             });
     }
+
+
 };
+
+
 
 
 ko.applyBindings(new viewModel());
@@ -151,4 +171,13 @@ function executeMethod() {
             console.log(xhr);
         }
     });
+}
+
+function replaceString(oldS, newS, fullS) {
+    for (var i = 0; i < fullS.length; ++i) {
+        if (fullS.substring(i, i + oldS.length) == oldS) {
+            fullS = fullS.substring(0, i) + newS + fullS.substring(i + oldS.length, fullS.length);
+        }
+    }
+    return fullS;
 }
