@@ -25,3 +25,22 @@
         <p><button type="submit">Войти</button></p>
     </div>
 }
+
+
+<script type="text/javascript">
+    var loginData = {
+        grant_type: 'password',
+        username: self.loginEmail(),
+        password: self.loginPassword()
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: 'http://localhost:52682/api/auth/token',
+        data: loginData
+    }).done(function (data) {
+        self.user(data.userName);
+        // Cache the access token in session storage.
+        sessionStorage.setItem(tokenKey, data.access_token);
+    }).fail(showError);
+</script>

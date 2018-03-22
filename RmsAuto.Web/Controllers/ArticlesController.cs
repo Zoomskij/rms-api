@@ -9,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Threading;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
@@ -28,31 +30,62 @@ namespace RMSAutoAPI.Controllers
         public int PerHour { get; set; }
         public int PerDay { get; set; }
 
+        public string CurrentRole { get; set; } 
+
         public ArticlesController()
         {
             var userName = User.Identity.Name;
-            CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
+            CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName || x.Email == userName);
             CurrentSettings = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID);
             PerMinute = _settingsHelper.CountRequests(RequestDelimeter.Minute, CurrentUser.AcctgID);
             PerHour = _settingsHelper.CountRequests(RequestDelimeter.Hour, CurrentUser.AcctgID);
             PerDay = _settingsHelper.CountRequests(RequestDelimeter.Day, CurrentUser.AcctgID);
+
+            switch (CurrentUser.UserRole)
+            {
+                case 0:
+                    CurrentRole = "Client";
+                    break;
+                case 1:
+                    CurrentRole = "Manager";
+                    break;
+                case 2:
+                    CurrentRole = "LimitedManager";
+                    break;
+                case 3:
+                    CurrentRole = "NoAccess";
+                    break;
+                case 4:
+                    CurrentRole = "Client_SearchApi";
+                    break;
+            }
         }
 
-		/*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
-		/// <summary>
-		/// Возвращает список брендов по артикулу
-		/// </summary>
-		/// <param name="article">Артикул (номер запчасти).</param>
-		/// <param name="analogues">Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.</param>
-		/// <remarks>Возвращает только те бренды по которым имеются     в наличие детали (на складе или у транзитных поставщиков). Для авторизации в HTTP-заголовок необходимо передавать пару key = "Authorization" value = "Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%"</remarks>
-		/// <response code="200">OK result</response>
-		/// <returns></returns>
-		[HttpGet]
+
+        /*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
+        /// <summary>
+        /// Возвращает список брендов по артикулу
+        /// </summary>
+        /// <param name="article">Артикул (номер запчасти).</param>
+        /// <param name="analogues">Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.</param>
+        /// <remarks>Возвращает только те бренды по которым имеются     в наличие детали (на складе или у транзитных поставщиков). Для авторизации в HTTP-заголовок необходимо передавать пару key = "Authorization" value = "Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%"</remarks>
+        /// <response code="200">OK result</response>
+        /// <returns></returns>
+        [HttpGet]
         [ResponseType(typeof(IEnumerable<Brand>))]
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
+        [Authorize]
         [Route("articles/{article:maxlength(50)}/brands")]
         public IHttpActionResult GetBrands(string article, bool analogues = false, string region = "rmsauto")
         {
+            //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
+            //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
+            if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
+                    (!CurrentRole.Equals("Client_SearchApi") && !CurrentRole.Equals("NoAccess")))
+            {
+                return Content(HttpStatusCode.BadRequest, "Authorization has been denied for this request.");
+            }
+
             if (CurrentSettings != null)
             {
                 if (_settingsHelper.IsAccess(PerMinute, PerHour, PerDay, CurrentSettings.Rates.PerMinute, CurrentSettings.Rates.PerHour, CurrentSettings.Rates.PerDay) == false)
@@ -96,10 +129,19 @@ namespace RMSAutoAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(IEnumerable<PartNumber>))]
-        [Authorize(Roles = "Client_SearchApi, NoAccess")]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
+        [Authorize]
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
         public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false, string region = "rmsauto")
         {
+            //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
+            //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
+            if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
+                    (!CurrentRole.Equals("Client_SearchApi") && !CurrentRole.Equals("NoAccess")))
+            {
+                return Content(HttpStatusCode.BadRequest, "Authorization has been denied for this request.");
+            }
+
             if (CurrentSettings != null)
             {
                 if (_settingsHelper.IsAccess(PerMinute, PerHour, PerDay, CurrentSettings.Rates.PerMinute, CurrentSettings.Rates.PerHour, CurrentSettings.Rates.PerDay) == false)

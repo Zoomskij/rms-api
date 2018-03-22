@@ -23,6 +23,13 @@ namespace RMSAutoAPI.Controllers
 
         public ActionResult Index2()
         {
+            ViewBag.CurrentUser = "Вы не авторизованы";
+            if (User.Identity.IsAuthenticated)
+            {
+                ViewBag.CurrentUser = "Ваш логин: " + User.Identity.Name;
+            }
+            //return result;
+
             var methods = new List<ApiMethod>();
             methods.Add(new ApiMethod() { Type = "GET", Name = "Get_Brands", Uri = "/api/articles/{article}/brands", Group = "Articles" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "Get_Spare_Parts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });

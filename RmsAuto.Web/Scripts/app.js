@@ -74,40 +74,40 @@ var viewModel = function () {
 
     this.firstName = ko.observable("Test");
 
-    this.fullName = ko.computed(function () {
-        var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
-        var ddd = "test";
-        $.ajax({
-            url: "/api/Articles/333310/Brands",
-            type: "GET",
-            contentType: "application/json",
-            success: function (data) {
-                return "aaaa";
-            },
-            error: function (xhr) {
-                console.log(xhr);
-            }
-        });
-        return ddd;
-    }, this);
+    //this.fullName = ko.computed(function () {
+    //    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
+    //    var ddd = "test";
+    //    $.ajax({
+    //        url: "/api/Articles/333310/Brands",
+    //        type: "GET",
+    //        contentType: "application/json",
+    //        success: function (data) {
+    //            return "aaaa";
+    //        },
+    //        error: function (xhr) {
+    //            console.log(xhr);
+    //        }
+    //    });
+    //    return ddd;
+    //}, this);
 
-    this.capitalizeLastName = function () {
-        var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
+    //this.capitalizeLastName = function () {
+    //    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
 
-        $.getJSON("/api/Articles/333310/Brands", function (data) {
+    //    $.getJSON("/api/Articles/333310/Brands", function (data) {
 
-            var currentVal = this.firstName;        // Read the current value
-         //   this.lastName(currentVal.toUpperCase()); // Write back a modified value
+    //        var currentVal = this.firstName;        // Read the current value
+    //     //   this.lastName(currentVal.toUpperCase()); // Write back a modified value
 
-            var a = data;
+    //        var a = data;
 
 
-            viewModel.firstName = ko.observable("adsf");
-            // Now use this data to update your view models, 
-            // and Knockout will update your UI automatically 
-        })
+    //        viewModel.firstName = ko.observable("adsf");
+    //        // Now use this data to update your view models, 
+    //        // and Knockout will update your UI automatically 
+    //    })
 
-    }
+    //}
         Get_Brands = function () {
             var pathname = window.location.pathname; 
             var mainUrl = replaceString(pathname, '', window.location.href);
@@ -157,21 +157,21 @@ var viewModel = function () {
 ko.applyBindings(new viewModel());
 
 
-function executeMethod() {
-    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
-    $.ajax({
-        url: "/api/Articles/333310/Brands",
-        type: "GET",
-        contentType: "application/json",
-        success: function (data) {
-            var b = data;
-            this.firstName = "adsf";
-        },
-        error: function (xhr) {
-            console.log(xhr);
-        }
-    });
-}
+//function executeMethod() {
+//    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
+//    $.ajax({
+//        url: "/api/Articles/333310/Brands",
+//        type: "GET",
+//        contentType: "application/json",
+//        success: function (data) {
+//            var b = data;
+//            this.firstName = "adsf";
+//        },
+//        error: function (xhr) {
+//            console.log(xhr);
+//        }
+//    });
+//}
 
 function replaceString(oldS, newS, fullS) {
     for (var i = 0; i < fullS.length; ++i) {
