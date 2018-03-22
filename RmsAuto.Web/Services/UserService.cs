@@ -16,6 +16,7 @@ namespace RMSAutoAPI.Services
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
         public Users GetUser(string login, string password, string region = "rmsauto")
         {
+            bool isRms = true;
             try
             {
                 if (!string.IsNullOrEmpty(region) && !region.Equals("rmsauto"))
@@ -23,11 +24,12 @@ namespace RMSAutoAPI.Services
                     var franches = db.Franch.ToList();
                     var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
                     db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                    isRms = false;
                 }
 
                 Users use = new Users();
 
-                var md5Password = GetMD5Hash(password);
+                var md5Password = GetMD5Hash(password, isRms);
                 var user = db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
                 return user;
             }
@@ -37,13 +39,28 @@ namespace RMSAutoAPI.Services
             }
         }
 
-        public string GetMD5Hash(string input)
+        public string GetMD5Hash(string input, bool isRms = true)
         {
             if (input == null) throw new ArgumentNullException("input");
             using (MD5 hasher = MD5.Create())
             {
-                return Convert.ToBase64String(hasher.ComputeHash(Encoding.Default.GetBytes(input)));
+                if (isRms)
+                    return Convert.ToBase64String(hasher.ComputeHash(Encoding.Default.GetBytes(input)));
+                else
+                    return ComputeHash(hasher, ComputeHash(hasher, input));
             }
+        }
+
+        public string ComputeHash(MD5 hasher, string input)
+        {
+            var hash = hasher.ComputeHash(Encoding.Default.GetBytes(input));
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("x2"));
+            }
+
+            return sb.ToString();
         }
     }
 }
