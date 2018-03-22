@@ -9,5 +9,7 @@ namespace RMSAutoAPI.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+
+        public string Region { get; set; }
     }
 }

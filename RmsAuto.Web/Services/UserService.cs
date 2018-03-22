@@ -5,6 +5,8 @@ using System.Web;
 using System.Security.Cryptography;
 using System.Text;
 using RMSAutoAPI.App_Data;
+using RMSAutoAPI.Infrastructure;
+
 
 namespace RMSAutoAPI.Services
 {
@@ -12,11 +14,27 @@ namespace RMSAutoAPI.Services
     public class UserService : IUserService
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
-        public Users GetUser(string login, string password)
+        public Users GetUser(string login, string password, string region = "rmsauto")
         {
-            var md5Password = GetMD5Hash(password);
-            var user = db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
-            return user;
+            try
+            {
+                if (!string.IsNullOrEmpty(region) && !region.Equals("rmsauto"))
+                {
+                    var franches = db.Franch.ToList();
+                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                }
+
+                Users use = new Users();
+
+                var md5Password = GetMD5Hash(password);
+                var user = db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public string GetMD5Hash(string input)

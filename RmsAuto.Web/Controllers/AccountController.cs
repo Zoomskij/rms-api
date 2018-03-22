@@ -57,7 +57,7 @@ namespace RMSAutoAPI.Controllers
             _userService = new UserService();
             if (ModelState.IsValid)
             {
-                var user = _userService.GetUser(model.Email, model.Password);
+                var user = _userService.GetUser(model.Email, model.Password, model.Region);
                 if (user == null)
                 {
                     ModelState.AddModelError("", "Неверный логин или пароль.");

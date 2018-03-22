@@ -4,7 +4,7 @@ namespace RMSAutoAPI.Services
 {
     interface IUserService
     {
-        Users GetUser(string login, string password);
+        Users GetUser(string login, string password, string region = "rmsauto");
         string GetMD5Hash(string input);
     }
 }

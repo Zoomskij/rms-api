@@ -11,19 +11,23 @@
 {
     @Html.AntiForgeryToken()
 
-    <div>
-        @Html.ValidationSummary()
-        <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
-        <p>
-            <label>Email</label><br />
-            @Html.EditorFor(x => x.Email)
-        </p>
-        <p>
-            <label>Пароль</label><br />
-            @Html.EditorFor(x => x.Password)
-        </p>
-        <p><button type="submit">Войти</button></p>
-    </div>
+<div>
+    @Html.ValidationSummary()
+    <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+    <p>
+        <label>Email</label><br />
+        @Html.EditorFor(x => x.Email)
+    </p>
+    <p>
+        <label>Пароль</label><br />
+        @Html.EditorFor(x => x.Password)
+    </p>
+    <p>
+        <label>Партнер</label><br />
+        @Html.EditorFor(x => x.Region)
+    </p>
+    <p><button type="submit">Войти</button></p>
+</div>
 }
 
 
