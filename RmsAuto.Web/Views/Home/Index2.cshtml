@@ -18,15 +18,18 @@
 
 </head>
 <body>
-    <td>@ViewBag.CurrentUser</td>
+
 
     <div class="wrapper">
-        <div>
+    <td>@ViewBag.CurrentUser</td> <br /><br />
+
+                
+        @*<div>
             <h2 class="title"> API.RMSAUTO </h2>
-        </div>
+        </div>*@
 
 
-        <div class="scheme-container">
+        @*<div class="scheme-container">
             <section class="schemes wrapper block col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                 <div class="col-lg-6 col-md-6 col-xs-6 col-sm-6">
                     <label for="schemes">
@@ -38,12 +41,12 @@
                     <div class="auth-wrapper">
                         <button class="btn authorize unlocked pull-right" onclick="showPopup()">
                             <span>Authorize</span>
-                            @*<svg width="20" height="20"><use href="#unlocked" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#unlocked"></use></svg>*@
+                   
                         </button>
                     </div>
                 </div>
             </section>
-        </div>
+        </div>*@
 
 
         <div class="opblock-tag-section">
@@ -66,13 +69,14 @@
                                 </div>
                             </a>
 
-                            <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
+                            <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
                                 <div class="opblock-body">
                                     <div class="opblock-description-wrapper">
                                         <div class="opblock-description">
                                             @item.TitleDescription
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                         <div class="opblock-section-header">
                                             <div class="tab-header">
@@ -81,6 +85,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     @*============PARAMETERS=============*@
                                     @foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
                                     {
@@ -140,10 +145,10 @@
                                     @*onclick="executeMethod()"*@
                                     @*==============EXECUTE================*@
                                     <div class="execute-wrapper">
-                                        <button class="btn execute opblock-control__btn" data-bind="click: @item.Name">Execute</button>
+                                        <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
                                     </div>
-
-
+                                    <div id="loader" class="loader" style="display:none">Loading...</div>
+                                    @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
 
                                     @*===============RESPONSES===============*@
                                     <div class="opblock-section-header">

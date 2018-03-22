@@ -64,7 +64,7 @@ var viewModel = function () {
     this.notify = function (str) {
         console.log(str)
         element = document.getElementById(str);
-        if (element.style.display == "block") {
+        if (element.style.display === "block") {
             element.style.display = "none";
         }
         else {
@@ -74,48 +74,16 @@ var viewModel = function () {
 
     this.firstName = ko.observable("Test");
 
-    //this.fullName = ko.computed(function () {
-    //    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
-    //    var ddd = "test";
-    //    $.ajax({
-    //        url: "/api/Articles/333310/Brands",
-    //        type: "GET",
-    //        contentType: "application/json",
-    //        success: function (data) {
-    //            return "aaaa";
-    //        },
-    //        error: function (xhr) {
-    //            console.log(xhr);
-    //        }
-    //    });
-    //    return ddd;
-    //}, this);
-
-    //this.capitalizeLastName = function () {
-    //    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
-
-    //    $.getJSON("/api/Articles/333310/Brands", function (data) {
-
-    //        var currentVal = this.firstName;        // Read the current value
-    //     //   this.lastName(currentVal.toUpperCase()); // Write back a modified value
-
-    //        var a = data;
-
-
-    //        viewModel.firstName = ko.observable("adsf");
-    //        // Now use this data to update your view models, 
-    //        // and Knockout will update your UI automatically 
-    //    })
-
-    //}
         Get_Brands = function () {
+            document.getElementById("loader").style.display = "block";
+
             var pathname = window.location.pathname; 
             var mainUrl = replaceString(pathname, '', window.location.href);
 
             article = document.getElementById('article').value;
             analogues = document.getElementById('analogues').value;
             var url = "/api/Articles/" + article + "/Brands";
-            if (analogues != "") {
+            if (analogues !== "") {
                 url += "?analogues=" + analogues + "";
             }
             $.getJSON(url, function (data) {
@@ -140,10 +108,7 @@ var viewModel = function () {
                 $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
 
                 $('#request-url').html(mainUrl + url + "");
-                
-                
-
-
+                document.getElementById("loader").style.display = "none";
               
             });
     }
@@ -151,31 +116,11 @@ var viewModel = function () {
 
 };
 
-
-
-
 ko.applyBindings(new viewModel());
-
-
-//function executeMethod() {
-//    var data = { "article": "333310", "analogues": "1", "region": "rmsauto" };
-//    $.ajax({
-//        url: "/api/Articles/333310/Brands",
-//        type: "GET",
-//        contentType: "application/json",
-//        success: function (data) {
-//            var b = data;
-//            this.firstName = "adsf";
-//        },
-//        error: function (xhr) {
-//            console.log(xhr);
-//        }
-//    });
-//}
 
 function replaceString(oldS, newS, fullS) {
     for (var i = 0; i < fullS.length; ++i) {
-        if (fullS.substring(i, i + oldS.length) == oldS) {
+        if (fullS.substring(i, i + oldS.length) === oldS) {
             fullS = fullS.substring(0, i) + newS + fullS.substring(i + oldS.length, fullS.length);
         }
     }

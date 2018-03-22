@@ -65,12 +65,13 @@ namespace RMSAutoAPI.Controllers
                 else
                 {
                     FormsAuthentication.SetAuthCookie(user.Email, true);
-                    
-                    
-                    var identity = new ClaimsIdentity("Bearer");
+
+                    ClaimsIdentity identity = new ClaimsIdentity("ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
+                    //var identity = new ClaimsIdentity("Bearer");
 
                     identity.AddClaim(new Claim(ClaimTypes.Name, user.Username));
                     identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+                    identity.AddClaim(new Claim("Region", model.Region));
 
                     var rolesTechnicalNamesUser = new List<string>();
 
@@ -95,23 +96,23 @@ namespace RMSAutoAPI.Controllers
 
                     var principal = new GenericPrincipal(identity, rolesTechnicalNamesUser.ToArray());
 
-                    
+                    AuthenticationManager.SignOut();
+                    AuthenticationManager.SignIn(new AuthenticationProperties
+                    {
+                        IsPersistent = true
+                    }, identity);
 
-                    var _client = new RestClient("http://localhost:52682");
-                    //{
-                    //Authenticator = new RestSharp.Authenticators.HttpBasicAuthenticator(armtek.Login, armtek.Password)
-                    //};
-                    var request = new RestRequest("/api/auth/token", Method.POST);
+                    //var _client = new RestClient("http://localhost:52682");
 
-                    request.AddQueryParameter("format", "json");
-                    request.RequestFormat = DataFormat.Json;
-                    request.AddParameter("username", "api");
-                    request.AddParameter("password", "123");
-                    request.AddParameter("grant_type", "password");
+                    //var request = new RestRequest("/api/auth/token", Method.POST);
 
-                   // request.AddBody(new { username = "api", password = "123"});
+                    //request.AddQueryParameter("format", "json");
+                    //request.RequestFormat = DataFormat.Json;
+                    //request.AddParameter("username", "api");
+                    //request.AddParameter("password", "123");
+                    //request.AddParameter("grant_type", "password");
 
-                    var response = _client.Execute<JObject>(request);
+                    //var response = _client.Execute<JObject>(request);
 
 
                     Thread.CurrentPrincipal = principal;

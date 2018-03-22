@@ -34,6 +34,10 @@ namespace RMSAutoAPI.Controllers
 
         public ArticlesController()
         {
+
+            var identity = (ClaimsIdentity)User.Identity;
+            IEnumerable<Claim> claims = identity.Claims;
+
             var userName = User.Identity.Name;
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName || x.Email == userName);
             CurrentSettings = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID);
