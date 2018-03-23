@@ -72,8 +72,8 @@ namespace RMSAutoAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(IEnumerable<Brand>))]
-        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
-        [Authorize]
+        [Authorize(Roles = "Client_SearchApi, NoAccess")]
+        //[Authorize]
         [Route("articles/{article:maxlength(50)}/brands")]
         public IHttpActionResult GetBrands(string article, bool analogues = false)
         {
@@ -81,11 +81,11 @@ namespace RMSAutoAPI.Controllers
 
             //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
             //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
-            if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
-                    (!CurrentRole.Equals("Client_SearchApi") && !CurrentRole.Equals("NoAccess")))
-            {
-                return Content(HttpStatusCode.BadRequest, "Authorization has been denied for this request.");
-            }
+            //if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
+            //        (!CurrentRole.Equals("Client_SearchApi") && !CurrentRole.Equals("NoAccess")))
+            //{
+            //    return Content(HttpStatusCode.BadRequest, "Authorization has been denied for this request.");
+            //}
 
             if (CurrentSettings != null)
             {

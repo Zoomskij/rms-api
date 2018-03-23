@@ -22,6 +22,7 @@
 
     <div class="wrapper">
     <td>@ViewBag.CurrentUser</td> <br /><br />
+    @*<td>@ViewBag.Token</td> <br /><br />*@
 
                 
         @*<div>
@@ -250,6 +251,7 @@
 
     <script type="text/javascript">
         var jsonModel = @Html.Raw(Json.Encode(@Model));
+        var token = @Html.Raw(Json.Encode(@ViewBag.Token));
     </script>
 
     @Scripts.Render("~/bundles/jquery")

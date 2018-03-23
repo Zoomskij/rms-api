@@ -45,7 +45,9 @@ var viewModel = function () {
         return new SampleMethod(method);
     });
     self.methods = ko.observableArray(modelData);
-
+    if (token === null) {
+        token = "";
+    }
     var isVisible = false;
     var json = [{
         "name": "bruce",
@@ -86,31 +88,82 @@ var viewModel = function () {
             if (analogues !== "") {
                 url += "?analogues=" + analogues + "";
             }
-            $.getJSON(url, function (data) {
 
-                $('#resp').html("[\n");
+            $.ajax({
+                url: url,
+                method: "GET",
+                dataType: "json",
+                crossDomain: true,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(data),
+                cache: false,
+                beforeSend: function (xhr) {
+                    /* Authorization header */
+                    xhr.setRequestHeader("Authorization", token);
+                    xhr.setRequestHeader("X-Mobile", "false");
+                },
+                success: function (data) {
+                    $('#resp').html("[\n");
 
-                for (var i = 0, j = data.length; i < j; i++) {
-                    var brand = data[i];
-                    $('#resp').append("  {\n");
-                    $('#resp').append("    \"Name\":"); 
-                    $('#resp').append(" \"" + brand.Name + "\"");
+                    for (var i = 0, j = data.length; i < j; i++) {
+                        var brand = data[i];
+                        $('#resp').append("  {\n");
+                        $('#resp').append("    \"Name\":"); 
+                        $('#resp').append(" \"" + brand.Name + "\"");
 
-                    $('#resp').append("\n");
-                    $('#resp').append("    \"Description\":");
-                    $('#resp').append(" \"" + brand.Description + "\"");
-                    $('#resp').append("\n  },\n");
+                        $('#resp').append("\n");
+                        $('#resp').append("    \"Description\":");
+                        $('#resp').append(" \"" + brand.Description + "\"");
+                        $('#resp').append("\n  },\n");
 
+                    }
+                    $('#resp').append("]");
+
+
+                    $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
+
+                    $('#request-url').html(mainUrl + url + "");
+                    document.getElementById("loader").style.display = "none";
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (errorThrown === "Unauthorized") {
+                        $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                    }
+                    document.getElementById("loader").style.display = "none";
                 }
-                $('#resp').append("]");
-
-
-                $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
-
-                $('#request-url').html(mainUrl + url + "");
-                document.getElementById("loader").style.display = "none";
-              
             });
+
+
+
+            //$.getJSON(url, function (data) {
+
+            //    $('#resp').html("[\n");
+
+            //    for (var i = 0, j = data.length; i < j; i++) {
+            //        var brand = data[i];
+            //        $('#resp').append("  {\n");
+            //        $('#resp').append("    \"Name\":"); 
+            //        $('#resp').append(" \"" + brand.Name + "\"");
+
+            //        $('#resp').append("\n");
+            //        $('#resp').append("    \"Description\":");
+            //        $('#resp').append(" \"" + brand.Description + "\"");
+            //        $('#resp').append("\n  },\n");
+
+            //    }
+            //    $('#resp').append("]");
+
+
+            //    $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
+
+            //    $('#request-url').html(mainUrl + url + "");
+            //    document.getElementById("loader").style.display = "none";
+              
+
+            //});
+
+
     }
 
 

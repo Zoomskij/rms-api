@@ -1,4 +1,6 @@
-﻿using Microsoft.Owin;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using RMSAutoAPI.App_Data;
@@ -41,6 +43,14 @@ namespace RMSAutoAPI
 
             app.UseOAuthAuthorizationServer(oAuthServerOptions);
             app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+
+           
+            var CookieOptions = new CookieAuthenticationOptions
+            {
+                AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie
+            };
+            app.UseCookieAuthentication(CookieOptions);
+           // app.UseOAuthBearerTokens(OAuthOptions);
         }
     }
 

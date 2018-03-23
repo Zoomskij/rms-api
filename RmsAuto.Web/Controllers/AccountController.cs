@@ -2,9 +2,11 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Owin;
 using RestSharp;
+using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Models;
 using RMSAutoAPI.Services;
 using System;
@@ -26,11 +28,19 @@ namespace RMSAutoAPI.Controllers
     {
 
         // public UserManager<ApplicationUser> UserManager { get; private set; }
+        private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
 
         private IUserService _userService;
         // GET: Account
         public ActionResult Index()
         {
+            List<SelectListItem> items = new List<SelectListItem>();
+            var franches = db.spGetFranches().ToList();
+            foreach (var franch in franches)
+            {
+                items.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
+            }
+            ViewBag.Partenrs = items;
             return View();
         }
 
@@ -52,19 +62,34 @@ namespace RMSAutoAPI.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(LoginModel model, string returnUrl)
         {
-
+            _userService = new UserService();
             var _client = new RestClient("http://localhost:52682");
 
             var request = new RestRequest("/api/auth/token", Method.POST);
 
             request.AddQueryParameter("format", "json");
             request.RequestFormat = DataFormat.Json;
-            request.AddParameter("username", "api");
-            request.AddParameter("password", "123");
+            request.AddParameter("username", model.Email);
+            request.AddParameter("password", model.Password);
+            request.AddParameter("region", model.Region);
             request.AddParameter("grant_type", "password");
 
             var response = _client.Execute<JObject>(request);
 
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var user = _userService.GetUser(model.Email, model.Password, model.Region);
+                var token = JsonConvert.DeserializeObject<Token>(response.Content);
+                //var token = response.Content
+                var bearerToken = $"{token.TokenType} {token.AccessToken}";
+            
+            
+                ViewBag.returnUrl = returnUrl;
+                TempData["bearerToken"] = bearerToken;
+                TempData["Email"] = user.Email;
+                return RedirectToAction("Index2", "Home");
+                //return View(model);
+            }
 
             //_userService = new UserService();
             //if (ModelState.IsValid)

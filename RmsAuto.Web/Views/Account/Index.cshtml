@@ -24,18 +24,25 @@
     </p>
     <p>
         <label>Партнер</label><br />
-        @Html.EditorFor(x => x.Region)
+        @{
+            List<SelectListItem> regions = new List<SelectListItem>();
+            regions = @ViewBag.Partenrs;
+        }
+        
+        @Html.DropDownListFor(model => model.Region, regions, "-- Select Region --")
     </p>
+
     <p><button type="submit">Войти</button></p>
 </div>
 }
 
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     var loginData = {
         grant_type: 'password',
-        username: self.loginEmail(),
-        password: self.loginPassword()
+        username: 'api'
+        password: '123',
+        region: rmsauto
     };
 
     $.ajax({
@@ -47,4 +54,19 @@
         // Cache the access token in session storage.
         sessionStorage.setItem(tokenKey, data.access_token);
     }).fail(showError);
-</script>
+
+
+    $("button").click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:52682/api/auth/token',
+            data: loginData
+        }).done(function (data) {
+            self.user(data.userName);
+            // Cache the access token in session storage.
+            sessionStorage.setItem(tokenKey, data.access_token);
+        }).fail(showError);
+    });
+
+</script>*@

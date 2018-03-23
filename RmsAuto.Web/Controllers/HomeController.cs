@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -20,14 +21,19 @@ namespace RMSAutoAPI.Controllers
 
         
 
-
+        
         public ActionResult Index2()
         {
             ViewBag.CurrentUser = "Вы не авторизованы";
-            if (User.Identity.IsAuthenticated)
-            {
-                ViewBag.CurrentUser = "Ваш логин: " + User.Identity.Name;
-            }
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    var init = User.Identity.Name;
+              
+            //}
+            var claims = (ClaimsIdentity)User.Identity;
+            ViewBag.CurrentUser = "Ваш логин: " + TempData["Email"];
+            ViewBag.Token = TempData["bearerToken"];
+
             //return result;
 
             var methods = new List<ApiMethod>();
