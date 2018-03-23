@@ -35,8 +35,15 @@ namespace RMSAutoAPI.Controllers
         public ArticlesController()
         {
 
-            var identity = (ClaimsIdentity)User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
+
+        }
+
+        public string Init()
+        {
+            var claims = (ClaimsIdentity)User.Identity;
+            var region = claims.Claims.FirstOrDefault(x => x.Type.Equals("Region"))?.Value;
+            if (string.IsNullOrWhiteSpace(region))
+                region = "rmsauto";
 
             var userName = User.Identity.Name;
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName || x.Email == userName);
@@ -45,24 +52,12 @@ namespace RMSAutoAPI.Controllers
             PerHour = _settingsHelper.CountRequests(RequestDelimeter.Hour, CurrentUser.AcctgID);
             PerDay = _settingsHelper.CountRequests(RequestDelimeter.Day, CurrentUser.AcctgID);
 
-            switch (CurrentUser.UserRole)
+            if (!region.Equals("rmsauto"))
             {
-                case 0:
-                    CurrentRole = "Client";
-                    break;
-                case 1:
-                    CurrentRole = "Manager";
-                    break;
-                case 2:
-                    CurrentRole = "LimitedManager";
-                    break;
-                case 3:
-                    CurrentRole = "NoAccess";
-                    break;
-                case 4:
-                    CurrentRole = "Client_SearchApi";
-                    break;
+                var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
             }
+            return region;
         }
 
 
@@ -80,8 +75,10 @@ namespace RMSAutoAPI.Controllers
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Authorize]
         [Route("articles/{article:maxlength(50)}/brands")]
-        public IHttpActionResult GetBrands(string article, bool analogues = false, string region = "rmsauto")
+        public IHttpActionResult GetBrands(string article, bool analogues = false)
         {
+            var region = Init();
+
             //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
             //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
             if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
@@ -97,11 +94,6 @@ namespace RMSAutoAPI.Controllers
             }
             try
             {
-                if (!region.Equals("rmsauto"))
-                {
-                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
-                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
-                }
                 var brands = db.spSearchBrands(article, analogues, CurrentUser.AcctgID, region);
                 if (brands == null)
                 {
@@ -136,8 +128,9 @@ namespace RMSAutoAPI.Controllers
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Authorize]
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
-        public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false, string region = "rmsauto")
+        public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
         {
+            var region = Init();
             //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
             //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
             if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
@@ -157,11 +150,6 @@ namespace RMSAutoAPI.Controllers
 
             try
             {
-                if (!region.Equals("rmsauto"))
-                {
-                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
-                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
-                }
                 var crosses = db.spSearchCrossesWithPriceSVC(article, brand, analogues, string.Empty, CurrentUser.AcctgID, CurrentUser.ClientGroup, region);
                 if (crosses == null)
                 {   

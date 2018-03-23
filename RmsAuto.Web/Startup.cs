@@ -47,9 +47,12 @@ namespace RMSAutoAPI
     public class AuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
         private IUserService _userService;
+        public string SelectedRegion { get; set; } = "rmsauto";
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
+            var region = context.Parameters.FirstOrDefault(x => x.Key.ToLower().Equals("region")).Value?.FirstOrDefault();
+            SelectedRegion = region ?? SelectedRegion;
             context.Validated();
         }
 
@@ -60,7 +63,7 @@ namespace RMSAutoAPI
 
             try
             {
-                var user = _userService.GetUser(context.UserName, context.Password);
+                var user = _userService.GetUser(context.UserName, context.Password, SelectedRegion);
 
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
@@ -87,6 +90,8 @@ namespace RMSAutoAPI
 						identity.AddClaim(new Claim(ClaimTypes.Role, "Client_SearchApi"));
 						break;
 				}
+                identity.AddClaim(new Claim("Region", SelectedRegion));
+
                
                 var principal = new GenericPrincipal(identity, rolesTechnicalNamesUser.ToArray());
 
