@@ -26,7 +26,11 @@
         <label>Партнер</label><br />
         @{
             List<SelectListItem> regions = new List<SelectListItem>();
-            regions = @ViewBag.Partenrs;
+            if (ViewBag.Partners != null)
+            {
+                regions = @ViewBag.Partners;
+            }
+
         }
         
         @Html.DropDownListFor(model => model.Region, regions, "-- Select Region --")

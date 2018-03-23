@@ -17,6 +17,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -40,7 +41,7 @@ namespace RMSAutoAPI.Controllers
             {
                 items.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
             }
-            ViewBag.Partenrs = items;
+            ViewBag.Partners = items;
             return View();
         }
 
@@ -63,7 +64,7 @@ namespace RMSAutoAPI.Controllers
         public async Task<ActionResult> Index(LoginModel model, string returnUrl)
         {
             _userService = new UserService();
-            var _client = new RestClient("http://localhost:52682");
+            var _client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
 
             var request = new RestRequest("/api/auth/token", Method.POST);
 
@@ -90,6 +91,9 @@ namespace RMSAutoAPI.Controllers
                 return RedirectToAction("Index2", "Home");
                 //return View(model);
             }
+
+            ModelState.AddModelError("", "Неверный логин или пароль.");
+
 
             //_userService = new UserService();
             //if (ModelState.IsValid)

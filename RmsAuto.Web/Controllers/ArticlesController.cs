@@ -7,6 +7,7 @@ using RMSAutoAPI.Properties;
 using RMSAutoAPI.Services;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -72,8 +73,8 @@ namespace RMSAutoAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(IEnumerable<Brand>))]
-        [Authorize(Roles = "Client_SearchApi, NoAccess")]
-        //[Authorize]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
+        [Authorize]
         [Route("articles/{article:maxlength(50)}/brands")]
         public IHttpActionResult GetBrands(string article, bool analogues = false)
         {
