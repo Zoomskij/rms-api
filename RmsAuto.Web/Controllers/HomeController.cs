@@ -37,9 +37,9 @@ namespace RMSAutoAPI.Controllers
             //return result;
 
             var methods = new List<ApiMethod>();
-            methods.Add(new ApiMethod() { Type = "GET", Name = "Get_Brands", Uri = "/api/articles/{article}/brands", Group = "Articles" });
-            methods.Add(new ApiMethod() { Type = "GET", Name = "Get_Spare_Parts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });
-            methods.Add(new ApiMethod() { Type = "GET", Name = "Get_Partners", Uri = "/api/Partners", Group = "Partners" });
+            methods.Add(new ApiMethod() { Type = "GET", Name = "GetBrands", Uri = "/api/articles/{article}/brands", Group = "Articles" });
+            methods.Add(new ApiMethod() { Type = "GET", Name = "GetSpareParts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });
+            methods.Add(new ApiMethod() { Type = "GET", Name = "GetPartners", Uri = "/api/Partners", Group = "Partners" });
 
 
             methods[0].Description = "Возвращает список брендов по артикулу";

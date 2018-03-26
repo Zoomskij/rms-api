@@ -120,11 +120,13 @@
                                                 <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
                                                     @if (param.Name != "analogues")
                                                     {
-                                                        <input id="@param.Name" type="text" class="" title="" value="" placeholder="@param.Description">
+                                                        var id = item.Name + "_" + param.Name;
+                                                        <input id="@id" type="text" class="" title="" value="" placeholder="@param.Description">
                                                     }
                                                     @if (param.Name == "analogues")
                                                     {
-                                                        <select id="@param.Name" class="">
+                                                        var id = item.Name + "_" + param.Name;
+                                                        <select id="@id" class="">
                                                             <option value="">--</option>
                                                             <option value="true">true</option>
                                                             <option value="false">false</option>
@@ -147,7 +149,10 @@
                                     <div class="execute-wrapper">
                                         <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
                                     </div>
-                                    <div id="loader" class="loader" style="display:none">Loading...</div>
+                                    @{ 
+                                        var idLoader = @item.Name + "_loader";
+                                    }
+                                    <div id="@idLoader" class="loader" style="display:none">Loading...</div>
                                     @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
 
                                     @*===============RESPONSES===============*@
@@ -169,7 +174,10 @@
                                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                                             <pre class="example">
-                                            <div id="curl" style="margin-top: -22px"></div>
+                                                @{ 
+                                                    var idCurl = @item.Name + "_curl";
+                                                }
+                                            <div id="@idCurl" style="margin-top: -40px"></div>
                                                     
                                             </pre>
                                         </div>
@@ -188,7 +196,10 @@
                                     <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
                                             <pre class="example" style="height:30px;">
-                                            <div class="request-url" id="request-url" style="margin-top: -22px"></div>
+                                                @{ 
+                                                    var idRequestUrl = @item.Name + "_request-url";
+                                                }
+                                            <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
                                                     
                                             </pre>
                                         </div>
@@ -225,7 +236,11 @@
                                         <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                             <pre class="example">
                                                     @*<strong class="pull-left" data-bind="text: firstName"></strong><br />*@
-                                            <div id="resp" style="margin-top: -40px"></div>
+                                                @{ 
+                                                    var idResp = @item.Name + "_resp";
+                                                }
+                                            
+                                                <div id="@idResp" style="margin-top: -40px"></div>
 
                                             </pre>
                                         </div>

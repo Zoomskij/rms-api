@@ -76,14 +76,15 @@ var viewModel = function () {
 
     this.firstName = ko.observable("Test");
 
-        Get_Brands = function () {
-            document.getElementById("loader").style.display = "block";
+
+        GetBrands = function () {
+            document.getElementById("GetBrands_loader").style.display = "block";
 
             var pathname = window.location.pathname; 
             var mainUrl = replaceString(pathname, '', window.location.href);
 
-            article = document.getElementById('article').value;
-            analogues = document.getElementById('analogues').value;
+            article = document.getElementById('GetBrands_article').value;
+            analogues = document.getElementById('GetBrands_analogues').value;
             var url = "/api/Articles/" + article + "/Brands";
             if (analogues !== "") {
                 url += "?analogues=" + analogues + "";
@@ -103,37 +104,145 @@ var viewModel = function () {
                     xhr.setRequestHeader("X-Mobile", "false");
                 },
                 success: function (data) {
-                    $('#resp').html("[\n");
+                    $('#GetBrands_resp').html("[\n");
 
                     for (var i = 0, j = data.length; i < j; i++) {
                         var brand = data[i];
-                        $('#resp').append("  {\n");
-                        $('#resp').append("    \"Name\":"); 
-                        $('#resp').append(" \"" + brand.Name + "\"");
+                        $('#GetBrands_resp').append("  {\n");
+                        $('#GetBrands_resp').append("    \"Name\":"); 
+                        $('#GetBrands_resp').append(" \"" + brand.Name + "\"");
 
-                        $('#resp').append("\n");
-                        $('#resp').append("    \"Description\":");
-                        $('#resp').append(" \"" + brand.Description + "\"");
-                        $('#resp').append("\n  },\n");
+                        $('#GetBrands_resp').append("\n");
+                        $('#GetBrands_resp').append("    \"Description\":");
+                        $('#GetBrands_resp').append(" \"" + brand.Description + "\"");
+
+                        $('#GetBrands_resp').append("\n  },\n");
 
                     }
-                    $('#resp').append("]");
+                    $('#GetBrands_resp').append("]");
 
 
-                    $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
+                    $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "");
 
-                    $('#request-url').html(mainUrl + url + "");
-                    document.getElementById("loader").style.display = "none";
+                    $('#GetBrands_request-url').html(mainUrl + url + "");
+                    document.getElementById("GetBrands_loader").style.display = "none";
 
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (errorThrown === "Unauthorized") {
                         $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                     }
-                    document.getElementById("loader").style.display = "none";
+                    document.getElementById("GetBrands_loader").style.display = "none";
                 }
             });
 
+            //////////////////////////////////////
+
+            GetSpareParts = function () {
+                document.getElementById("GetSpareParts_loader").style.display = "block";
+
+                var pathname = window.location.pathname;
+                var mainUrl = replaceString(pathname, '', window.location.href);
+
+                article = document.getElementById('GetSpareParts_article').value;
+                brand = document.getElementById('GetSpareParts_brand').value;
+                analogues = document.getElementById('GetSpareParts_analogues').value;
+                var url = "/api/Articles/" + article + "/Brand/" + brand;
+                if (analogues !== "") {
+                    url += "?analogues=" + analogues + "";
+                }
+
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    dataType: "json",
+                    crossDomain: true,
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        /* Authorization header */
+                        xhr.setRequestHeader("Authorization", token);
+                        xhr.setRequestHeader("X-Mobile", "false");
+                    },
+                    success: function (data) {
+                        $('#GetSpareParts_resp').html("[\n");
+
+                        for (var i = 0, j = data.length; i < j; i++) {
+                            var sparePart = data[i];
+
+                            $('#GetSpareParts_resp').append("  {\n");
+                            $('#GetSpareParts_resp').append("    \"Article\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.Article + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"Brand\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.Brand + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"Count\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.Count + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"DeliveryDaysMax\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.DeliveryDaysMax + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"DeliveryDaysMin\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.DeliveryDaysMin + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"DeliveryQuality\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.DeliveryQuality + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"MinOrderQty\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.MinOrderQty + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"Name\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.Name + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"Price\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.Price + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"SupplierID\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.SupplierID + "\"");
+
+                            $('#GetSpareParts_resp').append("\n");
+                            $('#GetSpareParts_resp').append("    \"Type\":");
+                            $('#GetSpareParts_resp').append(" \"" + sparePart.Type + "\"");
+
+                            $('#GetSpareParts_resp').append("\n  },\n");
+
+
+
+
+                            //$('#resp').append("\n");
+                            //$('#resp').append("    \"Description\":");
+                            //$('#resp').append(" \"" + brand.Description + "\"");
+                            //$('#resp').append("\n  },\n");
+
+                        }
+                        $('#GetSpareParts_resp').append("]");
+
+
+                        $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "");
+
+                        $('#GetSpareParts_request-url').html(mainUrl + url + "");
+                        document.getElementById("GetSpareParts_loader").style.display = "none";
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        if (errorThrown === "Unauthorized") {
+                            $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                        }
+                        document.getElementById("GetSpareParts_loader").style.display = "none";
+                    }
+                });
+            }
 
 
             //$.getJSON(url, function (data) {
