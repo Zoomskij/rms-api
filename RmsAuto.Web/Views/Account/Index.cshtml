@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Login";
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
 }
 
 <h2>Вход на сайт</h2>
@@ -14,13 +16,15 @@
 <div>
     @Html.ValidationSummary()
     <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+
+
     <p>
-        <label>Email</label><br />
-        @Html.EditorFor(x => x.Email)
+        @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
+        @Html.EditorFor(x => x.Email, new { @class = "form-control" })
     </p>
     <p>
-        <label>Пароль</label><br />
-        @Html.EditorFor(x => x.Password)
+        @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
+        @Html.EditorFor(x => x.Password, new { @class = "form-control" })
     </p>
     <p>
         <label>Партнер</label><br />
@@ -32,36 +36,23 @@
             }
 
         }
-        
-        @Html.DropDownListFor(model => model.Region, regions, "-- Select Region --")
+
+        @Html.DropDownListFor(model => model.Region, regions, "-- Select Region --", new { @class = "form-control" })
     </p>
 
-    <p><button type="submit">Войти</button></p>
+    <p><button type="submit" class="btn btn-info">Войти</button></p>
 </div>
 }
 
 
 @*<script type="text/javascript">
-    var loginData = {
-        grant_type: 'password',
-        username: 'api'
-        password: '123',
-        region: rmsauto
-    };
+        var loginData = {
+            grant_type: 'password',
+            username: 'api'
+            password: '123',
+            region: rmsauto
+        };
 
-    $.ajax({
-        type: 'POST',
-        url: 'http://localhost:52682/api/auth/token',
-        data: loginData
-    }).done(function (data) {
-        self.user(data.userName);
-        // Cache the access token in session storage.
-        sessionStorage.setItem(tokenKey, data.access_token);
-    }).fail(showError);
-
-
-    $("button").click(function (e) {
-        e.preventDefault();
         $.ajax({
             type: 'POST',
             url: 'http://localhost:52682/api/auth/token',
@@ -71,6 +62,19 @@
             // Cache the access token in session storage.
             sessionStorage.setItem(tokenKey, data.access_token);
         }).fail(showError);
-    });
 
-</script>*@
+
+        $("button").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:52682/api/auth/token',
+                data: loginData
+            }).done(function (data) {
+                self.user(data.userName);
+                // Cache the access token in session storage.
+                sessionStorage.setItem(tokenKey, data.access_token);
+            }).fail(showError);
+        });
+
+    </script>*@

@@ -90,6 +90,13 @@ var viewModel = function () {
             url += "?analogues=" + analogues + "";
         }
 
+        $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
+        $('#GetBrands_curl').append(" -H \"accept: application/json\"");
+        if (token != null && token != "") {
+            $('#GetBrands_curl').append(" -H \"authorization: " + token + "\"");
+        }
+        $('#GetBrands_request-url').html(mainUrl + url + "");
+
         $.ajax({
             url: url,
             method: "GET",
@@ -121,19 +128,12 @@ var viewModel = function () {
                 }
                 $('#GetBrands_resp').append("]");
 
-
-                $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
-                $('#GetBrands_curl').append(" -H \"accept: application/json\"");
-                $('#GetBrands_curl').append(" -H \"authorization:   " + token + "\"");
-
-
-                $('#GetBrands_request-url').html(mainUrl + url + "");
                 document.getElementById("GetBrands_loader").style.display = "none";
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                if (errorThrown === "Unauthorized") {
-                    $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                if (errorThrown === "Unauthorized" || errorThrown === "Method Not Allowed") {
+                    $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                 }
                 document.getElementById("GetBrands_loader").style.display = "none";
             }
@@ -155,6 +155,13 @@ var viewModel = function () {
                 if (analogues !== "") {
                     url += "?analogues=" + analogues + "";
                 }
+
+                $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
+                $('#GetSpareParts_curl').append(" -H \"accept: application/json\"");
+                if (token != null && token != "") {
+                    $('#GetSpareParts_curl').append(" -H \"authorization: " + token + "\"");
+                }
+                $('#GetSpareParts_request-url').html(mainUrl + url + "");
 
                 $.ajax({
                     url: url,
@@ -232,18 +239,12 @@ var viewModel = function () {
                         }
                         $('#GetSpareParts_resp').append("]");
 
-                        $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
-                        $('#GetSpareParts_curl').append(" -H \"accept: application/json\"");
-                        $('#GetSpareParts_curl').append(" -H \"authorization: " + token + "\"");
-
-
-                        $('#GetSpareParts_request-url').html(mainUrl + url + "");
                         document.getElementById("GetSpareParts_loader").style.display = "none";
 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        if (errorThrown === "Unauthorized") {
-                            $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                        if (errorThrown === "Unauthorized" || errorThrown === "Method Not Allowed") {
+                            $('#GetSpareParts_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                         }
                         document.getElementById("GetSpareParts_loader").style.display = "none";
                     }
