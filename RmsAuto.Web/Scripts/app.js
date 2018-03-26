@@ -163,9 +163,13 @@ var viewModel = function () {
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                if (errorThrown === "Unauthorized" || errorThrown === "Method Not Allowed") {
+                if (errorThrown === "Unauthorized") {
                     $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                 }
+                if (errorThrown === "Method Not Allowed") {
+                    $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
+                }
+
                 document.getElementById("GetBrands_loader").style.display = "none";
             }
         });
@@ -274,8 +278,11 @@ var viewModel = function () {
 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        if (errorThrown === "Unauthorized" || errorThrown === "Method Not Allowed") {
-                            $('#GetSpareParts_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                        if (errorThrown === "Unauthorized") {
+                            $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                        }
+                        if (errorThrown === "Method Not Allowed") {
+                            $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                         }
                         document.getElementById("GetSpareParts_loader").style.display = "none";
                     }
@@ -331,6 +338,9 @@ var viewModel = function () {
 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
+                            if (errorThrown === "Method Not Allowed") {
+                                $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
+                            }
                             document.getElementById("GetPartners_loader").style.display = "none";
                         }
                     });

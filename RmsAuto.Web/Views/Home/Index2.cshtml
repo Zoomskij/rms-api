@@ -77,70 +77,71 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+
+
+                                     @*============PARAMETERS=============*@
+                                    @if (Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
+                                    {
                                         <div class="opblock-section-header">
                                             <div class="tab-header">
                                                 <span class="opblock-title"><b>Parameters</b></span>
                                                 <button class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,'@item.Name')">Try it out </button>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    @*============PARAMETERS=============*@
-                                    @foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
-                                    {
-                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                <b>Name</b>
-                                            </div>
-                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                                <b>Description</b>
-                                            </div>
-                                        </div>
-                                        <hr style="margin-top:5px; margin-bottom:10px" />
-                                        foreach (var param in parameter.Key)
+                                        foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
                                         {
                                             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                    <b>@param.Name </b>
-                                                    @if (param.isRequired == true)
-                                                    {
-                                                        <span class="required">&nbsp;*&nbsp;required</span>
-                                                    }
+                                                    <b>Name</b>
                                                 </div>
                                                 <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                                    @param.Description
+                                                    <b>Description</b>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                    @param.Type
+                                            <hr style="margin-top:5px; margin-bottom:10px" />
+                                            foreach (var param in parameter.Key)
+                                            {
+                                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                        <b>@param.Name </b>
+                                                        @if (param.isRequired == true)
+                                                        {
+                                                            <span class="required">&nbsp;*&nbsp;required</span>
+                                                        }
+                                                    </div>
+                                                    <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                        @param.Description
+                                                    </div>
                                                 </div>
-                                                <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-                                                    @if (param.Name != "analogues")
-                                                    {
-                                                        var id = item.Name + "_" + param.Name;
-                                                        <input id="@id" style="display:none" type="text" class="" title="" value="" placeholder="@param.Description">
-                                                    }
-                                                    @if (param.Name == "analogues")
-                                                    {
-                                                        var id = item.Name + "_" + param.Name;
-                                                        <select id="@id" class="" style="display:none">
-                                                            <option value="">--</option>
-                                                            <option value="true">true</option>
-                                                            <option value="false">false</option>
-                                                        </select>
-                                                    }
+                                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                        @param.Type
+                                                    </div>
+                                                    <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                                        @if (param.Name != "analogues")
+                                                        {
+                                                            var id = item.Name + "_" + param.Name;
+                                                            <input id="@id" style="display:none" type="text" class="" title="" value="" placeholder="@param.Description">
+                                                        }
+                                                        @if (param.Name == "analogues")
+                                                        {
+                                                            var id = item.Name + "_" + param.Name;
+                                                            <select id="@id" class="" style="display:none">
+                                                                <option value="">--</option>
+                                                                <option value="true">true</option>
+                                                                <option value="false">false</option>
+                                                            </select>
+                                                        }                   
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                        (@Enum.GetName(typeof(TypeParameter), param.TypeParameter))
+                                                    </div>
                                                 </div>
 
-                                            </div>
-                                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                    (@Enum.GetName(typeof(TypeParameter), param.TypeParameter))
-                                                </div>
-                                            </div>
-
-                                            <div style="padding-top:20px"></div>
+                                                <div style="padding-top:20px"></div>
+                                            }
                                         }
                                     }
                                     @*onclick="executeMethod()"*@
@@ -149,7 +150,7 @@
                                         <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
                                     </div>
                                     @{
-                                        var idLoader = @item.Name + "_loader";
+                                    var idLoader = @item.Name + "_loader";
                                     }
                                     <div id="@idLoader" class="loader" style="display:none">Loading...</div>
                                     @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
@@ -164,44 +165,34 @@
 
                                     @*  CURL *@
                                     <br />
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                            <span class="response-label"> Curl</span>
-                                        </div>
+                                    <div class="execute-wrapper">
+                                        <span class="response-label"> Curl</span>
                                     </div>
 
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-                                            <pre class="example">
+                                    <div class="execute-wrapper" style="padding-top:0">
+                                        <pre class="example">
                                                 @{ 
                                                     var idCurl = @item.Name + "_curl";
                                                 }
-                                            <div id="@idCurl" style="margin-top: -40px"></div>
+                                        <div id="@idCurl" style="margin-top: -40px"></div>
                                                     
                                             </pre>
-                                        </div>
                                     </div>
-                                    @* ====================== *@
-
 
                                     @*  REQUEST URL *@
-                                    <br />
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                            <span class="response-label"> Request URL</span>
-                                        </div>
+
+                                    <div class="execute-wrapper">
+                                        <span class="response-label"> Request URL</span>
                                     </div>
 
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
-                                            <pre class="example" style="height:30px;">
-                                                @{ 
-                                                    var idRequestUrl = @item.Name + "_request-url";
-                                                }
-                                            <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
+                                    <div class="execute-wrapper" style="padding-top:0">
+                                        <pre class="example" style="height:30px;">
+                                            @{ 
+                                                var idRequestUrl = @item.Name + "_request-url";
+                                            }
+                                        <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
                                                     
-                                            </pre>
-                                        </div>
+                                        </pre>
                                     </div>
                                     @* ====================== *@
 
@@ -233,7 +224,7 @@
 
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                            <pre class="example">
+                                            <pre class="example" style="margin-right: -25px;">
                                                     @*<strong class="pull-left" data-bind="text: firstName"></strong><br />*@
                                                 @{ 
                                                     var idResp = @item.Name + "_resp";

@@ -169,6 +169,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     font-family: Source Code Pro,monospace;
     font-weight: 600;
     color: #fff;
+    text-align:left;
 }
 
 button {
@@ -240,9 +241,10 @@ select {
 .response-label {
     font-weight:bold;
     font-size: 12px;
-    margin: 10px 0 5px;
+    /*margin: 10px 0 5px;*/
     font-family: Open Sans,sans-serif;
     color: #3b4151;
+    float:left;
 }
 
 .loader,
