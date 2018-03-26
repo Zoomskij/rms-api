@@ -77,67 +77,68 @@ var viewModel = function () {
     this.firstName = ko.observable("Test");
 
 
-        GetBrands = function () {
-            document.getElementById("GetBrands_loader").style.display = "block";
+    GetBrands = function () {
+        document.getElementById("GetBrands_loader").style.display = "block";
 
-            var pathname = window.location.pathname; 
-            var mainUrl = replaceString(pathname, '', window.location.href);
+        var pathname = window.location.pathname;
+        var mainUrl = replaceString(pathname, '', window.location.href);
 
-            article = document.getElementById('GetBrands_article').value;
-            analogues = document.getElementById('GetBrands_analogues').value;
-            var url = "/api/Articles/" + article + "/Brands";
-            if (analogues !== "") {
-                url += "?analogues=" + analogues + "";
-            }
+        article = document.getElementById('GetBrands_article').value;
+        analogues = document.getElementById('GetBrands_analogues').value;
+        var url = "/api/Articles/" + article + "/Brands";
+        if (analogues !== "") {
+            url += "?analogues=" + analogues + "";
+        }
 
-            $.ajax({
-                url: url,
-                method: "GET",
-                dataType: "json",
-                crossDomain: true,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(data),
-                cache: false,
-                beforeSend: function (xhr) {
-                    /* Authorization header */
-                    xhr.setRequestHeader("Authorization", token);
-                    xhr.setRequestHeader("X-Mobile", "false");
-                },
-                success: function (data) {
-                    $('#GetBrands_resp').html("[\n");
+        $.ajax({
+            url: url,
+            method: "GET",
+            dataType: "json",
+            crossDomain: true,
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            cache: false,
+            beforeSend: function (xhr) {
+                /* Authorization header */
+                xhr.setRequestHeader("Authorization", token);
+                xhr.setRequestHeader("X-Mobile", "false");
+            },
+            success: function (data) {
+                $('#GetBrands_resp').html("[\n");
 
-                    for (var i = 0, j = data.length; i < j; i++) {
-                        var brand = data[i];
-                        $('#GetBrands_resp').append("  {\n");
-                        $('#GetBrands_resp').append("    \"Name\":"); 
-                        $('#GetBrands_resp').append(" \"" + brand.Name + "\"");
+                for (var i = 0, j = data.length; i < j; i++) {
+                    var brand = data[i];
+                    $('#GetBrands_resp').append("  {\n");
+                    $('#GetBrands_resp').append("    \"Name\":");
+                    $('#GetBrands_resp').append(" \"" + brand.Name + "\"");
 
-                        $('#GetBrands_resp').append("\n");
-                        $('#GetBrands_resp').append("    \"Description\":");
-                        $('#GetBrands_resp').append(" \"" + brand.Description + "\"");
+                    $('#GetBrands_resp').append("\n");
+                    $('#GetBrands_resp').append("    \"Description\":");
+                    $('#GetBrands_resp').append(" \"" + brand.Description + "\"");
 
-                        $('#GetBrands_resp').append("\n  },\n");
+                    $('#GetBrands_resp').append("\n  },\n");
 
-                    }
-                    $('#GetBrands_resp').append("]");
-
-
-                    $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
-                    $('#GetBrands_curl').append(" -H \"accept: application/json\"");
-                    $('#GetBrands_curl').append(" -H \"authorization:   " + token + "\"");
-
-
-                    $('#GetBrands_request-url').html(mainUrl + url + "");
-                    document.getElementById("GetBrands_loader").style.display = "none";
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    if (errorThrown === "Unauthorized") {
-                        $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
-                    }
-                    document.getElementById("GetBrands_loader").style.display = "none";
                 }
-            });
+                $('#GetBrands_resp').append("]");
+
+
+                $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
+                $('#GetBrands_curl').append(" -H \"accept: application/json\"");
+                $('#GetBrands_curl').append(" -H \"authorization:   " + token + "\"");
+
+
+                $('#GetBrands_request-url').html(mainUrl + url + "");
+                document.getElementById("GetBrands_loader").style.display = "none";
+
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                if (errorThrown === "Unauthorized") {
+                    $('#resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                }
+                document.getElementById("GetBrands_loader").style.display = "none";
+            }
+        });
+    }
 
             //////////////////////////////////////
 
@@ -248,6 +249,65 @@ var viewModel = function () {
                     }
                 });
             }
+            
+            //////////////////////////////////////
+                GetPartners = function () {
+                    document.getElementById("GetPartners_loader").style.display = "block";
+
+                    var pathname = window.location.pathname;
+                    var mainUrl = replaceString(pathname, '', window.location.href);
+
+                    var url = "/api/Partners/";
+
+                    $.ajax({
+                        url: url,
+                        method: "GET",
+                        dataType: "json",
+                        crossDomain: true,
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(data),
+                        cache: false,
+                        success: function (data) {
+                            $('#GetPartners_resp').html("[\n");
+
+                            for (var i = 0, j = data.length; i < j; i++) {
+                                var partner = data[i];
+                                $('#GetPartners_resp').append("  {\n");
+                                $('#GetPartners_resp').append("    \"City\":");
+                                $('#GetPartners_resp').append(" \"" + partner.City + "\"");
+
+                                $('#GetPartners_resp').append("  {\n");
+                                $('#GetPartners_resp').append("    \"InternalFranchName\":");
+                                $('#GetPartners_resp').append(" \"" + partner.InternalFranchName + "\"");
+
+                                $('#GetPartners_resp').append("  {\n");
+                                $('#GetPartners_resp').append("    \"Franch\":");
+                                $('#GetPartners_resp').append(" \"" + partner.Franch + "\"");
+
+                                $('#GetPartners_resp').append("\n  },\n");
+
+                            }
+                            $('#GetPartners_resp').append("]");
+
+
+                            $('#GetPartners_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
+                            $('#GetPartners_curl').append(" -H \"accept: application/json\"");
+
+
+                            $('#GetPartners_request-url').html(mainUrl + url + "");
+                            document.getElementById("GetPartners_loader").style.display = "none";
+
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            document.getElementById("GetPartners_loader").style.display = "none";
+                        }
+                    });
+
+                }
+
+
+
+
 
 
             //$.getJSON(url, function (data) {
@@ -278,10 +338,7 @@ var viewModel = function () {
             //});
 
 
-    }
-
-
-};
+}
 
 ko.applyBindings(new viewModel());
 

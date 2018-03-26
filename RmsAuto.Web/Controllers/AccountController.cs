@@ -45,6 +45,19 @@ namespace RMSAutoAPI.Controllers
             return View();
         }
 
+        [HttpGet]
+        public PartialViewResult Index3()
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            var franches = db.spGetFranches().ToList();
+            foreach (var franch in franches)
+            {
+                items.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
+            }
+            ViewBag.Partners = items;
+            return PartialView();
+        }
+
         private IAuthenticationManager AuthenticationManager
         {
             get
