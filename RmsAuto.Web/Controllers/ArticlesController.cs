@@ -80,14 +80,6 @@ namespace RMSAutoAPI.Controllers
         {
             var region = Init();
 
-            //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
-            //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
-            //if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
-            //        (!CurrentRole.Equals("Client_SearchApi") && !CurrentRole.Equals("NoAccess")))
-            //{
-            //    return Content(HttpStatusCode.BadRequest, "Authorization has been denied for this request.");
-            //}
-
             if (CurrentSettings != null)
             {
                 if (_settingsHelper.IsAccess(PerMinute, PerHour, PerDay, CurrentSettings.Rates.PerMinute, CurrentSettings.Rates.PerHour, CurrentSettings.Rates.PerDay) == false)
