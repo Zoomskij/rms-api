@@ -122,7 +122,10 @@ var viewModel = function () {
                     $('#GetBrands_resp').append("]");
 
 
-                    $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "");
+                    $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
+                    $('#GetBrands_curl').append(" -H \"accept: application/json\"");
+                    $('#GetBrands_curl').append(" -H \"authorization:   " + token + "\"");
+
 
                     $('#GetBrands_request-url').html(mainUrl + url + "");
                     document.getElementById("GetBrands_loader").style.display = "none";
@@ -228,8 +231,10 @@ var viewModel = function () {
                         }
                         $('#GetSpareParts_resp').append("]");
 
+                        $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
+                        $('#GetSpareParts_curl').append(" -H \"accept: application/json\"");
+                        $('#GetSpareParts_curl').append(" -H \"authorization: " + token + "\"");
 
-                        $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "");
 
                         $('#GetSpareParts_request-url').html(mainUrl + url + "");
                         document.getElementById("GetSpareParts_loader").style.display = "none";
