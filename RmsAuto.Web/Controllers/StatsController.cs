@@ -13,7 +13,7 @@ namespace RMSAutoAPI.Controllers
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
         private SettingsHelper _settingsHelper = new SettingsHelper();
 
-        public Users CurrentUser { get; set; }
+        public static Users CurrentUser { get; set; }
         public Settings CurrentSettings { get; set; }
 
 
@@ -21,23 +21,26 @@ namespace RMSAutoAPI.Controllers
         //Текущая авторизация которая используется для WEB API не подходит (смотреть: ApiController и Controller)
         //TO DO: Create model for view and config credentials for Controller
         //Authorize(Roles = "admin,manager")]
-        public ActionResult Index()
+        public ActionResult Index(string currentUser)
         {
-            var userName = User.Identity.Name;
-            CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
-            CurrentUser.AcctgID = "000042078";
-            CurrentUser = db.Users.FirstOrDefault(x => x.AcctgID == "000042078");
+            //var userName = User.Identity.Name;
+            if (!string.IsNullOrWhiteSpace(currentUser))
+            {
+                CurrentUser = db.Users.FirstOrDefault(x => x.Email == currentUser);
+            }
+            if (CurrentUser != null)
+            {
+                CurrentSettings = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID);
 
-            CurrentSettings = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID);
+                ViewBag.PerMinute = _settingsHelper.CountRequests(RequestDelimeter.Minute, CurrentUser.AcctgID);
+                ViewBag.PerHour = _settingsHelper.CountRequests(RequestDelimeter.Hour, CurrentUser.AcctgID);
+                ViewBag.PerDay = _settingsHelper.CountRequests(RequestDelimeter.Day, CurrentUser.AcctgID);
 
-            ViewBag.PerMinute = _settingsHelper.CountRequests(RequestDelimeter.Minute, CurrentUser.AcctgID);
-            ViewBag.PerHour = _settingsHelper.CountRequests(RequestDelimeter.Hour, CurrentUser.AcctgID);
-            ViewBag.PerDay = _settingsHelper.CountRequests(RequestDelimeter.Day, CurrentUser.AcctgID);
-
-            ViewBag.AllowInMinute = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID).Rates.PerMinute;  
-            ViewBag.AllowInHour = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID).Rates.PerHour;
-            ViewBag.AllowInDay = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID).Rates.PerDay;
-
+                ViewBag.AllowInMinute = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID)?.Rates?.PerMinute.ToString() ?? "∞";
+                ViewBag.AllowInHour = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID)?.Rates?.PerHour.ToString() ?? "∞";
+                ViewBag.AllowInDay = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID)?.Rates?.PerDay.ToString() ?? "∞";
+            }
+            ViewBag.CurrentUser = currentUser;
             return View();
         }
     }

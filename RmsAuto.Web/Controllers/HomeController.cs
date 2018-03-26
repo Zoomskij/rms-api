@@ -18,22 +18,29 @@ namespace RMSAutoAPI.Controllers
             var url = WebConfigurationManager.AppSettings["UrlApi"];
             return View("~/Views/Home/Index.cshtml",null, url);
         }
+        public static string Token { get; set; }
+        public static string CurrentEmail { get; set; }
 
-        
 
-        
+
         public ActionResult Index2()
         {
-            ViewBag.CurrentUser = "Вы не авторизованы";
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    var init = User.Identity.Name;
-              
-            //}
-            var claims = (ClaimsIdentity)User.Identity;
-            ViewBag.CurrentUser = "Ваш логин: " + TempData["Email"];
-            ViewBag.Token = TempData["bearerToken"];
+            if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
+            {
+                Token = (string)TempData["bearerToken"];
+                CurrentEmail = (string)TempData["Email"];
+            }
+            if ((int?)TempData["logout"] == 1)
+            {
+                Token = string.Empty;
+                CurrentEmail = string.Empty;
+            }
 
+            ViewBag.CurrentUser = CurrentEmail;
+            ViewBag.Token = Token;
+
+            if (!string.IsNullOrWhiteSpace(ViewBag.Token))
+                Token = ViewBag.Token;
             //return result;
 
             var methods = new List<ApiMethod>();

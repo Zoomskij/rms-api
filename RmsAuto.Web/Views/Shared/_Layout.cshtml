@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title </title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/api.css" rel="stylesheet" />
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -19,17 +20,20 @@
                 @Html.ActionLink("RMSAUTO API", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Documentation", "Index2", "Home")</li>
-                    <li>@Html.ActionLink("Stats", "Index", "Stats")</li>
-                    <li><a href="~/help">API</a></li>
-                    @if (User.Identity.IsAuthenticated)
+                <ul class="nav navbar-nav row">
+                    <li>@Html.ActionLink("Документация", "Index2", "Home")</li>
+                    <li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>
+
+
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentUser))
                     {
-                        <li class="pull-right">@Html.ActionLink("Log out", "Logout", "Account")</li>
+                         
+                        var ex = (string)(@ViewBag.CurrentUser + " Выход");
+                    <li class="pull-right">@Html.ActionLink(ex, "Logout", "Account")</li>
                     }
                     else
                     {
-                        <li class="pull-right">@Html.ActionLink("Login", "Index", "Account")</li>
+                        <li class="pull-right">@Html.ActionLink("Вход", "Index", "Account")</li>
                     }
                     
                 </ul>

@@ -72,6 +72,13 @@ namespace RMSAutoAPI.Controllers
             return View();
         }
 
+        public RedirectResult Logout()
+        {
+            TempData["logout"] = 1;
+            AuthenticationManager.SignOut();
+            return RedirectPermanent("/");
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(LoginModel model, string returnUrl)
@@ -179,11 +186,6 @@ namespace RMSAutoAPI.Controllers
 
             ViewBag.returnUrl = returnUrl;
             return View(model);
-        }
-        public ActionResult Logout()
-        {
-            AuthenticationManager.SignOut();
-            return RedirectToAction("Login");
         }
     }
 }
