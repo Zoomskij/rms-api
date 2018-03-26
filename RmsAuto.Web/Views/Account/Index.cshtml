@@ -45,38 +45,3 @@
         <p><button type="submit" class="btn btn-info">Войти</button></p>
     </div>
 }
-
-
-@*<script type="text/javascript">
-        var loginData = {
-            grant_type: 'password',
-            username: 'api'
-            password: '123',
-            region: rmsauto
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: 'http://localhost:52682/api/auth/token',
-            data: loginData
-        }).done(function (data) {
-            self.user(data.userName);
-            // Cache the access token in session storage.
-            sessionStorage.setItem(tokenKey, data.access_token);
-        }).fail(showError);
-
-
-        $("button").click(function (e) {
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: 'http://localhost:52682/api/auth/token',
-                data: loginData
-            }).done(function (data) {
-                self.user(data.userName);
-                // Cache the access token in session storage.
-                sessionStorage.setItem(tokenKey, data.access_token);
-            }).fail(showError);
-        });
-
-    </script>*@

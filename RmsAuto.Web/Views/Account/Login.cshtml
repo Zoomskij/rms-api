@@ -1,0 +1,72 @@
+﻿@model RMSAutoAPI.Models.LoginModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Login";
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/api.css" rel="stylesheet" />
+}
+
+<style type="text/css">
+    .parent {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        overflow: auto;
+        
+    }
+
+    .block {
+        background: white;
+        padding: 3%;
+        padding-top: 0;
+        border-radius: 20px;
+
+    }
+
+</style>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="parent">
+        <div class="block">
+            <h2>Вход на сайт</h2>
+            @Html.ValidationSummary()
+            <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+
+
+            <p>
+                @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
+                @Html.EditorFor(x => x.Email, new { @class = "form-control" })
+            </p>
+            <p>
+                @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
+                @Html.EditorFor(x => x.Password, new { @class = "form-control" })
+            </p>
+            <p>
+                <label>Партнер</label><br />
+                @{
+            List<SelectListItem> regions = new List<SelectListItem>();
+            if (ViewBag.Partners != null)
+            {
+                regions = @ViewBag.Partners;
+            }
+
+                }
+
+                @Html.DropDownListFor(model => model.Region, regions, "-- Select Region --", new { @class = "form-control" })
+            </p>
+
+            <p><button type="submit" class="btn btn-info">Войти</button></p>
+        </div>
+    </div>
+}

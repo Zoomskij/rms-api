@@ -68,7 +68,7 @@ namespace RMSAutoAPI
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             var region = context.Parameters.FirstOrDefault(x => x.Key.ToLower().Equals("region")).Value?.FirstOrDefault();
-            SelectedRegion = region ?? SelectedRegion;
+            SelectedRegion = region ?? "rmsauto";
             context.Validated();
         }
 

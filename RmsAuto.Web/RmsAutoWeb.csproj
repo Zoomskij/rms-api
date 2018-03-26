@@ -416,6 +416,7 @@
     <Content Include="Views\Home\Index2.cshtml" />
     <Content Include="Views\Home\Authorization.cshtml" />
     <Content Include="Scripts\knockout-3.4.2.js" />
+    <Content Include="Views\Account\Login.cshtml" />
     <None Include="Web.test-api.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

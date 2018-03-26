@@ -21,7 +21,6 @@
 
 
     <div class="wrapper">
-        <td>Ваш логин: @ViewBag.CurrentUser</td> <br /><br />
         @*<td>@ViewBag.Token</td> <br /><br />*@
 
 
@@ -258,6 +257,9 @@
         </div>
     </div>
 
+
+
+
     <ul data-bind="foreach: methods">
         <strong data-bind="text: Name"></strong>
 
@@ -268,60 +270,10 @@
         var token = @Html.Raw(Json.Encode(@ViewBag.Token));
     </script>
 
-
-    <a class="openDialog" data-dialog-id="emailDialog"
-       data-dialog-title="Contact Us" href="/Account/Index">PopUP</a>
-
-    <div id="dialog1" title="Dialog Title" hidden="hidden">I'm a dialog</div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/app.js"></script>
-
-
-    @*<script src="@Url.Content("~/Scripts/jquery-1.4.4.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery-ui.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-        <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>*@
-
-
-
-
-    <script type="text/javascript">
-
-        $.ajaxSetup({ cache: false });
-
-        $(document).ready(function () {
-            $(".openDialog").on("click", function (e) {
-                e.preventDefault();
-
-                $("#opener").click(function () {
-                    $("#dialog1").dialog('open');
-                });
-
-                //$("<div></div>")
-                //    //.addClass("dialog")
-                //    //.attr("id", $(this).attr("data-dialog-id"))
-                //    //.appendTo("body")
-                //    .dialog({
-                //        title: $(this).attr("data-dialog-title"),
-                //        close: function () { $(this).remove() },
-                //        modal: true
-                //    })
-
-                //    .load(this.href);
-            });
-
-            $(".close").on("click", function (e) {
-                e.preventDefault();
-                $(this).closest(".dialog").dialog("close");
-            });
-        });
-    </script>
-
-
 
 </body>
 </html>
