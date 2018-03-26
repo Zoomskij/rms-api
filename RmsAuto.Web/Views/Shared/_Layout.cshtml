@@ -23,7 +23,15 @@
                     <li>@Html.ActionLink("Documentation", "Index2", "Home")</li>
                     <li>@Html.ActionLink("Stats", "Index", "Stats")</li>
                     <li><a href="~/help">API</a></li>
-                    <li class="pull-right">@Html.ActionLink("Login", "Index", "Account")</li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="pull-right">@Html.ActionLink("Log out", "Logout", "Account")</li>
+                    }
+                    else
+                    {
+                        <li class="pull-right">@Html.ActionLink("Login", "Index", "Account")</li>
+                    }
+                    
                 </ul>
             </div>
         </div>

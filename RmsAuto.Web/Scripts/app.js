@@ -74,6 +74,37 @@ var viewModel = function () {
         }
     }
 
+    this.tryIt = function (str) {
+        article = document.getElementById(str + "_article");
+        brand = document.getElementById(str + "_brand");
+        analogues = document.getElementById(str + "_analogues");
+        if (article != null) {
+            if (article.style.display === 'none') {
+                article.style.display = 'block'
+            }
+            else {
+                article.style.display = 'none'
+            }
+        }
+        if (brand != null) {
+            if (brand.style.display === 'none') {
+                brand.style.display = 'block'
+            }
+            else {
+                brand.style.display = 'none'
+            }
+        }
+        if (analogues != null) {
+            if (analogues.style.display === 'none') {
+                analogues.style.display = 'block'
+            }
+            else {
+                analogues.style.display = 'none'
+            }
+        }
+    }
+
+
     this.firstName = ko.observable("Test");
 
 
