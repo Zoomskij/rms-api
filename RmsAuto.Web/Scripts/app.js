@@ -50,11 +50,9 @@ var viewModel = function () {
     }
     var isVisible = false;
     var json = [{
-        "name": "bruce",
-        "id": 1
+
     }, {
-        "name": "greg",
-        "id": 2
+    
     }]
    
     var data = ko.utils.arrayMap(json, function (item) {
@@ -346,39 +344,6 @@ var viewModel = function () {
                     });
 
                 }
-
-
-
-
-
-
-            //$.getJSON(url, function (data) {
-
-            //    $('#resp').html("[\n");
-
-            //    for (var i = 0, j = data.length; i < j; i++) {
-            //        var brand = data[i];
-            //        $('#resp').append("  {\n");
-            //        $('#resp').append("    \"Name\":"); 
-            //        $('#resp').append(" \"" + brand.Name + "\"");
-
-            //        $('#resp').append("\n");
-            //        $('#resp').append("    \"Description\":");
-            //        $('#resp').append(" \"" + brand.Description + "\"");
-            //        $('#resp').append("\n  },\n");
-
-            //    }
-            //    $('#resp').append("]");
-
-
-            //    $('#curl').html("curl -X GET \"" + mainUrl + "" + url + "");
-
-            //    $('#request-url').html(mainUrl + url + "");
-            //    document.getElementById("loader").style.display = "none";
-              
-
-            //});
-
 
 }
 
