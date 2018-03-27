@@ -23,9 +23,8 @@
         justify-content: center;
         overflow: auto;
     }
-    .window
-    {
 
+    .window {
     }
 
     .window {
@@ -50,13 +49,15 @@
         font-weight: 600;
     }
 
-    .chest:hover {
-        color:black;
-    }
-
+        .chest:hover {
+            color: black;
+        }
 </style>
 
-@using (Ajax.BeginForm("Login", new AjaxOptions { } ))
+@*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.min.js"></script>*@
+
+@using (Ajax.BeginForm("Login", new AjaxOptions { }))
 {
     @Html.AntiForgeryToken()
 
@@ -86,19 +87,21 @@
                 <p>
                     @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
                 </p>
                 <p>
                     @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Password, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                 </p>
                 <p>
                     <label>Партнер</label><br />
                     @{
-                List<SelectListItem> regions = new List<SelectListItem>();
-                if (ViewBag.Partners != null)
-                {
-                    regions = @ViewBag.Partners;
-                }
+                        List<SelectListItem> regions = new List<SelectListItem>();
+                        if (ViewBag.Partners != null)
+                        {
+                            regions = @ViewBag.Partners;
+                        }
 
                     }
 
@@ -109,4 +112,5 @@
             </div>
         </div>
     </div>
+
 }

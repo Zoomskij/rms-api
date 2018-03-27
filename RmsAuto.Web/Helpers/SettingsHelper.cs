@@ -13,7 +13,20 @@ namespace RMSAutoAPI.Helpers
         // Логируем все наши запросы в основную таблицу логов 
         public int CountRequests(RequestDelimeter delimeter, string ip)
         {
-            var sec = (int)delimeter * -1; // Чтобы получить отрицательное значение и найти разницу в кол-ве запросов
+            int sec = 0;
+            switch (delimeter)
+            {
+                case RequestDelimeter.Minute:
+                    sec = DateTime.Now.Second * -1;
+                    break;
+                case RequestDelimeter.Hour:
+                    sec = (DateTime.Now.Minute * 60 + DateTime.Now.Second) * -1;
+                    break;
+                case RequestDelimeter.Day:
+                    sec = (((DateTime.Now.Hour * 60 * 60) + (DateTime.Now.Minute * 60)) + DateTime.Now.Second) * -1;
+                    break;
+            }
+
             return dbLog.SearchSparePartsLog.Count(x => x.AcctgID.Equals(ip) && EntityFunctions.AddSeconds(DateTime.Now, sec) < x.SearchDate && x.Source == 1);
         }
 

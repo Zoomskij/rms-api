@@ -32,7 +32,7 @@ function SampleMethod(method) {
 }
 
 
-function brand(brand) {
+function brands(brand) {
     this.Name = ko.observable(brand.Name);
     this.Description = ko.observable(brand.Description);
 }
@@ -76,7 +76,7 @@ var viewModel = function () {
         article = document.getElementById(str + "_article");
         brand = document.getElementById(str + "_brand");
         analogues = document.getElementById(str + "_analogues");
-        if (article != null) {
+        if (article !== null) {
             if (article.style.display === 'none') {
                 article.style.display = 'block'
             }
@@ -84,7 +84,7 @@ var viewModel = function () {
                 article.style.display = 'none'
             }
         }
-        if (brand != null) {
+        if (brand !== null) {
             if (brand.style.display === 'none') {
                 brand.style.display = 'block'
             }
@@ -92,7 +92,7 @@ var viewModel = function () {
                 brand.style.display = 'none'
             }
         }
-        if (analogues != null) {
+        if (analogues !== null) {
             if (analogues.style.display === 'none') {
                 analogues.style.display = 'block'
             }
@@ -121,7 +121,7 @@ var viewModel = function () {
 
         $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
         $('#GetBrands_curl').append(" -H \"accept: application/json\"");
-        if (token != null && token != "") {
+        if (token !== null && token !== "") {
             $('#GetBrands_curl').append(" -H \"authorization: " + token + "\"");
         }
         $('#GetBrands_request-url').html(mainUrl + url + "");
@@ -191,7 +191,7 @@ var viewModel = function () {
 
                 $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
                 $('#GetSpareParts_curl').append(" -H \"accept: application/json\"");
-                if (token != null && token != "") {
+                if (token !== null && token !== "") {
                     $('#GetSpareParts_curl').append(" -H \"authorization: " + token + "\"");
                 }
                 $('#GetSpareParts_request-url').html(mainUrl + url + "");
