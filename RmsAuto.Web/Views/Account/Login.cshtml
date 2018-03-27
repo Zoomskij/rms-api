@@ -56,7 +56,7 @@
 
 </style>
 
-@using (Html.BeginForm())
+@using (Ajax.BeginForm("Login", new AjaxOptions { } ))
 {
     @Html.AntiForgeryToken()
 
