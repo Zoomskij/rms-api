@@ -81,7 +81,6 @@
                     <li>grant_type=password</li>
                 </ul>
 
-                @Html.ValidationSummary()
                 <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
 
 
@@ -113,5 +112,7 @@
             </div>
         </div>
     </div>
+
+    @Scripts.Render("~/bundles/jqueryval")
 
 }

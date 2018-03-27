@@ -77,6 +77,8 @@ var viewModel = function () {
         brand = document.getElementById(str + "_brand");
         analogues = document.getElementById(str + "_analogues");
         execute = document.getElementById(str + "_execute");
+        bTryit = document.getElementById(str + "_tryIt");
+
         if (article !== null) {
             if (article.style.display === 'none') {
                 article.style.display = 'block'
@@ -109,6 +111,14 @@ var viewModel = function () {
                 execute.style.display = 'none'
             }
         }
+        if (bTryit !== null) {
+            if (bTryit.innerHTML === 'Try it out') {
+                bTryit.innerHTML = "Cancel";
+            }
+            else {
+                bTryit.innerHTML = "Try it out";
+            }
+        }
 
     }
 
@@ -120,7 +130,12 @@ var viewModel = function () {
         document.getElementById("GetBrands_loader").style.display = "block";
 
         var pathname = window.location.pathname;
-        var mainUrl = replaceString(pathname, '', window.location.href);
+        if (pathname === '/') {
+            var mainUrl = window.location.href;
+        }
+        else {
+            var mainUrl = replaceString(pathname, '', window.location.href);
+        }
 
         article = document.getElementById('GetBrands_article').value;
         analogues = document.getElementById('GetBrands_analogues').value;
@@ -178,6 +193,7 @@ var viewModel = function () {
             error: function (jqXHR, textStatus, errorThrown) {
                 if (errorThrown === "Unauthorized" || token === "") {
                     $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                    $('#GetBrands_code').html("401");
                 }
                 if (errorThrown === "Method Not Allowed") {
                     $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
@@ -194,7 +210,12 @@ var viewModel = function () {
                 document.getElementById("GetSpareParts_loader").style.display = "block";
 
                 var pathname = window.location.pathname;
-                var mainUrl = replaceString(pathname, '', window.location.href);
+                if (pathname === '/') {
+                    var mainUrl = window.location.href;
+                }
+                else {
+                    var mainUrl = replaceString(pathname, '', window.location.href);
+                }
 
                 article = document.getElementById('GetSpareParts_article').value;
                 brand = document.getElementById('GetSpareParts_brand').value;
@@ -289,10 +310,11 @@ var viewModel = function () {
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         if (errorThrown === "Unauthorized" || token === "") {
-                            $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                            $('#GetSpareParts_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
+                            $('#GetSpareParts_code').html("401");
                         }
                         if (errorThrown === "Method Not Allowed") {
-                            $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
+                            $('#GetSpareParts_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                         }
                         document.getElementById("GetSpareParts_loader").style.display = "none";
                     }
@@ -304,7 +326,12 @@ var viewModel = function () {
                     document.getElementById("GetPartners_loader").style.display = "block";
 
                     var pathname = window.location.pathname;
-                    var mainUrl = replaceString(pathname, '', window.location.href);
+                    if (pathname === '/') {
+                        var mainUrl = window.location.href;
+                    }
+                    else {
+                        var mainUrl = replaceString(pathname, '', window.location.href);
+                    }
 
                     var url = "/api/Partners/";
 
@@ -355,7 +382,7 @@ var viewModel = function () {
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             if (errorThrown === "Method Not Allowed") {
-                                $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
+                                $('#GetPartners_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                             }
                             document.getElementById("GetPartners_loader").style.display = "none";
                         }

@@ -87,10 +87,13 @@
                                     @*============PARAMETERS=============*@
                                     @if (Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
                                     {
+                                         
+                                        var idTryIt = @item.Name + "_tryIt";
+                                        
                                         <div class="opblock-section-header">
                                             <div class="tab-header">
                                                 <span class="opblock-title"><b>Parameters</b></span>
-                                                <button class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,'@item.Name')">Try it out </button>
+                                                <button id="@idTryIt" class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,'@item.Name')">Try it out</button>
                                             </div>
                                         </div>
                                         foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
@@ -154,9 +157,18 @@
                                     @{ 
                                         var idExecute = @item.Name + "_execute";
                                     }
-                                    <div id="@idExecute" class="execute-wrapper" style="display:none">
-                                        <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
-                                    </div>
+                                    @if (!Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
+                                    {
+                                        <div id="@idExecute" class="execute-wrapper" >
+                                            <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div id="@idExecute" class="execute-wrapper" style="display:none" >
+                                            <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
+                                        </div>
+                                    }
                                     @{
                                         var idLoader = @item.Name + "_loader";
                                     }
