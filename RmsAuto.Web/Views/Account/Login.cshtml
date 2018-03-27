@@ -55,10 +55,11 @@
 </style>
 
 @*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.min.js"></script>*@
+    <script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.min.js"></script>*@
 
 @using (Ajax.BeginForm("Login", new AjaxOptions { }))
 {
+    @Html.ValidationSummary(true)
     @Html.AntiForgeryToken()
 
     <div class="parent">

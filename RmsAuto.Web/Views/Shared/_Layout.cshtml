@@ -34,7 +34,6 @@
                     else
                     {
                         <li class="pull-right"> @Html.ActionLink("Вход ", "Login", "Account", null, new { @class = "modal-link" })</li>
-                        @*<li class="pull-right">@Html.ActionLink("Вход", "Index", "Account")</li>*@
                     }
 
                 </ul>
@@ -56,21 +55,15 @@
 
     <script type="text/javascript">
         $(function () {
-            // Initialize numeric spinner input boxes
-            //$(".numeric-spinner").spinedit();
-            // Initialize modal dialog
-            // attach modal-container bootstrap attributes to links with .modal-link class.
-            // when a link is clicked with these attributes, bootstrap will display the href content in a modal dialog.
+
             $('body').on('click', '.modal-link', function (e) {
                 e.preventDefault();
                 $(this).attr('data-target', '#modal-container');
                 $(this).attr('data-toggle', 'modal');
             });
-            // Attach listener to .modal-close-btn's so that when the button is pressed the modal dialog disappears
             $('body').on('click', '.modal-close-btn', function () {
                 $('#modal-container').modal('hide');
             });
-            //clear modal cache, so that new content can be loaded
             $('#modal-container').on('hidden.bs.modal', function () {
                 $(this).removeData('bs.modal');
             });
@@ -82,15 +75,6 @@
 
 
     <style>
-        #modal-container {
-            /*background: white;
-            width: 800px;
-            height: 500px;
-            position: absolute;
-            top: 25%;
-            left: 25%;*/
-        }
-
         .modal-content {
             width: 600px !important;
             margin: 30px auto !important;
