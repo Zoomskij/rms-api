@@ -76,6 +76,7 @@ var viewModel = function () {
         article = document.getElementById(str + "_article");
         brand = document.getElementById(str + "_brand");
         analogues = document.getElementById(str + "_analogues");
+        execute = document.getElementById(str + "_execute");
         if (article !== null) {
             if (article.style.display === 'none') {
                 article.style.display = 'block'
@@ -100,6 +101,15 @@ var viewModel = function () {
                 analogues.style.display = 'none'
             }
         }
+        if (execute !== null) {
+            if (execute.style.display === 'none') {
+                execute.style.display = 'block'
+            }
+            else {
+                execute.style.display = 'none'
+            }
+        }
+
     }
 
 

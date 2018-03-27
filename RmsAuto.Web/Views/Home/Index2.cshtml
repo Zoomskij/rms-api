@@ -151,7 +151,10 @@
                                     }
                                     @*onclick="executeMethod()"*@
                                     @*==============EXECUTE================*@
-                                    <div class="execute-wrapper">
+                                    @{ 
+                                        var idExecute = @item.Name + "_execute";
+                                    }
+                                    <div id="@idExecute" class="execute-wrapper" style="display:none">
                                         <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
                                     </div>
                                     @{
