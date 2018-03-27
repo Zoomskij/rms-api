@@ -412,13 +412,11 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Stats\Index.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Swagger\swagger-ui-bundle.js.map" />
     <Content Include="Swagger\swagger-ui-standalone-preset.js.map" />
     <Content Include="Swagger\swagger-ui.css.map" />
     <Content Include="Swagger\swagger-ui.js.map" />
     <Content Include="Views\Home\Index2.cshtml" />
-    <Content Include="Views\Home\Authorization.cshtml" />
     <Content Include="Scripts\knockout-3.4.2.js" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />

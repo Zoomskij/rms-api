@@ -197,6 +197,7 @@ var viewModel = function () {
                     $('#GetBrands_code').html("401");
                 }
                 if (errorThrown === "Method Not Allowed") {
+                    $('#GetBrands_code').html("405");
                     $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                 }
 
@@ -316,6 +317,7 @@ var viewModel = function () {
                             $('#GetSpareParts_code').html("401");
                         }
                         if (errorThrown === "Method Not Allowed") {
+                            $('#GetSpareParts_code').html("405");
                             $('#GetSpareParts_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                         }
                         document.getElementById("GetSpareParts_loader").style.display = "none";
@@ -385,6 +387,7 @@ var viewModel = function () {
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
                             if (errorThrown === "Method Not Allowed") {
+                                $('#GetPartners_code').html("405");
                                 $('#GetPartners_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                             }
                             document.getElementById("GetPartners_loader").style.display = "none";

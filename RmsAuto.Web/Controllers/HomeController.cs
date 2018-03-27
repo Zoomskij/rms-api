@@ -21,8 +21,6 @@ namespace RMSAutoAPI.Controllers
         public static string Token { get; set; }
         public static string CurrentEmail { get; set; }
 
-
-
         public ActionResult Index2()
         {
             if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
@@ -63,22 +61,7 @@ namespace RMSAutoAPI.Controllers
             methods[2].Description = "Возвращает список партнеров";
             methods[2].TitleDescription = "Для того чтобы авторизоваться в другом регионе необходим параметр InternalFranchName";
 
-
-
             return View(methods);
-        }
-
-        [ChildActionOnly]
-        public ActionResult GetHtmlPage(string path)
-        {
-            return new FilePathResult(path, "text/html");
-        }
-
-
-        [HttpGet]
-        public PartialViewResult Authorization()
-        {
-            return PartialView();
         }
     }
 }

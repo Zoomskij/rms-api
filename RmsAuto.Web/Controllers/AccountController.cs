@@ -32,18 +32,6 @@ namespace RMSAutoAPI.Controllers
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
 
         private IUserService _userService;
-        // GET: Account
-        public ActionResult Index()
-        {
-            List<SelectListItem> items = new List<SelectListItem>();
-            var franches = db.spGetFranches().ToList();
-            foreach (var franch in franches)
-            {
-                items.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
-            }
-            ViewBag.Partners = items;
-            return View();
-        }
 
         [HttpGet]
         public ActionResult Login()
