@@ -160,7 +160,7 @@ var viewModel = function () {
                 }
                 $('#GetBrands_resp').append("]");
 
-                $('#GetBrands_code').append("200");
+                $('#GetBrands_code').html("200");
 
                 document.getElementById("GetBrands_loader").style.display = "none";
 
@@ -272,7 +272,7 @@ var viewModel = function () {
                         }
                         $('#GetSpareParts_resp').append("]");
 
-                        $('#GetSpareParts_code').append("200");
+                        $('#GetSpareParts_code').html("200");
 
                         document.getElementById("GetSpareParts_loader").style.display = "none";
 
@@ -338,7 +338,7 @@ var viewModel = function () {
 
                             $('#GetPartners_request-url').html(mainUrl + url + "");
 
-                            $('#GetPartners_code').append("200");
+                            $('#GetPartners_code').html("200");
 
                             document.getElementById("GetPartners_loader").style.display = "none";
 
