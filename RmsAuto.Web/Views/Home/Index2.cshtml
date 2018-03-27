@@ -1,4 +1,5 @@
-﻿@model List<RMSAutoAPI.Models.ApiMethod>
+﻿@using System.Web.Configuration;
+@model List<RMSAutoAPI.Models.ApiMethod>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
@@ -20,7 +21,11 @@
 <body>
 
     <br />
+
     <div class="wrapper">
+
+        [ Base URL: @WebConfigurationManager.AppSettings["UrlApi"] ]
+        <br /><br />
         @*<td>@ViewBag.Token</td> <br /><br />*@
 
 
@@ -79,7 +84,7 @@
 
 
 
-                                     @*============PARAMETERS=============*@
+                                    @*============PARAMETERS=============*@
                                     @if (Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
                                     {
                                         <div class="opblock-section-header">
@@ -131,7 +136,7 @@
                                                                 <option value="true">true</option>
                                                                 <option value="false">false</option>
                                                             </select>
-                                                        }                   
+                                                        }
                                                     </div>
                                                 </div>
                                                 <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
@@ -150,7 +155,7 @@
                                         <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
                                     </div>
                                     @{
-                                    var idLoader = @item.Name + "_loader";
+                                        var idLoader = @item.Name + "_loader";
                                     }
                                     <div id="@idLoader" class="loader" style="display:none">Loading...</div>
                                     @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
@@ -164,35 +169,44 @@
 
 
                                     @*  CURL *@
-                                    <br />
-                                    <div class="execute-wrapper">
-                                        <span class="response-label"> Curl</span>
-                                    </div>
+                                    @{ 
+                                        var idDivCurl = @item.Name + "_divCurl";
+                                    }
+                                    <div id="@idDivCurl" style="display:none">
+                                        <br />
+                                        <div class="execute-wrapper">
+                                            <span class="response-label"> Curl</span>
+                                        </div>
 
-                                    <div class="execute-wrapper" style="padding-top:0">
-                                        <pre class="example">
+                                        <div class="execute-wrapper" style="padding-top:0">
+                                            <pre class="example">
                                                 @{ 
                                                     var idCurl = @item.Name + "_curl";
                                                 }
-                                        <div id="@idCurl" style="margin-top: -40px"></div>
+                                            <div id="@idCurl" style="margin-top: -40px"></div>
                                                     
                                             </pre>
+                                        </div>
                                     </div>
 
                                     @*  REQUEST URL *@
+                                    @{ 
+                                        var idDivRequestUrl = @item.Name + "_divRequestUrl";
+                                    }
+                                    <div id="@idDivRequestUrl" style="display:none">
+                                        <div class="execute-wrapper">
+                                            <span class="response-label"> Request URL</span>
+                                        </div>
 
-                                    <div class="execute-wrapper">
-                                        <span class="response-label"> Request URL</span>
-                                    </div>
-
-                                    <div class="execute-wrapper" style="padding-top:0">
-                                        <pre class="example" style="height:30px;">
-                                            @{ 
-                                                var idRequestUrl = @item.Name + "_request-url";
-                                            }
-                                        <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
+                                        <div class="execute-wrapper" style="padding-top:0">
+                                            <pre class="example" style="height:30px;">
+                                                @{ 
+                                                    var idRequestUrl = @item.Name + "_request-url";
+                                                }
+                                            <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
                                                     
-                                        </pre>
+                                            </pre>
+                                        </div>
                                     </div>
                                     @* ====================== *@
 
@@ -233,7 +247,51 @@
                                                     var idResp = @item.Name + "_resp";
                                                 }
                                             
-                                            <div id="@idResp" style="margin-top: -70px"></div>
+<div id="@idResp" style="margin-top: -50px">
+@switch (item.Name)
+{
+    case "GetBrands":
+<p>
+[
+  {
+    "Name": "string",
+    "Description": "string"
+  }
+]
+</p>
+    break;
+case "GetSpareParts":
+<p>
+[
+  {
+    "Brand": "string",
+    "Article": "string",
+    "Name": "string",
+    "Type": 0,
+    "DeliveryQuality": 0,
+    "Count": 0,
+    "DeliveryDaysMin": 0,
+    "DeliveryDaysMax": 0,
+    "Price": 0,
+    "SupplierID": 0,
+    "MinOrderQty": 0
+  }
+]
+</p>                                                     
+    break;
+case "GetPartners":
+<p>
+[
+  {
+    "City": "string",
+    "InternalFranchName": "string",
+    "Franch": "string"
+  }
+]
+</p>
+    break;
+}
+</div>
 
                                             </pre>
                                         </div>

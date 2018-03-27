@@ -126,6 +126,9 @@ var viewModel = function () {
         }
         $('#GetBrands_request-url').html(mainUrl + url + "");
 
+        document.getElementById('GetBrands_divCurl').style.display = 'block';
+        document.getElementById('GetBrands_divRequestUrl').style.display = 'block';
+        
         $.ajax({
             url: url,
             method: "GET",
@@ -197,6 +200,9 @@ var viewModel = function () {
                     $('#GetSpareParts_curl').append(" -H \"authorization: " + token + "\"");
                 }
                 $('#GetSpareParts_request-url').html(mainUrl + url + "");
+
+                document.getElementById('GetSpareParts_divCurl').style.display = 'block';
+                document.getElementById('GetSpareParts_divRequestUrl').style.display = 'block';
 
                 $.ajax({
                     url: url,
@@ -291,6 +297,9 @@ var viewModel = function () {
                     var mainUrl = replaceString(pathname, '', window.location.href);
 
                     var url = "/api/Partners/";
+
+                    document.getElementById('GetPartners_divCurl').style.display = 'block';
+                    document.getElementById('GetPartners_divRequestUrl').style.display = 'block';
 
                     $.ajax({
                         url: url,
