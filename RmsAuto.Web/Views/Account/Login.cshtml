@@ -1,4 +1,6 @@
-﻿@model RMSAutoAPI.Models.LoginModel
+﻿@using System.Web.Configuration;
+@model RMSAutoAPI.Models.LoginModel
+
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,15 +22,36 @@
         align-content: center;
         justify-content: center;
         overflow: auto;
-        
+    }
+    .window
+    {
+
+    }
+
+    .window {
+        background: white;
+        border-radius: 10px;
+        max-width: 640px;
+        max-height: 600px;
     }
 
     .block {
-        background: white;
-        padding: 3%;
+        padding: 10%;
         padding-top: 0;
-        border-radius: 20px;
+    }
 
+    .chest {
+        position: relative;
+        text-align: right;
+        float: right;
+        top: 5px;
+        right: 10px;
+        color: black;
+        font-weight: 600;
+    }
+
+    .chest:hover {
+        color:black;
     }
 
 </style>
@@ -38,35 +61,52 @@
     @Html.AntiForgeryToken()
 
     <div class="parent">
-        <div class="block">
-            <h2>Вход на сайт</h2>
-            @Html.ValidationSummary()
-            <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+        <div class="window">
+            <a href="#" data-dismiss="modal" class="chest">x</a>
+            <div class="block">
+                <h3>Вход на сайт </h3>
 
 
-            <p>
-                @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
-                @Html.EditorFor(x => x.Email, new { @class = "form-control" })
-            </p>
-            <p>
-                @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
-                @Html.EditorFor(x => x.Password, new { @class = "form-control" })
-            </p>
-            <p>
-                <label>Партнер</label><br />
-                @{
-            List<SelectListItem> regions = new List<SelectListItem>();
-            if (ViewBag.Partners != null)
-            {
-                regions = @ViewBag.Partners;
-            }
+                <hr style="margin-top:-5px" />
 
+                <h4>oauth2 (OAuth2, password)</h4>
+                Для получения Токена необходимо вызвать POST-метод по адресу: <br />
+                <b>@WebConfigurationManager.AppSettings["UrlApi"]/api/auth/token</b><br />
+                передав три пары ключ/значение:<br />
+                <ul>
+                    <li>username=%USERNAME%</li>
+                    <li>password=%PASSWORD%</li>
+                    <li>grant_type=password</li>
+                </ul>
+
+                @Html.ValidationSummary()
+                <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+
+
+                <p>
+                    @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
+                    @Html.EditorFor(x => x.Email, new { @class = "form-control" })
+                </p>
+                <p>
+                    @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
+                    @Html.EditorFor(x => x.Password, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Партнер</label><br />
+                    @{
+                List<SelectListItem> regions = new List<SelectListItem>();
+                if (ViewBag.Partners != null)
+                {
+                    regions = @ViewBag.Partners;
                 }
 
-                @Html.DropDownListFor(model => model.Region, regions, "-- Select Region --", new { @class = "form-control" })
-            </p>
+                    }
 
-            <p><button type="submit" class="btn btn-info">Войти</button></p>
+                    @Html.DropDownListFor(model => model.Region, regions, "-- Выберите Регион --", new { @class = "form-control", style = "width: 192px;" })
+                </p>
+
+                <p><button type="submit" class="btn btn-info">Войти</button></p>
+            </div>
         </div>
     </div>
 }

@@ -161,7 +161,7 @@ var viewModel = function () {
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                if (errorThrown === "Unauthorized") {
+                if (errorThrown === "Unauthorized" || token === "") {
                     $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                 }
                 if (errorThrown === "Method Not Allowed") {
@@ -276,7 +276,7 @@ var viewModel = function () {
 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        if (errorThrown === "Unauthorized") {
+                        if (errorThrown === "Unauthorized" || token === "") {
                             $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                         }
                         if (errorThrown === "Method Not Allowed") {
