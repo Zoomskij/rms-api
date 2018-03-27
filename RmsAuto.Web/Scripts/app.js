@@ -157,6 +157,8 @@ var viewModel = function () {
                 }
                 $('#GetBrands_resp').append("]");
 
+                $('#GetBrands_code').append("200");
+
                 document.getElementById("GetBrands_loader").style.display = "none";
 
             },
@@ -261,16 +263,10 @@ var viewModel = function () {
 
                             $('#GetSpareParts_resp').append("\n  },\n");
 
-
-
-
-                            //$('#resp').append("\n");
-                            //$('#resp').append("    \"Description\":");
-                            //$('#resp').append(" \"" + brand.Description + "\"");
-                            //$('#resp').append("\n  },\n");
-
                         }
                         $('#GetSpareParts_resp').append("]");
+
+                        $('#GetSpareParts_code').append("200");
 
                         document.getElementById("GetSpareParts_loader").style.display = "none";
 
@@ -332,6 +328,9 @@ var viewModel = function () {
 
 
                             $('#GetPartners_request-url').html(mainUrl + url + "");
+
+                            $('#GetPartners_code').append("200");
+
                             document.getElementById("GetPartners_loader").style.display = "none";
 
                         },
