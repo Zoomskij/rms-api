@@ -130,11 +130,12 @@ var viewModel = function () {
         document.getElementById("GetBrands_loader").style.display = "block";
 
         var pathname = window.location.pathname;
+        var mainUrl = '';
         if (pathname === '/') {
-            var mainUrl = window.location.href;
+             mainUrl = window.location.href;
         }
         else {
-            var mainUrl = replaceString(pathname, '', window.location.href);
+             mainUrl = replaceString(pathname, '', window.location.href);
         }
 
         article = document.getElementById('GetBrands_article').value;
@@ -210,11 +211,12 @@ var viewModel = function () {
                 document.getElementById("GetSpareParts_loader").style.display = "block";
 
                 var pathname = window.location.pathname;
+                var mainUrl = '';
                 if (pathname === '/') {
-                    var mainUrl = window.location.href;
+                    mainUrl = window.location.href;
                 }
                 else {
-                    var mainUrl = replaceString(pathname, '', window.location.href);
+                    mainUrl = replaceString(pathname, '', window.location.href);
                 }
 
                 article = document.getElementById('GetSpareParts_article').value;
@@ -326,11 +328,12 @@ var viewModel = function () {
                     document.getElementById("GetPartners_loader").style.display = "block";
 
                     var pathname = window.location.pathname;
+                    var mainUrl = '';
                     if (pathname === '/') {
-                        var mainUrl = window.location.href;
+                        mainUrl = window.location.href;
                     }
                     else {
-                        var mainUrl = replaceString(pathname, '', window.location.href);
+                        mainUrl = replaceString(pathname, '', window.location.href);
                     }
 
                     var url = "/api/Partners/";
