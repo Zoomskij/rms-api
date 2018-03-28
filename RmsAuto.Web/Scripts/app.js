@@ -114,6 +114,28 @@ var viewModel = function () {
         mainUrl = replaceString(pathname, '', window.location.href);
     }
 
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
     GetBrands = function () {
         changeVisible(document.getElementById("GetBrands_loader"));
 
@@ -148,22 +170,9 @@ var viewModel = function () {
                 xhr.setRequestHeader("X-Mobile", "false");
             },
             success: function (data) {
-                $('#GetBrands_resp').html("[\n");
-
-                for (var i = 0, j = data.length; i < j; i++) {
-                    var brand = data[i];
-                    $('#GetBrands_resp').append("  {\n");
-                    $('#GetBrands_resp').append("    \"Name\":");
-                    $('#GetBrands_resp').append(" \"" + brand.Name + "\"");
-
-                    $('#GetBrands_resp').append("\n");
-                    $('#GetBrands_resp').append("    \"Description\":");
-                    $('#GetBrands_resp').append(" \"" + brand.Description + "\"");
-
-                    $('#GetBrands_resp').append("\n  },\n");
-
-                }
-                $('#GetBrands_resp').append("]");
+                var str = JSON.stringify(data, null, 2);
+                var j = syntaxHighlight(str);
+                $('#GetBrands_resp').html(j);
 
                 $('#GetBrands_code').html("200");
 
@@ -221,59 +230,9 @@ var viewModel = function () {
                         xhr.setRequestHeader("X-Mobile", "false");
                     },
                     success: function (data) {
-                        $('#GetSpareParts_resp').html("[\n");
-
-                        for (var i = 0, j = data.length; i < j; i++) {
-                            var sparePart = data[i];
-
-                            $('#GetSpareParts_resp').append("  {\n");
-                            $('#GetSpareParts_resp').append("    \"Article\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.Article + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"Brand\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.Brand + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"Count\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.Count + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"DeliveryDaysMax\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.DeliveryDaysMax + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"DeliveryDaysMin\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.DeliveryDaysMin + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"DeliveryQuality\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.DeliveryQuality + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"MinOrderQty\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.MinOrderQty + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"Name\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.Name + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"Price\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.Price + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"SupplierID\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.SupplierID + "\"");
-
-                            $('#GetSpareParts_resp').append("\n");
-                            $('#GetSpareParts_resp').append("    \"Type\":");
-                            $('#GetSpareParts_resp').append(" \"" + sparePart.Type + "\"");
-
-                            $('#GetSpareParts_resp').append("\n  },\n");
-
-                        }
-                        $('#GetSpareParts_resp').append("]");
+                        var str = JSON.stringify(data, null, 2);
+                        var j = syntaxHighlight(str);
+                        $('#GetSpareParts_resp').html(j);
 
                         $('#GetSpareParts_code').html("200");
 
@@ -312,27 +271,9 @@ var viewModel = function () {
                         data: JSON.stringify(data),
                         cache: false,
                         success: function (data) {
-                            $('#GetPartners_resp').html("[\n");
-
-                            for (var i = 0, j = data.length; i < j; i++) {
-                                var partner = data[i];
-                                $('#GetPartners_resp').append("  {\n");
-                                $('#GetPartners_resp').append("    \"City\":");
-                                $('#GetPartners_resp').append(" \"" + partner.City + "\"");
-
-                                $('#GetPartners_resp').append("  {\n");
-                                $('#GetPartners_resp').append("    \"InternalFranchName\":");
-                                $('#GetPartners_resp').append(" \"" + partner.InternalFranchName + "\"");
-
-                                $('#GetPartners_resp').append("  {\n");
-                                $('#GetPartners_resp').append("    \"Franch\":");
-                                $('#GetPartners_resp').append(" \"" + partner.Franch + "\"");
-
-                                $('#GetPartners_resp').append("\n  },\n");
-
-                            }
-                            $('#GetPartners_resp').append("]");
-
+                            var str = JSON.stringify(data, null, 2);
+                            var j = syntaxHighlight(str);
+                            $('#GetPartners_resp').html(j);
 
                             $('#GetPartners_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
                             $('#GetPartners_curl').append(" -H \"accept: application/json\"");
