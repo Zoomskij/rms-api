@@ -1,4 +1,5 @@
 ﻿@using System.Web.Configuration;
+@using System.ComponentModel;
 @model List<RMSAutoAPI.Models.ApiMethod>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -322,15 +323,92 @@ case "GetPartners":
 
             </div>
         </div>
-    </div>
+
+
+
+        @*MODELS*@
+            <section class="models">
+                <div id="models-header" class="models-header">
+                    <h4>
+                        <span>Models</span>
+                        <svg width="20" height="20"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#large-arrow-down"></use></svg>
+                    </h4>
+                </div>
+                <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
+
+                @foreach (var method in Model)
+                {
+                    <div id="model-Brand" class="model-container">
+                        <div class="model-box">
+                            <p><span class="model-title"> @method.Response.GetType().Name</span> { </p>
+                            @foreach (var property in @method.Response.GetType().GetProperties())
+                            {
+                                <table class="properties">
+                                    <tr>
+                                        <td valign="top" width="150">
+                                            <span class="prop-name">@property.Name </span>
+                                        </td>
+                                        <td valign="top">
+                                            <span class="model">
+                                                <span class="prop">
+                                                    <span class="prop-type">@property.PropertyType.Name.ToLower()</span>
+                                                    <div class="markdown">
+                                                        <span> @{
+                                                            if (method.Response.GetType().Name.Equals("Brand"))
+                                                            {
+                                                                var prop = typeof(RMSAutoAPI.Models.Brand).GetProperty(property.Name);
+                                                                if (prop != null)
+                                                                {
+                                                                    var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                                                                    <p>@attribute.Description</p>
+                                                                }
+                                                            }
+
+                                                            if (method.Response.GetType().Name.Equals("PartNumber"))
+                                                            {
+                                                                var prop = typeof(RMSAutoAPI.Models.PartNumber).GetProperty(property.Name);
+                                                                if (prop != null)
+                                                                {
+                                                                    var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                                                                    <p>@attribute.Description</p>
+                                                                }
+                                                            }
+
+                                                            if (method.Response.GetType().Name.Equals("Partner"))
+                                                            {
+                                                                var prop = typeof(RMSAutoAPI.Models.Partner).GetProperty(property.Name);
+                                                                if (prop != null)
+                                                                {
+                                                                    var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                                                                    <p>@attribute.Description</p>
+                                                                }
+                                                            }
+
+                                                        }</span>
+ 
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            }
+                        }
+                        </div>
+                    </div>
+                }
+            </div>
+            </section>
+
+    </div> @*End wrapper*@
 
 
 
 
-    <ul data-bind="foreach: methods">
+    @*<ul data-bind="foreach: methods">
         <strong data-bind="text: Name"></strong>
 
-    </ul>
+    </ul>*@
 
     <script type="text/javascript">
         var jsonModel = @Html.Raw(Json.Encode(@Model));

@@ -394,7 +394,23 @@ var viewModel = function () {
                         }
                     });
 
-                }
+            }
+
+
+
+
+
+
+                var modelsHeader = document.getElementById("models-header");
+                modelsHeader.onclick = function () {
+                    var allModels = document.getElementById("all-models");
+                    if (allModels.style.display === 'block') {
+                        allModels.style.display = 'none';
+                    }
+                    else {
+                        allModels.style.display = 'block';
+                    }
+                };
 
 }
 
