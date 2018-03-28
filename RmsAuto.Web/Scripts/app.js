@@ -79,38 +79,11 @@ var viewModel = function () {
         execute = document.getElementById(str + "_execute");
         bTryit = document.getElementById(str + "_tryIt");
 
-        if (article !== null) {
-            if (article.style.display === 'none') {
-                article.style.display = 'block'
-            }
-            else {
-                article.style.display = 'none'
-            }
-        }
-        if (brand !== null) {
-            if (brand.style.display === 'none') {
-                brand.style.display = 'block'
-            }
-            else {
-                brand.style.display = 'none'
-            }
-        }
-        if (analogues !== null) {
-            if (analogues.style.display === 'none') {
-                analogues.style.display = 'block'
-            }
-            else {
-                analogues.style.display = 'none'
-            }
-        }
-        if (execute !== null) {
-            if (execute.style.display === 'none') {
-                execute.style.display = 'block'
-            }
-            else {
-                execute.style.display = 'none'
-            }
-        }
+        changeVisible(article);
+        changeVisible(brand);
+        changeVisible(analogues);
+        changeVisible(execute);
+
         if (bTryit !== null) {
             if (bTryit.innerHTML === 'Try it out') {
                 bTryit.innerHTML = "Cancel";
@@ -119,24 +92,30 @@ var viewModel = function () {
                 bTryit.innerHTML = "Try it out";
             }
         }
-
     }
 
+    function changeVisible(item) {
+        if (item !== null) {
+            if (item.style.display === 'none') {
+                item.style.display = 'block'
+            }
+            else {
+                item.style.display = 'none'
+            }
+        }
+    }
 
-    this.firstName = ko.observable("Test");
-
+    var pathname = window.location.pathname;
+    var mainUrl = '';
+    if (pathname === '/') {
+        mainUrl = window.location.href;
+    }
+    else {
+        mainUrl = replaceString(pathname, '', window.location.href);
+    }
 
     GetBrands = function () {
-        document.getElementById("GetBrands_loader").style.display = "block";
-
-        var pathname = window.location.pathname;
-        var mainUrl = '';
-        if (pathname === '/') {
-             mainUrl = window.location.href;
-        }
-        else {
-             mainUrl = replaceString(pathname, '', window.location.href);
-        }
+        changeVisible(document.getElementById("GetBrands_loader"));
 
         article = document.getElementById('GetBrands_article').value;
         analogues = document.getElementById('GetBrands_analogues').value;
@@ -188,7 +167,7 @@ var viewModel = function () {
 
                 $('#GetBrands_code').html("200");
 
-                document.getElementById("GetBrands_loader").style.display = "none";
+                changeVisible(document.getElementById("GetBrands_loader"));
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -200,8 +179,7 @@ var viewModel = function () {
                     $('#GetBrands_code').html("405");
                     $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                 }
-
-                document.getElementById("GetBrands_loader").style.display = "none";
+                changeVisible(document.getElementById("GetBrands_loader"));
             }
         });
     }
@@ -209,16 +187,7 @@ var viewModel = function () {
             //////////////////////////////////////
 
             GetSpareParts = function () {
-                document.getElementById("GetSpareParts_loader").style.display = "block";
-
-                var pathname = window.location.pathname;
-                var mainUrl = '';
-                if (pathname === '/') {
-                    mainUrl = window.location.href;
-                }
-                else {
-                    mainUrl = replaceString(pathname, '', window.location.href);
-                }
+                changeVisible(document.getElementById("GetSpareParts_loader"));
 
                 article = document.getElementById('GetSpareParts_article').value;
                 brand = document.getElementById('GetSpareParts_brand').value;
@@ -308,7 +277,7 @@ var viewModel = function () {
 
                         $('#GetSpareParts_code').html("200");
 
-                        document.getElementById("GetSpareParts_loader").style.display = "none";
+                        changeVisible(document.getElementById("GetSpareParts_loader"));
 
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
@@ -320,23 +289,14 @@ var viewModel = function () {
                             $('#GetSpareParts_code').html("405");
                             $('#GetSpareParts_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                         }
-                        document.getElementById("GetSpareParts_loader").style.display = "none";
+                        changeVisible(document.getElementById("GetSpareParts_loader"));
                     }
                 });
             }
             
             //////////////////////////////////////
                 GetPartners = function () {
-                    document.getElementById("GetPartners_loader").style.display = "block";
-
-                    var pathname = window.location.pathname;
-                    var mainUrl = '';
-                    if (pathname === '/') {
-                        mainUrl = window.location.href;
-                    }
-                    else {
-                        mainUrl = replaceString(pathname, '', window.location.href);
-                    }
+                    changeVisible(document.getElementById("GetPartners_loader"));
 
                     var url = "/api/Partners/";
 
@@ -382,7 +342,7 @@ var viewModel = function () {
 
                             $('#GetPartners_code').html("200");
 
-                            document.getElementById("GetPartners_loader").style.display = "none";
+                            changeVisible(document.getElementById("GetPartners_loader"));
 
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
@@ -390,7 +350,7 @@ var viewModel = function () {
                                 $('#GetPartners_code').html("405");
                                 $('#GetPartners_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
                             }
-                            document.getElementById("GetPartners_loader").style.display = "none";
+                            changeVisible(document.getElementById("GetPartners_loader"));
                         }
                     });
 
@@ -404,12 +364,7 @@ var viewModel = function () {
                 var modelsHeader = document.getElementById("models-header");
                 modelsHeader.onclick = function () {
                     var allModels = document.getElementById("all-models");
-                    if (allModels.style.display === 'block') {
-                        allModels.style.display = 'none';
-                    }
-                    else {
-                        allModels.style.display = 'block';
-                    }
+                    changeVisible(allModels);
                 };
 
 }
