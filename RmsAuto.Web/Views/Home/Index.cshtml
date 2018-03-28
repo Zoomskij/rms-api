@@ -1,79 +1,421 @@
-﻿@model string
+﻿@using System.Web.Configuration;
+@using System.ComponentModel;
+@model List<RMSAutoAPI.Models.ApiMethod>
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
 }
 
-<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Source+Code+Pro:300,600|Titillium+Web:400,600,700" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="~/Swagger/swagger-ui.css">
+<!DOCTYPE html>
 
-<style>
 
-    html {
-        box-sizing: border-box;
-        overflow: -moz-scrollbars-vertical;
-        overflow-y: scroll;
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/api.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <br />
+
+    <div class="wrapper">
+
+        [ Base URL: @WebConfigurationManager.AppSettings["UrlApi"] ]
+        <br /><br />
+        @*<td>@ViewBag.Token</td> <br /><br />*@
+
+
+        @*<div>
+            <h2 class="title"> API.RMSAUTO </h2>
+        </div>*@
+
+              <div class="rms-title">
+                  API.RMSAUTO представляет собой REST-сервис.
+                  Для обращения к методам api необходимо пройти авторизацию на сервисе посредством персонального логина/пароля.
+                  В ответ будет сгенерирован Bearer токен, который необходимо передавать в HTTP заголовок вызываемого метода.
+              </div>
+
+        <div class="opblock-tag-section">
+            <div style="height: auto; border: none; margin: 0px; padding: 0px;">
+                @foreach (var group in Model.GroupBy(x => x.Group))
+            {
+
+                <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
+                    <a class="nostyle" href="#/@group.Key"><span>@group.Key</span></a>
+                </h4>
+                <hr style="margin-bottom:10px; margin-top:15px;" />
+            foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
+            {
+                <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
+                    <a class="nostyle" href="#/@group.Key/@item.Name" data-bind="click:notify.bind(this,'@item.Name')">
+                        <div class="opblock-summary opblock-summary-get">
+                            <span class="opblock-summary-method">@item.Type</span>
+                            <span class="opblock-summary-path">@item.Uri</span>
+                            <div class="opblock-summary-description">@item.Description</div>
+                        </div>
+                    </a>
+
+                    <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
+                        <div class="opblock-body">
+                            <div class="opblock-description-wrapper">
+                                <div class="opblock-description">
+                                    @item.TitleDescription
+                                </div>
+                            </div>
+
+
+
+                            @*============PARAMETERS=============*@
+                            @if (Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
+                        {
+
+                            var idTryIt = @item.Name + "_tryIt";
+
+                            <div class="opblock-section-header">
+                                <div class="tab-header">
+                                    <span class="opblock-title"><b>Parameters</b></span>
+                                    <button id="@idTryIt" class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,'@item.Name')">Try it out</button>
+                                </div>
+                            </div>
+                        foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
+                        {
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    <div class="param-name">Name</div>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                    <div class="param-name">Description</div>
+                                </div>
+                            </div>
+                            <hr style="margin-top:5px; margin-bottom:10px" />
+                        foreach (var param in parameter.Key)
+                        {
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    <b>@param.Name </b>
+                                    @if (param.isRequired == true)
+                                {
+                                    <span class="required">&nbsp;*&nbsp;required</span>
+                            }
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                    @param.Description
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    @param.Type
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                    @if (param.Name != "analogues")
+                                {
+                                    var id = item.Name + "_" + param.Name;
+                                    <input id="@id" style="display:none" type="text" class="" title="" value="" placeholder="@param.Description">
+                            }
+                                    @if (param.Name == "analogues")
+                                {
+                                    var id = item.Name + "_" + param.Name;
+                                    <select id="@id" class="" style="display:none">
+                                        <option value="">--</option>
+                                        <option value="true">true</option>
+                                        <option value="false">false</option>
+                                    </select>
+                            }
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    (@Enum.GetName(typeof(TypeParameter), param.TypeParameter))
+                                </div>
+                            </div>
+
+                            <div style="padding-top:20px"></div>
+                    }
+                }
+            }
+            @*onclick="executeMethod()"*@
+            @*==============EXECUTE================*@
+                            @{
+                            var idExecute = @item.Name + "_execute";
+                            }
+                            @if (!Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
+                        {
+                            <div id="@idExecute" class="execute-wrapper">
+                                <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
+                            </div>
+                    }
+                    else
+                    {
+                        <div id="@idExecute" class="execute-wrapper" style="display:none">
+                            <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
+                        </div>
+                }
+                            @{
+                            var idLoader = @item.Name + "_loader";
+                            }
+                            <div id="@idLoader" class="loader" style="display:none">Loading...</div>
+                            @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
+
+                            @*===============RESPONSES===============*@
+                            <div class="opblock-section-header">
+                                <div class="tab-header">
+                                    <span class="opblock-title"><b>Responses</b></span>
+                                </div>
+                            </div>
+
+
+                            @*  CURL *@
+                            @{
+                            var idDivCurl = @item.Name + "_divCurl";
+                            }
+                            <div id="@idDivCurl" style="display:none">
+                                <br />
+                                <div class="execute-wrapper">
+                                    <span class="response-label"> Curl</span>
+                                </div>
+
+                                <div class="execute-wrapper" style="padding-top:0">
+                                    <pre class="example">
+                                                @{ 
+                                                    var idCurl = @item.Name + "_curl";
+                                                }
+                                    <div id="@idCurl" style="margin-top: -40px"></div>
+                                                    
+                                            </pre>
+                                </div>
+                            </div>
+
+                            @*  REQUEST URL *@
+                            @{
+                            var idDivRequestUrl = @item.Name + "_divRequestUrl";
+                            }
+                            <div id="@idDivRequestUrl" style="display:none">
+                                <div class="execute-wrapper">
+                                    <span class="response-label"> Request URL</span>
+                                </div>
+
+                                <div class="execute-wrapper" style="padding-top:0">
+                                    <pre class="example" style="height:30px;">
+                                                @{ 
+                                                    var idRequestUrl = @item.Name + "_request-url";
+                                                }
+                                    <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
+                                                    
+                                            </pre>
+                                </div>
+                            </div>
+                            @* ====================== *@
+
+
+
+                            <br />
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    <span class="response-label"> Server response</span>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    <b>Code</b>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                    <b>Details</b>
+                                </div>
+                            </div>
+                            <hr style="margin-top:5px; margin-bottom:10px" />
+
+                            <div style="margin-top:20px"></div>
+
+
+                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                    @{
+                                    var idCode = item.Name + "_code";
+                                    }
+                                    <div id="@idCode"></div>
+                                </div>
+                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                    <pre class="example" style="margin-right: -25px;">
+
+                                                @{ 
+                                                    var idResp = @item.Name + "_resp";
+                                                }
+                                            
+<div id="@idResp" style="margin-top: -50px; overflow-y:auto; max-height:600px">
+@switch (item.Name)
+{
+    case "GetBrands":
+<span>
+[
+  {
+    "Name": "string",
+    "Description": "string"
+  }
+]
+</span>
+    break;
+case "GetSpareParts":
+<span>
+[
+  {
+    "Brand": "string",
+    "Article": "string",
+    "Name": "string",
+    "Type": 0,
+    "DeliveryQuality": 0,
+    "Count": 0,
+    "DeliveryDaysMin": 0,
+    "DeliveryDaysMax": 0,
+    "Price": 0,
+    "SupplierID": 0,
+    "MinOrderQty": 0
+  }
+]
+</span>                                                     
+    break;
+case "GetPartners":
+<span>
+[
+  {
+    "City": "string",
+    "InternalFranchName": "string",
+    "Franch": "string"
+  }
+]
+</span>
+    break;
+}
+</div>
+
+                                            </pre>
+                                </div>
+                            </div>
+
+                            <div style="padding-bottom:20px"></div>
+                        </div>
+                    </div>
+                </div>
+        }
     }
 
-    *,
-    *:before,
-    *:after {
-        box-sizing: inherit;
-    }
 
-    body {
-        margin: 0;
-        background: #fafafa;
-    }
-</style>
+            </div>
+        </div>
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0">
-    <defs>
-        <symbol viewBox="0 0 20 20" id="unlocked">
-            <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path>
-        </symbol>
-        <symbol viewBox="0 0 20 20" id="locked">
-            <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8zM12 8H8V5.199C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8z" />
-        </symbol>
-        <symbol viewBox="0 0 20 20" id="close">
-            <path d="M14.348 14.849c-.469.469-1.229.469-1.697 0L10 11.819l-2.651 3.029c-.469.469-1.229.469-1.697 0-.469-.469-.469-1.229 0-1.697l2.758-3.15-2.759-3.152c-.469-.469-.469-1.228 0-1.697.469-.469 1.228-.469 1.697 0L10 8.183l2.651-3.031c.469-.469 1.228-.469 1.697 0 .469.469.469 1.229 0 1.697l-2.758 3.152 2.758 3.15c.469.469.469 1.229 0 1.698z" />
-        </symbol>
-        <symbol viewBox="0 0 20 20" id="large-arrow">
-            <path d="M13.25 10L6.109 2.58c-.268-.27-.268-.707 0-.979.268-.27.701-.27.969 0l7.83 7.908c.268.271.268.709 0 .979l-7.83 7.908c-.268.271-.701.27-.969 0-.268-.269-.268-.707 0-.979L13.25 10z" />
-        </symbol>
-        <symbol viewBox="0 0 20 20" id="large-arrow-down">
-            <path d="M17.418 6.109c.272-.268.709-.268.979 0s.271.701 0 .969l-7.908 7.83c-.27.268-.707.268-.979 0l-7.908-7.83c-.27-.268-.27-.701 0-.969.271-.268.709-.268.979 0L10 13.25l7.418-7.141z" />
-        </symbol>
 
-        <symbol viewBox="0 0 24 24" id="jump-to">
-            <path d="M19 7v4H5.83l3.58-3.59L8 6l-6 6 6 6 1.41-1.41L5.83 13H21V7z" />
-        </symbol>
-        <symbol viewBox="0 0 24 24" id="expand">
-            <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
-        </symbol>
-    </defs>
-</svg>
-<div id="swagger-ui" style="margin-top:-30px"></div>
-<script src="~/Swagger/swagger-ui-bundle.js"></script>
-<script src="~/Swagger/swagger-ui-standalone-preset.js"></script>
-<script>
 
-    window.onload = function () {
-        // Build a system
-        var url = '@Model' + '/swagger/docs/v1';
-        const ui = SwaggerUIBundle({
-            url: url,
-            dom_id: '#swagger-ui',
-            deepLinking: true,
-            presets: [
-                SwaggerUIBundle.presets.apis,
-                SwaggerUIStandalonePreset
-            ],
-            plugins: [
-                SwaggerUIBundle.plugins.DownloadUrl
-            ],
-            layout: "StandaloneLayout"
-        })
+        @*MODELS*@
+        <section class="models">
+            <div id="models-header" class="models-header">
+                <h4>
+                    <span>Models</span>
+                    <svg width="20" height="20"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#large-arrow-down"></use></svg>
+                </h4>
+            </div>
+            <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
 
-        window.ui = ui
-    }
-</script>
+                @foreach (var method in Model)
+            {
+                <div id="model-Brand" class="model-container">
+                    <div class="model-box">
+                        <p><span class="model-title"> @method.Response.GetType().Name</span> { </p>
+                        @foreach (var property in @method.Response.GetType().GetProperties())
+                    {
+                        <table class="properties">
+                            <tr>
+                                <td valign="top" width="150">
+                                    <span class="prop-name">@property.Name </span>
+                                </td>
+                                <td valign="top">
+                                    <span class="model">
+                                        <span class="prop">
+                                            <span class="prop-type">
+                                                @if (property.PropertyType.Name.ToLower().Equals("nullable`1"))
+                                            {
+                                                <span>int32 (nullable)</span>
+                                        }
+                                        else
+                                        {
+                                            @property.PropertyType.Name.ToLower()
+                                    }
+
+                                            </span>
+                                            <div class="markdown">
+                                                <span>
+                                                    @{
+                                                    if (method.Response.GetType().Name.Equals("Brand"))
+                                                    {
+                                                        var prop = typeof(RMSAutoAPI.Models.Brand).GetProperty(property.Name);
+                                                        if (prop != null)
+                                                        {
+                                                            var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                                                            <p>@attribute.Description</p>
+                                                    }
+                                                }
+
+                                                if (method.Response.GetType().Name.Equals("PartNumber"))
+                                                {
+                                                    var prop = typeof(RMSAutoAPI.Models.PartNumber).GetProperty(property.Name);
+                                                    if (prop != null)
+                                                    {
+                                                        var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                                                        <p>@attribute.Description</p>
+                                                }
+                                            }
+
+                                            if (method.Response.GetType().Name.Equals("Partner"))
+                                            {
+                                                var prop = typeof(RMSAutoAPI.Models.Partner).GetProperty(property.Name);
+                                                if (prop != null)
+                                                {
+                                                    var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
+                                                    <p>@attribute.Description</p>
+                                            }
+                                        }
+
+                                                    }
+                                                </span>
+
+                                            </div>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </table>
+                }
+                        }
+                    </div>
+                </div>
+        }
+            </div>
+        </section>
+
+    </div> @*End wrapper*@
+
+
+
+
+    @*<ul data-bind="foreach: methods">
+        <strong data-bind="text: Name"></strong>
+
+    </ul>*@
+
+    <script type="text/javascript">
+        var jsonModel = @Html.Raw(Json.Encode(@Model));
+        var token = @Html.Raw(Json.Encode(@ViewBag.Token));
+    </script>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/app.js"></script>
+
+</body>
+</html>

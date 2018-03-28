@@ -7,6 +7,10 @@
     box-sizing: border-box;
 }
 
+.rms-title {
+    padding-bottom:20px;
+}
+
 .info .title {
     font-size: 36px;
     margin: 0;
@@ -67,6 +71,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
 
 .opblock.opblock-get .opblock-summary {
     border-color: #61affe;
+    /*border-bottom: 1px solid #61affe;*/
 }
 
 .opblock .opblock-summary-method {
@@ -135,7 +140,6 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     color: #3b4151;
 }
 
-
 .required {
     font-size: 11px;
     position: relative;
@@ -146,11 +150,23 @@ a.nostyle, .swagger-ui a.nostyle:visited {
 
 .opblock .opblock-section-header {
     padding: 8px 20px;
+    margin-bottom: 20px;
     min-height: 50px;
     background: hsla(0,0%,100%,.8);
     -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.1);
     box-shadow: 0 1px 2px rgba(0,0,0,.1);
 }
+
+.param-name {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 12px 0;
+    text-align: left;
+    font-family: Open Sans,sans-serif;
+    color: #3b4151;
+}
+
+
 
 .example {
     font-size: 12px;
@@ -329,7 +345,7 @@ section.models h4 {
 .model-box {
     padding: 10px;
     border-radius: 4px;
-    background: rgba(0,0,0,0.03);
+    background: rgba(0,0,0,0.01);
 }
 
 .model-title {

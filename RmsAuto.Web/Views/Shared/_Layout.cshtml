@@ -8,6 +8,7 @@
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/api.css" rel="stylesheet" />
 </head>
+
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -20,9 +21,9 @@
                 @Html.ActionLink("RMSAUTO API", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav row">
-                    <li>@Html.ActionLink("Документация", "Index2", "Home")</li>
-                    <li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>
+                <ul class="nav navbar-nav row pull-right">
+                    
+                    @*<li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>*@
 
 
                     @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentUser))

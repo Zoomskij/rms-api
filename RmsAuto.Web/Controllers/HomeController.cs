@@ -13,15 +13,15 @@ namespace RMSAutoAPI.Controllers
 
     public class HomeController : Controller
     {
-        public ActionResult Index()
-        {
-            var url = WebConfigurationManager.AppSettings["UrlApi"];
-            return View("~/Views/Home/Index.cshtml",null, url);
-        }
+        //public ActionResult Index2()
+        //{
+        //    var url = WebConfigurationManager.AppSettings["UrlApi"];
+        //    return View("~/Views/Home/Index2.cshtml",null, url);
+        //}
         public static string Token { get; set; }
         public static string CurrentEmail { get; set; }
 
-        public ActionResult Index2()
+        public ActionResult Index()
         {
             if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
             {
