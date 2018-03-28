@@ -54,20 +54,12 @@
         }
 </style>
 
-@*<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.min.js"></script>*@
-
-@using (Ajax.BeginForm("Login", new AjaxOptions { }))
-{
-    @Html.ValidationSummary(true)
-    @Html.AntiForgeryToken()
-
+<div id="divForm">
     <div class="parent">
         <div class="window">
             <a href="#" data-dismiss="modal" class="chest">x</a>
             <div class="block">
                 <h3>Вход на сайт </h3>
-
 
                 <hr style="margin-top:-5px" />
 
@@ -83,7 +75,6 @@
 
                 <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
 
-
                 <p>
                     @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Email, new { @class = "form-control" })
@@ -93,6 +84,10 @@
                     @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Password, new { @class = "form-control" })
                     @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
+                    <span id="is-password-error" class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true" style="display:none">
+                        <span for="Email" class="">Неверный логин или пароль.</span>
+                    </span>
+
                 </p>
                 <p>
                     <label>Партнер</label><br />
@@ -108,11 +103,65 @@
                     @Html.DropDownListFor(model => model.Region, regions, "-- Выберите Регион --", new { @class = "form-control", style = "width: 192px;" })
                 </p>
 
-                <p><button type="submit" class="btn btn-info">Войти</button></p>
+                <p><button id="button-auth" type="submit" class="btn btn-info">Войти</button></p>
             </div>
         </div>
     </div>
 
     @Scripts.Render("~/bundles/jqueryval")
+</div>
+<script type="text/javascript">
+    var pathname = window.location.pathname;
+    var mainUrl = '';
+    if (pathname === '/') {
+        mainUrl = window.location.href;
+    }
+    else {
+        mainUrl = replaceString(pathname, '', window.location.href);
+    }
 
-}
+    $("#button-auth").click(function () {
+        url = mainUrl + "/Account/LoginAuth"
+        var login = "";
+        var email = document.getElementById("Email").value;
+        var password = document.getElementById("Password").value;
+        var region = document.getElementById("Region").value;
+        if (email != "" && password != "") {
+            $.ajax({
+                url: url,
+                method: "POST",
+                crossDomain: true,
+                data: {
+                    'Email': email,
+                    'Password': password,
+                    'Region': region
+                },
+                cache: false,
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (data) {
+                    document.getElementById('is-password-error').style.display = 'block';
+                    return false;
+                }
+            });
+        }
+        else {
+            document.getElementById('is-password-error').style.display = 'block';
+        }
+    });
+
+    var email = document.getElementById("Email");
+    var password = document.getElementById("Password");
+    var region = document.getElementById("Region").value;
+    password.oninput = function () {
+        document.getElementById('is-password-error').style.display = 'none';
+    };
+    email.oninput = function () {
+        document.getElementById('is-password-error').style.display = 'none';
+    };
+    region.oninput = function () {
+        document.getElementById('is-password-error').style.display = 'none';
+    };
+
+</script>

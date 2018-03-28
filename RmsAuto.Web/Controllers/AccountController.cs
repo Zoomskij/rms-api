@@ -101,7 +101,47 @@ namespace RMSAutoAPI.Controllers
             ModelState.AddModelError("", "Неверный логин или пароль.");
 
             ViewBag.returnUrl = returnUrl;
+            //return RedirectToAction("Index2", "Home");
+            //ViewBag.returnUrl = returnUrl;
             return View(model);
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult LoginAuth(string Email, string Password, string Region)
+        {
+            _userService = new UserService();
+            var _client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
+
+            var request = new RestRequest("/api/auth/token", Method.POST);
+
+            request.AddQueryParameter("format", "json");
+            request.RequestFormat = DataFormat.Json;
+            request.AddParameter("username", Email);
+            request.AddParameter("password", Password);
+            request.AddParameter("region", Region);
+            request.AddParameter("grant_type", "password");
+
+            var response = _client.Execute<JObject>(request);
+
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var user = _userService.GetUser(Email, Password, Region);
+                var token = JsonConvert.DeserializeObject<Token>(response.Content);
+                var bearerToken = $"{token.TokenType} {token.AccessToken}";
+
+
+                TempData["bearerToken"] = bearerToken;
+                TempData["Email"] = user.Email;
+                
+                return RedirectToAction("Index2", "Home");
+            }
+
+            ModelState.AddModelError("", "Неверный логин или пароль.");
+
+            return View();
+            //return RedirectToAction("Index2", "Home");
+
         }
     }
 }

@@ -123,14 +123,9 @@ namespace RMSAutoAPI.Controllers
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
         public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
         {
+            var mainBrand = db.BrandEquivalents.FirstOrDefault(x => x.Equivalent.Equals(brand))?.Brand;
+            mainBrand = string.IsNullOrWhiteSpace(mainBrand) ? brand : mainBrand;
             var region = Init();
-            //TODO: Вынесена проверка ролей в связи с неоднозначной авторизацией через ApiController and MvcController
-            //CurrentRole - Для проверки роли через сайт. UserIsInRole - через API.
-            if ((!User.IsInRole("Client_SearchApi") && !User.IsInRole("NoAccess")) &&
-                    (!CurrentRole.Equals("Client_SearchApi") && !CurrentRole.Equals("NoAccess")))
-            {
-                return Content(HttpStatusCode.BadRequest, "Authorization has been denied for this request.");
-            }
 
             if (CurrentSettings != null)
             {
@@ -138,8 +133,7 @@ namespace RMSAutoAPI.Controllers
                     return Content(HttpStatusCode.Forbidden, Resources.ErrorMaxRequests);
             }
             // Подменяем введенный бренд на наш Main brand
-            var mainBrand = db.BrandEquivalents.FirstOrDefault(x => x.Equivalent.Equals(brand))?.Brand;
-            mainBrand = string.IsNullOrWhiteSpace(mainBrand) ? brand : mainBrand;
+
 
             try
             {
