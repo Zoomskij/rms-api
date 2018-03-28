@@ -8,51 +8,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/api.css" rel="stylesheet" />
+    <link href="~/Content/login.css" rel="stylesheet" />
 }
-
-<style type="text/css">
-    .parent {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
-        overflow: auto;
-    }
-
-    .window {
-    }
-
-    .window {
-        background: white;
-        border-radius: 10px;
-        max-width: 640px;
-        max-height: 600px;
-    }
-
-    .block {
-        padding: 10%;
-        padding-top: 0;
-    }
-
-    .chest {
-        position: relative;
-        text-align: right;
-        float: right;
-        top: 5px;
-        right: 10px;
-        color: black;
-        font-weight: 600;
-    }
-
-        .chest:hover {
-            color: black;
-        }
-</style>
 
 <div id="divForm">
     <div class="parent">
@@ -78,12 +35,10 @@
                 <p>
                     @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Email, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
                 </p>
                 <p>
                     @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Password, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(x => x.Password, "", new { @class = "text-danger" })
                     <span id="is-password-error" class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true" style="display:none">
                         <span for="Email" class="">Неверный логин или пароль.</span>
                     </span>
@@ -97,9 +52,7 @@
                         {
                             regions = @ViewBag.Partners;
                         }
-
                     }
-
                     @Html.DropDownListFor(model => model.Region, regions, "-- Выберите Регион --", new { @class = "form-control", style = "width: 192px;" })
                 </p>
 
@@ -111,16 +64,10 @@
     @Scripts.Render("~/bundles/jqueryval")
 </div>
 <script type="text/javascript">
-    var pathname = window.location.pathname;
-    var mainUrl = '';
-    if (pathname === '/') {
-        mainUrl = window.location.href;
-    }
-    else {
-        mainUrl = replaceString(pathname, '', window.location.href);
-    }
-
+    var mainUrl = "@WebConfigurationManager.AppSettings["UrlApi"]";
+    
     $("#button-auth").click(function () {
+        alert(mainUrl);
         url = mainUrl + "/Account/LoginAuth"
         var login = "";
         var email = document.getElementById("Email").value;

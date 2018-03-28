@@ -26,7 +26,7 @@ namespace RMSAutoAPI.Controllers
             if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
             {
                 Token = (string)TempData["bearerToken"];
-                CurrentEmail = (string)TempData["Email"];
+                CurrentEmail = (string)TempData["Username"];
             }
             if ((int?)TempData["logout"] == 1)
             {

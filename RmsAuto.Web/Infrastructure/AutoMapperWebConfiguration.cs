@@ -33,8 +33,8 @@ namespace RMSAutoAPI.Infrastructure
 
                 cfg.CreateMap<spGetFranches_Result, Partner>()
                          .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
-                         .ForMember(dest => dest.Franch, opt => opt.MapFrom(src => src.Franch))
-                         .ForMember(dest => dest.InternalFranchName, opt => opt.MapFrom(src => src.InternalFranchName));
+                         .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Franch))
+                         .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.InternalFranchName));
             });
 
         }

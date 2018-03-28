@@ -28,7 +28,6 @@ namespace RMSAutoAPI.Controllers
     public class AccountController : Controller
     {
 
-        // public UserManager<ApplicationUser> UserManager { get; private set; }
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
 
         private IUserService _userService;
@@ -92,16 +91,12 @@ namespace RMSAutoAPI.Controllers
 
 
                 TempData["bearerToken"] = bearerToken;
-                TempData["Email"] = user.Email;
+                TempData["Username"] = user.Username;
                 
                 return RedirectToAction("Index", "Home");
             }
-
             ModelState.AddModelError("", "Неверный логин или пароль.");
-
             return View();
-            //return RedirectToAction("Index2", "Home");
-
         }
     }
 }

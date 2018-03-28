@@ -14,11 +14,11 @@ namespace RMSAutoAPI.Models
         /// Необходимый Параметр
         /// </summary>
         [Description("Необходимый Параметр")]
-        public string InternalFranchName { get; set; }
+        public string Code { get; set; }
         /// <summary>
         /// Наименование Партнера
         /// </summary>
         [Description("Наименование Партнера")]
-        public string Franch { get; set; }
+        public string Name { get; set; }
     }
 }
