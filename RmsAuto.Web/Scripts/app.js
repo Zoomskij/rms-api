@@ -20,15 +20,6 @@ function SampleMethod(method) {
     self.TitleDescription = ko.observable(method.TitleDescription);
     self.Type = ko.observable(method.Type);
     self.Uri = ko.observable(method.Uri);
-    //self.d = ko.observable(item.name);
-    //self.id = ko.observable(item.id);
-    //self.expanded = ko.observable(false);
-    //self.toggle = function (item) {
-    //    self.expanded(!self.expanded());
-    //};
-    //self.linkLabel = ko.computed(function () {
-    //    return self.expanded() ? "collapse" : "expand";
-    //}, self);
 }
 
 
@@ -62,14 +53,7 @@ var viewModel = function () {
     self.items = ko.observableArray(data);
 
     this.notify = function (str) {
-        console.log(str)
-        element = document.getElementById(str);
-        if (element.style.display === "block") {
-            element.style.display = "none";
-        }
-        else {
-            element.style.display = "block";
-        }
+        changeVisible(document.getElementById(str));
     }
 
     this.tryIt = function (str) {
@@ -105,6 +89,7 @@ var viewModel = function () {
         }
     }
 
+    //Get current url
     var pathname = window.location.pathname;
     var mainUrl = '';
     if (pathname === '/') {
@@ -114,6 +99,7 @@ var viewModel = function () {
         mainUrl = replaceString(pathname, '', window.location.href);
     }
 
+    //Formating json for print
     function syntaxHighlight(json) {
         if (typeof json != 'string') {
             json = JSON.stringify(json, undefined, 2);
@@ -136,26 +122,27 @@ var viewModel = function () {
         });
     }
 
-    GetBrands = function () {
-        changeVisible(document.getElementById("GetBrands_loader"));
+    // Generating request
+    function Request(method, url) {
+        changeVisible(document.getElementById(method + "_loader"));
+        var resp = $('#' + method + '_resp');
+        var code = $('#' + method + '_code');
+        var loader = $('#' + method + '_loader');
+        var curl = $('#' + method + '_curl');
+        var reqUrl = $('#' + method + '_request-url');
 
-        article = document.getElementById('GetBrands_article').value;
-        analogues = document.getElementById('GetBrands_analogues').value;
-        var url = "/api/Articles/" + article + "/Brands";
-        if (analogues !== "") {
-            url += "?analogues=" + analogues + "";
-        }
+        document.getElementById(method + '_divCurl').style.display = 'block';
+        document.getElementById(method + '_divRequestUrl').style.display = 'block';
 
-        $('#GetBrands_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
-        $('#GetBrands_curl').append(" -H \"accept: application/json\"");
+        curl.html("curl -X GET \"" + mainUrl + "" + url + "\"");
+        curl.append(" -H \"accept: application/json\"");
         if (token !== null && token !== "") {
-            $('#GetBrands_curl').append(" -H \"authorization: " + token + "\"");
+            if (method !== "GetPartners") {
+                curl.append(" -H \"authorization: " + token + "\"");
+            }
         }
-        $('#GetBrands_request-url').html(mainUrl + url + "");
+        reqUrl.html(mainUrl + url + "");
 
-        document.getElementById('GetBrands_divCurl').style.display = 'block';
-        document.getElementById('GetBrands_divRequestUrl').style.display = 'block';
-        
         $.ajax({
             url: url,
             method: "GET",
@@ -172,141 +159,61 @@ var viewModel = function () {
             success: function (data) {
                 var str = JSON.stringify(data, null, 2);
                 var j = syntaxHighlight(str);
-                $('#GetBrands_resp').html(j);
+                resp.html(j);
 
-                $('#GetBrands_code').html("200");
+                code.html("200");
 
-                changeVisible(document.getElementById("GetBrands_loader"));
+                changeVisible(document.getElementById(method + "_loader"));
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 if (errorThrown === "Unauthorized" || token === "") {
-                    $('#GetBrands_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
-                    $('#GetBrands_code').html("401");
+                    code.html("401");
+                    resp.html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                 }
                 if (errorThrown === "Method Not Allowed") {
-                    $('#GetBrands_code').html("405");
-                    $('#GetBrands_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
+                    code.html("405");
+                    resp.html("{\n    \"Message\": \"Method not allowed.\"\n}");
                 }
-                changeVisible(document.getElementById("GetBrands_loader"));
+                changeVisible(document.getElementById(method + "_loader"));
             }
         });
     }
 
-            //////////////////////////////////////
+    GetBrands = function () {
+        article = document.getElementById('GetBrands_article').value;
+        analogues = document.getElementById('GetBrands_analogues').value;
+        var url = "/api/Articles/" + article + "/Brands";
+        if (analogues !== "") {
+            url += "?analogues=" + analogues + "";
+        }
 
-            GetSpareParts = function () {
-                changeVisible(document.getElementById("GetSpareParts_loader"));
+        Request("GetBrands", url);
+    }
 
-                article = document.getElementById('GetSpareParts_article').value;
-                brand = document.getElementById('GetSpareParts_brand').value;
-                analogues = document.getElementById('GetSpareParts_analogues').value;
-                var url = "/api/Articles/" + article + "/Brand/" + brand;
-                if (analogues !== "") {
-                    url += "?analogues=" + analogues + "";
-                }
+    GetSpareParts = function () {
+        article = document.getElementById('GetSpareParts_article').value;
+        brand = document.getElementById('GetSpareParts_brand').value;
+        analogues = document.getElementById('GetSpareParts_analogues').value;
+        var url = "/api/Articles/" + article + "/Brand/" + brand;
+        if (analogues !== "") {
+            url += "?analogues=" + analogues + "";
+        }
 
-                $('#GetSpareParts_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
-                $('#GetSpareParts_curl').append(" -H \"accept: application/json\"");
-                if (token !== null && token !== "") {
-                    $('#GetSpareParts_curl').append(" -H \"authorization: " + token + "\"");
-                }
-                $('#GetSpareParts_request-url').html(mainUrl + url + "");
-
-                document.getElementById('GetSpareParts_divCurl').style.display = 'block';
-                document.getElementById('GetSpareParts_divRequestUrl').style.display = 'block';
-
-                $.ajax({
-                    url: url,
-                    method: "GET",
-                    dataType: "json",
-                    crossDomain: true,
-                    contentType: "application/json; charset=utf-8",
-                    data: JSON.stringify(data),
-                    cache: false,
-                    beforeSend: function (xhr) {
-                        /* Authorization header */
-                        xhr.setRequestHeader("Authorization", token);
-                        xhr.setRequestHeader("X-Mobile", "false");
-                    },
-                    success: function (data) {
-                        var str = JSON.stringify(data, null, 2);
-                        var j = syntaxHighlight(str);
-                        $('#GetSpareParts_resp').html(j);
-
-                        $('#GetSpareParts_code').html("200");
-
-                        changeVisible(document.getElementById("GetSpareParts_loader"));
-
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        if (errorThrown === "Unauthorized" || token === "") {
-                            $('#GetSpareParts_resp').html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
-                            $('#GetSpareParts_code').html("401");
-                        }
-                        if (errorThrown === "Method Not Allowed") {
-                            $('#GetSpareParts_code').html("405");
-                            $('#GetSpareParts_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
-                        }
-                        changeVisible(document.getElementById("GetSpareParts_loader"));
-                    }
-                });
-            }
+        Request("GetSpareParts", url);
+    }
             
-            //////////////////////////////////////
-                GetPartners = function () {
-                    changeVisible(document.getElementById("GetPartners_loader"));
-
-                    var url = "/api/Partners/";
-
-                    document.getElementById('GetPartners_divCurl').style.display = 'block';
-                    document.getElementById('GetPartners_divRequestUrl').style.display = 'block';
-
-                    $.ajax({
-                        url: url,
-                        method: "GET",
-                        dataType: "json",
-                        crossDomain: true,
-                        contentType: "application/json; charset=utf-8",
-                        data: JSON.stringify(data),
-                        cache: false,
-                        success: function (data) {
-                            var str = JSON.stringify(data, null, 2);
-                            var j = syntaxHighlight(str);
-                            $('#GetPartners_resp').html(j);
-
-                            $('#GetPartners_curl').html("curl -X GET \"" + mainUrl + "" + url + "\"");
-                            $('#GetPartners_curl').append(" -H \"accept: application/json\"");
+    GetPartners = function () {
+        var url = "/api/Partners/";
+        Request("GetPartners", url);
+    }
 
 
-                            $('#GetPartners_request-url').html(mainUrl + url + "");
-
-                            $('#GetPartners_code').html("200");
-
-                            changeVisible(document.getElementById("GetPartners_loader"));
-
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            if (errorThrown === "Method Not Allowed") {
-                                $('#GetPartners_code').html("405");
-                                $('#GetPartners_resp').html("{\n    \"Message\": \"Method not allowed.\"\n}");
-                            }
-                            changeVisible(document.getElementById("GetPartners_loader"));
-                        }
-                    });
-
-            }
-
-
-
-
-
-
-                var modelsHeader = document.getElementById("models-header");
-                modelsHeader.onclick = function () {
-                    var allModels = document.getElementById("all-models");
-                    changeVisible(allModels);
-                };
+    var modelsHeader = document.getElementById("models-header");
+    modelsHeader.onclick = function () {
+        var allModels = document.getElementById("all-models");
+        changeVisible(allModels);
+    };
 
 }
 
