@@ -49,6 +49,7 @@
                     <a class="nostyle" href="#/@group.Key"><span>@group.Key</span></a>
                 </h4>
                 <hr style="margin-bottom:10px; margin-top:15px;" />
+
             foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
             {
                 <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
@@ -58,16 +59,17 @@
                             <span class="opblock-summary-path">@item.Uri</span>
                             <div class="opblock-summary-description">@item.Description</div>
                         </div>
+                        <hr style="width:99.5%; margin-top:0px; margin-bottom:-1px; border-top: 1px solid #61affe;" />
                     </a>
 
                     <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
                         <div class="opblock-body">
+
                             <div class="opblock-description-wrapper">
                                 <div class="opblock-description">
                                     @item.TitleDescription
                                 </div>
                             </div>
-
 
 
                             @*============PARAMETERS=============*@
@@ -322,12 +324,12 @@ case "GetPartners":
             <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
 
                 @foreach (var method in Model)
-            {
+                {
                 <div id="model-Brand" class="model-container">
                     <div class="model-box">
                         <p><span class="model-title"> @method.Response.GetType().Name</span> { </p>
                         @foreach (var property in @method.Response.GetType().GetProperties())
-                    {
+                        {
                         <table class="properties">
                             <tr>
                                 <td valign="top" width="150">
@@ -338,13 +340,21 @@ case "GetPartners":
                                         <span class="prop">
                                             <span class="prop-type">
                                                 @if (property.PropertyType.Name.ToLower().Equals("nullable`1"))
-                                            {
-                                                <span>int32 (nullable)</span>
-                                        }
-                                        else
-                                        {
-                                            @property.PropertyType.Name.ToLower()
-                                    }
+                                                {
+                                                    <span>int32 (nullable)</span>
+                                                }
+                                                else if (property.PropertyType.Name.ToLower().Equals("sparepartitemtype"))
+                                                {
+                                                    <span>int32 </span>
+                                                }
+                                                else if (property.PropertyType.Name.ToLower().Equals("quality"))
+                                                {
+                                                    <span>int32 </span>
+                                                }
+                                                else
+                                                {
+                                                    @property.PropertyType.Name.ToLower()
+                                                }
 
                                             </span>
                                             <div class="markdown">
