@@ -13,11 +13,6 @@ namespace RMSAutoAPI.Controllers
 
     public class HomeController : Controller
     {
-        //public ActionResult Index2()
-        //{
-        //    var url = WebConfigurationManager.AppSettings["UrlApi"];
-        //    return View("~/Views/Home/Index2.cshtml",null, url);
-        //}
         public static string Token { get; set; }
         public static string CurrentEmail { get; set; }
 

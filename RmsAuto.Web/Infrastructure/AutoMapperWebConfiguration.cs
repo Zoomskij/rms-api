@@ -6,7 +6,6 @@ namespace RMSAutoAPI.Infrastructure
 {
     public class AutoMapperWebConfiguration
     {
-        private int _clientGroup;
         public static void Configure()
         {
             ConfigureUserMapping();
