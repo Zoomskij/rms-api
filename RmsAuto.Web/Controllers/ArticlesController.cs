@@ -132,7 +132,6 @@ namespace RMSAutoAPI.Controllers
             }
             // Подменяем введенный бренд на наш Main brand
 
-
             try
             {
                 var crosses = db.spSearchCrossesWithPriceSVC(article, brand, analogues, string.Empty, CurrentUser.AcctgID, CurrentUser.ClientGroup, region);

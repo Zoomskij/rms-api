@@ -167,13 +167,16 @@ var viewModel = function () {
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                if (errorThrown === "Unauthorized" || token === "") {
-                    code.html("401");
+                code.html(jqXHR.status);
+
+                if (jqXHR.status === 401) {
                     resp.html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                 }
-                if (errorThrown === "Method Not Allowed") {
-                    code.html("405");
+                if (jqXHR.status === 405) {
                     resp.html("{\n    \"Message\": \"Method not allowed.\"\n}");
+                }
+                if (jqXHR.status === 400) {
+                    resp.html("{\n    \"Message\": " + jqXHR.responseText +"\n}");
                 }
                 changeVisible(document.getElementById(method + "_loader"));
             }
