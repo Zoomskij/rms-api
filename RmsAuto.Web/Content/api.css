@@ -312,10 +312,6 @@ section.models .model-container {
     background: rgba(0,0,0,.05);
 }
 
-.model-title {
-    position: relative;
-}
-
 section.models h4 {
     font-size: 16px;
     display: -webkit-box;
@@ -361,8 +357,12 @@ section.models h4 span {
 
 
 .prop-name {
-    min-width:200px;
-    max-width:200px;
+    min-width: 200px;
+    max-width: 200px;
+    font-family: Source Code Pro,monospace;
+    font-size: 12px;
+    color: #3b4151;
+    font-weight: 600;
 }
 
 .prop-type {
