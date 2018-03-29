@@ -67,7 +67,6 @@
     var mainUrl = "@WebConfigurationManager.AppSettings["UrlApi"]";
     
     $("#button-auth").click(function () {
-        alert(mainUrl);
         url = mainUrl + "/Account/LoginAuth"
         var login = "";
         var email = document.getElementById("Email").value;
@@ -111,21 +110,11 @@
         document.getElementById('is-password-error').style.display = 'none';
     };
 
-    var bAuth = document.getElementById("button-auth");
-    email.addEventListener("keyup", function (event) {
-        event.preventDefault();
-        if (event.keyCode === 13)
-            document.getElementById("button-auth").click();
-    });
-    password.addEventListener("keyup", function (event) {
-        event.preventDefault();
-        if (event.keyCode === 13)
-            document.getElementById("button-auth").click();
-    });
     this.addEventListener("keyup", function (event) {
         event.preventDefault();
-        if (event.keyCode === 13)
+        if (event.keyCode === 13) {
             document.getElementById("button-auth").click();
+        }
     });
 
 </script>

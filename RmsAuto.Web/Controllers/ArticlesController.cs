@@ -74,7 +74,6 @@ namespace RMSAutoAPI.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<Brand>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
-        //[Authorize]
         [Route("articles/{article:maxlength(50)}/brands")]
         public IHttpActionResult GetBrands(string article, bool analogues = false)
         {
@@ -118,8 +117,7 @@ namespace RMSAutoAPI.Controllers
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(IEnumerable<PartNumber>))]
-        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
-        [Authorize]
+        [Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
         public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
         {
