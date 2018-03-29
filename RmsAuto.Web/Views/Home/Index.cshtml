@@ -147,8 +147,8 @@
                             }
                             @if (!Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
                         {
-                            <div id="@idExecute" class="execute-wrapper">
-                                <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
+                            <div class="execute-wrapper">
+                                <button id="@idExecute" class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
                             </div>
                     }
                     else

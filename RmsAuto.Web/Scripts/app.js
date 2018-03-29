@@ -176,31 +176,61 @@ var viewModel = function () {
                     resp.html("{\n    \"Message\": \"Method not allowed.\"\n}");
                 }
                 if (jqXHR.status === 400) {
-                    resp.html("{\n    \"Message\": " + jqXHR.responseText +"\n}");
+                    resp.html("{\n    \"Message\": " + jqXHR.responseJSON +"\n}");
                 }
                 changeVisible(document.getElementById(method + "_loader"));
             }
         });
     }
 
+    function validation(input) {
+        if (input.value === "") {
+            input.classList.add("invalid");
+            input.oninput = function () {
+                input.classList.remove("invalid");
+            };
+            return false;
+        }
+        return true;
+    }
+    function AddEventListener(item, methodName) {
+        item.addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                document.getElementById(methodName + "_execute").click();
+            }
+        });
+    }
+
     GetBrands = function () {
-        article = document.getElementById('GetBrands_article').value;
-        analogues = document.getElementById('GetBrands_analogues').value;
-        var url = "/api/Articles/" + article + "/Brands";
-        if (analogues !== "") {
-            url += "?analogues=" + analogues + "";
+        article = document.getElementById("GetBrands_article");
+
+        if (validation(article) === false) {
+            return false;
+        }
+
+        analogues = document.getElementById("GetBrands_analogues");
+        var url = "/api/Articles/" + article.value + "/Brands";
+        if (analogues.value !== "") {
+            url += "?analogues=" + analogues.value + "";
         }
 
         Request("GetBrands", url);
     }
 
     GetSpareParts = function () {
-        article = document.getElementById('GetSpareParts_article').value;
-        brand = document.getElementById('GetSpareParts_brand').value;
-        analogues = document.getElementById('GetSpareParts_analogues').value;
-        var url = "/api/Articles/" + article + "/Brand/" + brand;
-        if (analogues !== "") {
-            url += "?analogues=" + analogues + "";
+        article = document.getElementById("GetSpareParts_article");
+        brand = document.getElementById("GetSpareParts_brand");
+        var isArticle = validation(article);
+        var isBrand = validation(brand);
+        if (isArticle && isBrand === false) {
+            return false;
+        }
+
+        analogues = document.getElementById("GetSpareParts_analogues");
+        var url = "/api/Articles/" + article.value + "/Brand/" + brand.value;
+        if (analogues.value !== "") {
+            url += "?analogues=" + analogues.value + "";
         }
 
         Request("GetSpareParts", url);
