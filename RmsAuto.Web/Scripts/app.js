@@ -169,7 +169,7 @@ var viewModel = function () {
             error: function (jqXHR, textStatus, errorThrown) {
                 code.html(jqXHR.status);
 
-                if (jqXHR.status === 401) {
+                if (jqXHR.status === 401 || (jqXHR.status === 404)) {
                     resp.html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                 }
                 if (jqXHR.status === 405) {
