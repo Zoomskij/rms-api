@@ -67,7 +67,7 @@ namespace RMSAutoAPI
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
-            var region = context.Parameters.FirstOrDefault(x => x.Key.ToLower().Equals("region")).Value?.FirstOrDefault();
+            var region = context.Parameters.FirstOrDefault(x => x.Key.ToLower().Equals("code")).Value?.FirstOrDefault();
             SelectedRegion = region ?? "rmsauto";
             context.Validated();
         }

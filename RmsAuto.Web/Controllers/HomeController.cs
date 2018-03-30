@@ -9,27 +9,25 @@ using System.Web.Mvc;
 
 namespace RMSAutoAPI.Controllers
 {
-
-
     public class HomeController : Controller
     {
         public static string Token { get; set; }
-        public static string CurrentEmail { get; set; }
+        public static string CurrentUser { get; set; }
 
         public ActionResult Index()
         {
             if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
             {
                 Token = (string)TempData["bearerToken"];
-                CurrentEmail = (string)TempData["Username"];
+				CurrentUser = (string)TempData["Username"];
             }
             if ((int?)TempData["logout"] == 1)
             {
                 Token = string.Empty;
-                CurrentEmail = string.Empty;
+				CurrentUser = string.Empty;
             }
 
-            ViewBag.CurrentUser = CurrentEmail;
+            ViewBag.CurrentUser = CurrentUser;
             ViewBag.Token = Token;
 
             if (!string.IsNullOrWhiteSpace(ViewBag.Token))
@@ -40,7 +38,6 @@ namespace RMSAutoAPI.Controllers
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetBrands", Uri = "/api/articles/{article}/brands", Group = "Articles", });
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetSpareParts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetPartners", Uri = "/api/partners", Group = "Partners" });
-
 
             methods[0].Response = new Brand();
             methods[0].Description = "Возвращает список брендов по артикулу";
@@ -57,8 +54,8 @@ namespace RMSAutoAPI.Controllers
             methods[1].Parameters.Add(new ApiParameter() { Name = "analogues", Description = "Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.", IsRequired = false, Type = "boolean", TypeParameter = TypeParameter.query });
             ////////
             methods[2].Response = new Partner();
-            methods[2].Description = "Возвращает список партнеров";
-            methods[2].TitleDescription = "Для того чтобы авторизоваться в другом регионе необходим параметр InternalFranchName";
+            methods[2].Description = "Возвращает список партнёров";
+            methods[2].TitleDescription = "Для авторизации клиентов наших региональных партнёров необходимо передавать код партнёра, полученный в этом методе (параметр Code)";
 
             return View(methods);
         }

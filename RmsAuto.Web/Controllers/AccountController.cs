@@ -27,7 +27,6 @@ namespace RMSAutoAPI.Controllers
     // либо выносить в отдельную сборку
     public class AccountController : Controller
     {
-
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
 
         private IUserService _userService;
@@ -67,7 +66,7 @@ namespace RMSAutoAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult LoginAuth(string Email, string Password, string Region)
+        public ActionResult LoginAuth(string username, string password, string code)
         {
             _userService = new UserService();
             var _client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
@@ -76,19 +75,18 @@ namespace RMSAutoAPI.Controllers
 
             request.AddQueryParameter("format", "json");
             request.RequestFormat = DataFormat.Json;
-            request.AddParameter("username", Email);
-            request.AddParameter("password", Password);
-            request.AddParameter("region", Region);
+            request.AddParameter("username", username);
+            request.AddParameter("password", password);
+            request.AddParameter("code", code);
             request.AddParameter("grant_type", "password");
 
             var response = _client.Execute<JObject>(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var user = _userService.GetUser(Email, Password, Region);
+                var user = _userService.GetUser(username, password, code);
                 var token = JsonConvert.DeserializeObject<Token>(response.Content);
                 var bearerToken = $"{token.TokenType} {token.AccessToken}";
-
 
                 TempData["bearerToken"] = bearerToken;
                 TempData["Username"] = user.Username;
