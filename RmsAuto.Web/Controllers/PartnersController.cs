@@ -27,6 +27,7 @@ namespace RMSAutoAPI.Controllers
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult GetPartners()
         {
+			var user = User.Identity;
             var partners = db.spGetFranches();
 
             if (partners == null)

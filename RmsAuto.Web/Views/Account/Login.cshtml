@@ -16,31 +16,32 @@
         <div class="window">
             <a href="#" data-dismiss="modal" class="chest">x</a>
             <div class="block">
-                <h3>Вход на сайт </h3>
+                <h3>Авторизация</h3>
 
                 <hr style="margin-top:-5px" />
 
                 <h4>oauth2 (OAuth2, password)</h4>
                 Для получения Токена необходимо вызвать POST-метод по адресу: <br />
                 <b>@WebConfigurationManager.AppSettings["UrlApi"]/api/auth/token</b><br />
-                передав три пары ключ/значение:<br />
+                передав четыре пары ключ/значение:<br />
                 <ul>
                     <li>username=%USERNAME%</li>
                     <li>password=%PASSWORD%</li>
+					<li>code=%CODE% (только для региональных клиентов)</li>
                     <li>grant_type=password</li>
                 </ul>
 
                 <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
 
                 <p>
-                    @Html.LabelFor(x => x.Email, new { @class = "control-label" }) <br />
-                    @Html.EditorFor(x => x.Email, new { @class = "form-control" })
+                    @Html.LabelFor(x => x.Username, new { @class = "control-label" }) <br />
+                    @Html.EditorFor(x => x.Username, new { @class = "form-control" })
                 </p>
                 <p>
                     @Html.LabelFor(x => x.Password, new { @class = "control-label" }) <br />
                     @Html.EditorFor(x => x.Password, new { @class = "form-control" })
-                    <span id="is-password-error" class="text-danger field-validation-error" data-valmsg-for="Email" data-valmsg-replace="true" style="display:none">
-                        <span for="Email" class="">Неверный логин или пароль.</span>
+                    <span id="is-password-error" class="text-danger field-validation-error" data-valmsg-for="Username" data-valmsg-replace="true" style="display:none">
+                        <span for="Username" class="">Неверный логин или пароль.</span>
                     </span>
 
                 </p>
@@ -53,7 +54,7 @@
                             regions = @ViewBag.Partners;
                         }
                     }
-                    @Html.DropDownListFor(model => model.Region, regions, "-- Выберите Регион --", new { @class = "form-control", style = "width: 192px;" })
+                    @Html.DropDownListFor(model => model.Region, regions, "-- Выберите Регион --", new { @class = "form-control", style = "width: 192px; height: 38px;" })
                 </p>
 
                 <p><button id="button-auth" type="submit" class="btn btn-info">Войти</button></p>
@@ -69,18 +70,18 @@
     $("#button-auth").click(function () {
         url = mainUrl + "/Account/LoginAuth"
         var login = "";
-        var email = document.getElementById("Email").value;
+        var username = document.getElementById("Username").value;
         var password = document.getElementById("Password").value;
         var region = document.getElementById("Region").value;
-        if (email != "" && password != "") {
+        if (username != "" && password != "") {
             $.ajax({
                 url: url,
                 method: "POST",
                 crossDomain: true,
                 data: {
-                    'Email': email,
+                    'Username': username,
                     'Password': password,
-                    'Region': region
+                    'Code': region
                 },
                 cache: false,
                 success: function (data) {
@@ -97,13 +98,13 @@
         }
     });
 
-    var email = document.getElementById("Email");
+    var username = document.getElementById("Username");
     var password = document.getElementById("Password");
     var region = document.getElementById("Region").value;
     password.oninput = function () {
         document.getElementById('is-password-error').style.display = 'none';
     };
-    email.oninput = function () {
+    username.oninput = function () {
         document.getElementById('is-password-error').style.display = 'none';
     };
     region.oninput = function () {

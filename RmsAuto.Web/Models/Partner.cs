@@ -13,12 +13,12 @@ namespace RMSAutoAPI.Models
         /// <summary>
         /// Необходимый Параметр
         /// </summary>
-        [Description("Необходимый Параметр")]
+        [Description("Код партнёра - необходимый параметр для авторизации региональных клиентов")]
         public string Code { get; set; }
         /// <summary>
         /// Наименование Партнера
         /// </summary>
-        [Description("Наименование Партнера")]
+        [Description("Наименование партнёра")]
         public string Name { get; set; }
     }
 }
