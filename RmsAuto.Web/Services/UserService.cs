@@ -21,8 +21,8 @@ namespace RMSAutoAPI.Services
             {
                 if (!string.IsNullOrEmpty(region) && !region.Equals("rmsauto"))
                 {
-                    var franches = db.Franch.ToList();
-                    var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                    var franches = db.spGetFranches().ToList();
+                    var currentFranch = franches.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
                     db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
                     isRms = false;
                 }

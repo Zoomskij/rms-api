@@ -55,7 +55,7 @@ namespace RMSAutoAPI.Controllers
 
             if (!region.Equals("rmsauto"))
             {
-                var currentFranch = db.Franch.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
                 db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
             }
             return region;

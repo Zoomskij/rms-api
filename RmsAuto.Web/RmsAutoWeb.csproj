@@ -208,9 +208,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Data\Franch.cs">
-      <DependentUpon>Store.tt</DependentUpon>
-    </Compile>
     <Compile Include="App_Data\LogRequests.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>

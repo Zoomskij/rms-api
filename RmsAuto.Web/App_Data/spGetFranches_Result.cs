@@ -16,5 +16,7 @@ namespace RMSAutoAPI.App_Data
         public string City { get; set; }
         public string Franch { get; set; }
         public string InternalFranchName { get; set; }
+        public string DbName { get; set; }
+        public string ServerName { get; set; }
     }
 }
