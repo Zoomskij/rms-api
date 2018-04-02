@@ -46,18 +46,17 @@ namespace RMSAutoAPI.Controllers
             if (string.IsNullOrWhiteSpace(region))
                 region = "rmsauto";
 
+            if (!region.Equals("rmsauto"))
+            {
+                var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+            }
             var userName = User.Identity.Name;
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName || x.Email == userName);
             CurrentSettings = db.Settings.FirstOrDefault(x => x.UserId == CurrentUser.UserID);
             PerMinute = _settingsHelper.CountRequests(RequestDelimeter.Minute, CurrentUser.AcctgID);
             PerHour = _settingsHelper.CountRequests(RequestDelimeter.Hour, CurrentUser.AcctgID);
             PerDay = _settingsHelper.CountRequests(RequestDelimeter.Day, CurrentUser.AcctgID);
-
-            if (!region.Equals("rmsauto"))
-            {
-                var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
-                db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
-            }
             return region;
         }
 
