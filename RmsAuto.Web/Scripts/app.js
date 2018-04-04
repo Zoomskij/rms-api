@@ -59,6 +59,7 @@ var viewModel = function () {
     this.tryIt = function (str) {
         article = document.getElementById(str + "_article");
         brand = document.getElementById(str + "_brand");
+        orderId = document.getElementById(str + "_orderId");
         analogues = document.getElementById(str + "_analogues");
         execute = document.getElementById(str + "_execute");
         bTryit = document.getElementById(str + "_tryIt");
@@ -67,6 +68,7 @@ var viewModel = function () {
         changeVisible(brand);
         changeVisible(analogues);
         changeVisible(execute);
+        changeVisible(orderId);
 
         if (bTryit !== null) {
             if (bTryit.innerHTML === 'Try it out') {
@@ -234,6 +236,16 @@ var viewModel = function () {
         }
 
         Request("GetSpareParts", url);
+    }
+
+    GetOrder = function () {
+        orderId = document.getElementById("GetOrder_orderId");
+        var url = "/api/orders/" + orderId.value;
+        var isOrderId = validation(orderId);
+        if (isOrderId === false) {
+            return false;
+        }
+        Request("GetOrder", url);
     }
             
     GetPartners = function () {

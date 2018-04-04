@@ -41,5 +41,6 @@ namespace RMSAutoAPI.App_Data
         public Nullable<byte> ItemDeliveryType { get; set; }
     
         public virtual Orders Orders { get; set; }
+        public virtual OrderLineStatuses OrderLineStatuses { get; set; }
     }
 }

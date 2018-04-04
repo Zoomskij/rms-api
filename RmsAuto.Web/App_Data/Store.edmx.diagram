@@ -17,6 +17,9 @@
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.Orders" Width="1.5" PointX="3" PointY="7.25" />
         <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLines_Orders" />
         <AssociationConnector Association="ex_rmsauto_storeModel.FK_Orders_Users" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.SpareParts" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.OrderLineStatuses" Width="1.5" PointX="7.375" PointY="7" />
+        <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLines_OrderLineStatuses" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -214,7 +214,13 @@
     <Compile Include="App_Data\OrderLines.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\OrderLineStatuses.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\Orders.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\SpareParts.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Data\spGetFranches_Result.cs">
