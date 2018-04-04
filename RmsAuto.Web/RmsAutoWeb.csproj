@@ -211,6 +211,12 @@
     <Compile Include="App_Data\LogRequests.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\OrderLines.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\Orders.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\spGetFranches_Result.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
@@ -224,6 +230,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ArticlesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\OrdersController.cs" />
     <Compile Include="Controllers\PartnersController.cs" />
     <Compile Include="Controllers\StatsController.cs" />
     <Compile Include="App_Data\ErrorLog.cs">
@@ -254,6 +261,7 @@
     <Compile Include="Models\ApiParameter.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
+    <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\PartNumber.cs" />
     <Compile Include="Models\LoginModel.cs" />

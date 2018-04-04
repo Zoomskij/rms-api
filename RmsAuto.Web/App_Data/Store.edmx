@@ -40,6 +40,53 @@
           <Property Name="Brand" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Equivalent" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="OrderLines">
+          <Key>
+            <PropertyRef Name="OrderLineID" />
+          </Key>
+          <Property Name="OrderLineID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AcctgOrderLineID" Type="int" />
+          <Property Name="ParentOrderLineID" Type="int" />
+          <Property Name="OrderID" Type="int" Nullable="false" />
+          <Property Name="PartNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Manufacturer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="SupplierID" Type="int" Nullable="false" />
+          <Property Name="DeliveryDaysMin" Type="int" Nullable="false" />
+          <Property Name="DeliveryDaysMax" Type="int" Nullable="false" />
+          <Property Name="PartName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="PartDescription" Type="varchar" MaxLength="255" />
+          <Property Name="WeightPhysical" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="WeightVolume" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="UnitPrice" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Qty" Type="int" Nullable="false" />
+          <Property Name="StrictlyThisNumber" Type="bit" Nullable="false" />
+          <Property Name="VinCheckupData" Type="varchar" MaxLength="500" />
+          <Property Name="OrderLineNotes" Type="varchar" MaxLength="500" />
+          <Property Name="EstSupplyDate" Type="datetime" />
+          <Property Name="CurrentStatus" Type="tinyint" Nullable="false" />
+          <Property Name="CurrentStatusDate" Type="datetime" />
+          <Property Name="ReferenceID" Type="varchar" MaxLength="50" />
+          <Property Name="Processed" Type="tinyint" Nullable="false" />
+          <Property Name="SupplierPriceWithMarkup" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ItemDeliveryType" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="ClientID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ShippingMethod" Type="tinyint" Nullable="false" />
+          <Property Name="PaymentMethod" Type="tinyint" Nullable="false" />
+          <Property Name="OrderNotes" Type="varchar" MaxLength="500" />
+          <Property Name="OrderDate" Type="datetime" Nullable="false" />
+          <Property Name="StoreNumber" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CustOrderNum" Type="varchar" MaxLength="50" />
+          <Property Name="Status" Type="tinyint" Nullable="false" />
+          <Property Name="CompletedDate" Type="datetime" />
+          <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserID" />
@@ -66,7 +113,7 @@
           <Property Name="ScopeType" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="HowKnow" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="RmsStoreID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ManagerId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ManagerId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="ManagerDeptId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="IsChecked" Type="bit" Nullable="false" />
           <Property Name="IsRestricted" Type="bit" Nullable="false" />
@@ -112,6 +159,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OrderLines_Orders">
+          <End Role="Orders" Type="Self.Orders" Multiplicity="1" />
+          <End Role="OrderLines" Type="Self.OrderLines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderLines">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="spGetFranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api" />
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
@@ -133,6 +204,8 @@
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="api" store:Type="Tables" />
           <EntitySet Name="Settings" EntityType="Self.Settings" Schema="api" store:Type="Tables" />
           <EntitySet Name="BrandEquivalents" EntityType="Self.BrandEquivalents" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderLines" EntityType="Self.OrderLines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Settings__RatesI__6F57D01E" Association="Self.FK__Settings__RatesI__6F57D01E">
             <End Role="Rates" EntitySet="Rates" />
@@ -141,6 +214,14 @@
           <AssociationSet Name="FK__Settings__UserId__6E63ABE5" Association="Self.FK__Settings__UserId__6E63ABE5">
             <End Role="Users" EntitySet="Users" />
             <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLines_Orders" Association="Self.FK_OrderLines_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderLines" EntitySet="OrderLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -177,6 +258,16 @@
           <EntitySet Name="BrandEquivalents" EntityType="ex_rmsauto_storeModel.BrandEquivalents" />
           <EntitySet Name="LogRequests" EntityType="ex_rmsauto_storeModel.LogRequests" />
           <FunctionImport Name="spGetFranches" ReturnType="Collection(ex_rmsauto_storeModel.spGetFranches_Result)" />
+          <EntitySet Name="OrderLines" EntityType="ex_rmsauto_storeModel.OrderLines" />
+          <EntitySet Name="Orders" EntityType="ex_rmsauto_storeModel.Orders" />
+          <AssociationSet Name="FK_OrderLines_Orders" Association="ex_rmsauto_storeModel.FK_OrderLines_Orders">
+            <End Role="Orders" EntitySet="Orders" />
+            <End Role="OrderLines" EntitySet="OrderLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_Users" Association="ex_rmsauto_storeModel.FK_Orders_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -253,7 +344,7 @@
           <Property Name="ScopeType" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="HowKnow" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="RmsStoreID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="ManagerDeptId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IsChecked" Type="Boolean" Nullable="false" />
           <Property Name="IsRestricted" Type="Boolean" Nullable="false" />
@@ -275,6 +366,7 @@
           <Property Name="PassportIssuedBy" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PassportWhenIssued" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Settings" Relationship="ex_rmsauto_storeModel.FK__Settings__UserId__6E63ABE5" FromRole="Users" ToRole="Settings" />
+          <NavigationProperty Name="Orders" Relationship="ex_rmsauto_storeModel.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
         </EntityType>
         <Association Name="FK__Settings__UserId__6E63ABE5">
           <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="1" />
@@ -313,6 +405,80 @@
           <Property Type="String" Name="DbName" Nullable="true" MaxLength="255" />
           <Property Type="String" Name="ServerName" Nullable="true" MaxLength="255" />
         </ComplexType>
+        <EntityType Name="OrderLines">
+          <Key>
+            <PropertyRef Name="OrderLineID" />
+          </Key>
+          <Property Name="OrderLineID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AcctgOrderLineID" Type="Int32" />
+          <Property Name="ParentOrderLineID" Type="Int32" />
+          <Property Name="OrderID" Type="Int32" Nullable="false" />
+          <Property Name="PartNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Manufacturer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
+          <Property Name="DeliveryDaysMin" Type="Int32" Nullable="false" />
+          <Property Name="DeliveryDaysMax" Type="Int32" Nullable="false" />
+          <Property Name="PartName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="PartDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="WeightPhysical" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="WeightVolume" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="UnitPrice" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Qty" Type="Int32" Nullable="false" />
+          <Property Name="StrictlyThisNumber" Type="Boolean" Nullable="false" />
+          <Property Name="VinCheckupData" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OrderLineNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="EstSupplyDate" Type="DateTime" Precision="3" />
+          <Property Name="CurrentStatus" Type="Byte" Nullable="false" />
+          <Property Name="CurrentStatusDate" Type="DateTime" Precision="3" />
+          <Property Name="ReferenceID" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Processed" Type="Byte" Nullable="false" />
+          <Property Name="SupplierPriceWithMarkup" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ItemDeliveryType" Type="Byte" />
+          <NavigationProperty Name="Orders" Relationship="ex_rmsauto_storeModel.FK_OrderLines_Orders" FromRole="OrderLines" ToRole="Orders" />
+        </EntityType>
+        <EntityType Name="Orders">
+          <Key>
+            <PropertyRef Name="OrderID" />
+          </Key>
+          <Property Name="OrderID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="ClientID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ShippingMethod" Type="Byte" Nullable="false" />
+          <Property Name="PaymentMethod" Type="Byte" Nullable="false" />
+          <Property Name="OrderNotes" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="StoreNumber" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CustOrderNum" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="CompletedDate" Type="DateTime" Precision="3" />
+          <Property Name="Total" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
+          <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLines_Orders" FromRole="Orders" ToRole="OrderLines" />
+          <NavigationProperty Name="Users" Relationship="ex_rmsauto_storeModel.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK_OrderLines_Orders">
+          <End Type="ex_rmsauto_storeModel.Orders" Role="Orders" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderLines" Role="OrderLines" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Orders">
+              <PropertyRef Name="OrderID" />
+            </Principal>
+            <Dependent Role="OrderLines">
+              <PropertyRef Name="OrderID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_Users">
+          <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.Orders" Role="Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -443,6 +609,55 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="OrderLines">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderLines">
+              <MappingFragment StoreEntitySet="OrderLines">
+                <ScalarProperty Name="ItemDeliveryType" ColumnName="ItemDeliveryType" />
+                <ScalarProperty Name="SupplierPriceWithMarkup" ColumnName="SupplierPriceWithMarkup" />
+                <ScalarProperty Name="Processed" ColumnName="Processed" />
+                <ScalarProperty Name="ReferenceID" ColumnName="ReferenceID" />
+                <ScalarProperty Name="CurrentStatusDate" ColumnName="CurrentStatusDate" />
+                <ScalarProperty Name="CurrentStatus" ColumnName="CurrentStatus" />
+                <ScalarProperty Name="EstSupplyDate" ColumnName="EstSupplyDate" />
+                <ScalarProperty Name="OrderLineNotes" ColumnName="OrderLineNotes" />
+                <ScalarProperty Name="VinCheckupData" ColumnName="VinCheckupData" />
+                <ScalarProperty Name="StrictlyThisNumber" ColumnName="StrictlyThisNumber" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="WeightVolume" ColumnName="WeightVolume" />
+                <ScalarProperty Name="WeightPhysical" ColumnName="WeightPhysical" />
+                <ScalarProperty Name="PartDescription" ColumnName="PartDescription" />
+                <ScalarProperty Name="PartName" ColumnName="PartName" />
+                <ScalarProperty Name="DeliveryDaysMax" ColumnName="DeliveryDaysMax" />
+                <ScalarProperty Name="DeliveryDaysMin" ColumnName="DeliveryDaysMin" />
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+                <ScalarProperty Name="ParentOrderLineID" ColumnName="ParentOrderLineID" />
+                <ScalarProperty Name="AcctgOrderLineID" ColumnName="AcctgOrderLineID" />
+                <ScalarProperty Name="OrderLineID" ColumnName="OrderLineID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Orders">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Orders">
+              <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CustOrderNum" ColumnName="CustOrderNum" />
+                <ScalarProperty Name="StoreNumber" ColumnName="StoreNumber" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="OrderNotes" ColumnName="OrderNotes" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+                <ScalarProperty Name="ShippingMethod" ColumnName="ShippingMethod" />
+                <ScalarProperty Name="ClientID" ColumnName="ClientID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="OrderID" ColumnName="OrderID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
