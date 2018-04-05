@@ -271,6 +271,7 @@
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\PartNumber.cs" />
     <Compile Include="Models\LoginModel.cs" />
+    <Compile Include="Models\Reaction.cs" />
     <Compile Include="Models\SparePartItemType.cs" />
     <Compile Include="Models\Quality.cs" />
     <Compile Include="Models\Token.cs" />

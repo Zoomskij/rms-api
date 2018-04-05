@@ -51,14 +51,14 @@ namespace RMSAutoAPI.Controllers
         [HttpPost]
         [Route("orders")]
 
-        public IHttpActionResult CreateOrderz([FromBody] List<PartNumber> partNumbers)
+        public IHttpActionResult CreateOrderz([FromBody] Order order)
         {
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
 
             var orderStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
 
             decimal total = 0;
-            foreach (var pn in partNumbers)
+            foreach (var pn in order.PartNumbers)
             {
                 var summary = db.SpareParts.FirstOrDefault(x =>
                      x.SupplierID == pn.SupplierID &&
@@ -70,19 +70,18 @@ namespace RMSAutoAPI.Controllers
                 }
             }
 
+            Orders dbOrder = new Orders();
+            dbOrder.UserID = CurrentUser.UserID;
+            dbOrder.ClientID = CurrentUser.AcctgID;
+            dbOrder.ShippingMethod = 0;
+            dbOrder.PaymentMethod = 0;
+            dbOrder.StoreNumber = "StoreNumber";
+            dbOrder.Status = 0;
+            dbOrder.OrderDate = DateTime.Now;
+            dbOrder.Total = total;
+            dbOrder.Users = CurrentUser;
 
-            Orders order = new Orders();
-            order.UserID = CurrentUser.UserID;
-            order.ClientID = CurrentUser.AcctgID;
-            order.ShippingMethod = 0;
-            order.PaymentMethod = 0;
-            order.StoreNumber = "StoreNumber";
-            order.Status = 0;
-            order.OrderDate = DateTime.Now;
-            order.Total = total;
-            order.Users = CurrentUser;
-
-            var orderLines = Mapper.Map< List<PartNumber>,ICollection <OrderLines>>(partNumbers);
+            var orderLines = Mapper.Map< List<PartNumber>,ICollection <OrderLines>>(order.PartNumbers);
             foreach (var ol in orderLines)
             {
                 ol.DeliveryDaysMin = 0;
@@ -94,16 +93,16 @@ namespace RMSAutoAPI.Controllers
                 ol.Processed = 0;
                 ol.OrderLineStatuses = orderStatus;
             }
-            order.OrderLines = orderLines;
+            dbOrder.OrderLines = orderLines;
 
             try
             {
-                var createorder = db.Orders.Add(order);
+                var createorder = db.Orders.Add(dbOrder);
                 db.SaveChanges();
-                if (order.OrderID != 0)
+                if (dbOrder.OrderID != 0)
                 {
-                    var createdOrder = Mapper.Map<Orders, Order>(order);
-                    var parts = Mapper.Map<ICollection<OrderLines>, List<PartNumber>>(order.OrderLines);
+                    var createdOrder = Mapper.Map<Orders, Order>(dbOrder);
+                    var parts = Mapper.Map<ICollection<OrderLines>, List<PartNumber>>(dbOrder.OrderLines);
                     createdOrder.PartNumbers = parts;
                     return Ok(createdOrder);
                 }
