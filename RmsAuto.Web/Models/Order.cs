@@ -11,7 +11,7 @@ namespace RMSAutoAPI.Models
         public string Username { get; set; }
         public DateTime OrderDate { get; set; }
         public DateTime? CompletedDate { get; set; }
-        public int Status { get; set; }
+        public byte Status { get; set; }
         public decimal Total { get; set; }
         public List<PartNumber> PartNumbers { get; set; } = new List<PartNumber>();
     }

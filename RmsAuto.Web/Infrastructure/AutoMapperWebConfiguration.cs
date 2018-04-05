@@ -34,6 +34,28 @@ namespace RMSAutoAPI.Infrastructure
                          .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
                          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Franch))
                          .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.InternalFranchName));
+
+                cfg.CreateMap<OrderLines, PartNumber>()
+                            .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
+                            .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
+                            .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Qty))
+                            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
+                            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice));
+
+                cfg.CreateMap<PartNumber, OrderLines>()
+                            .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Brand))
+                            .ForMember(dest => dest.PartNumber, opt => opt.MapFrom(src => src.Article))
+                            .ForMember(dest => dest.Qty, opt => opt.MapFrom(src => src.Count))
+                            .ForMember(dest => dest.PartName, opt => opt.MapFrom(src => src.Name))
+                            .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price));
+
+
+
+                cfg.CreateMap<Orders, Order>()
+                            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
+
+
+
             });
 
         }

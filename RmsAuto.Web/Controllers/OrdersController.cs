@@ -1,4 +1,5 @@
-﻿using RMSAutoAPI.App_Data;
+﻿using AutoMapper;
+using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -50,20 +51,25 @@ namespace RMSAutoAPI.Controllers
         [HttpPost]
         [Route("orders")]
 
-        public IHttpActionResult CreateOrderz([FromBody] PartNumber partNumber)
+        public IHttpActionResult CreateOrderz([FromBody] List<PartNumber> partNumbers)
         {
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
 
-
-            var summary = db.SpareParts.FirstOrDefault(x => 
-                     x.SupplierID == partNumber.SupplierID &&
-                     x.Manufacturer == partNumber.Brand &&
-                     x.PartNumber == partNumber.Article);
-            if (summary == null) return NotFound();
-            
-            if (summary.QtyInStock < partNumber.Count) return Content(HttpStatusCode.BadRequest, "Too many");
-
             var orderStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
+
+            decimal total = 0;
+            foreach (var pn in partNumbers)
+            {
+                var summary = db.SpareParts.FirstOrDefault(x =>
+                     x.SupplierID == pn.SupplierID &&
+                     x.Manufacturer == pn.Brand &&
+                     x.PartNumber == pn.Article);
+                if (summary != null && pn.Count.HasValue)
+                {
+                    total += pn.Count.Value * summary.InitialPrice;
+                }
+            }
+
 
             Orders order = new Orders();
             order.UserID = CurrentUser.UserID;
@@ -73,46 +79,42 @@ namespace RMSAutoAPI.Controllers
             order.StoreNumber = "StoreNumber";
             order.Status = 0;
             order.OrderDate = DateTime.Now;
-            order.Total = summary.InitialPrice * partNumber.Count.Value;
+            order.Total = total;
             order.Users = CurrentUser;
-            order.OrderLines.Add(new OrderLines
+
+            var orderLines = Mapper.Map< List<PartNumber>,ICollection <OrderLines>>(partNumbers);
+            foreach (var ol in orderLines)
             {
-                //OrderID = order.OrderID,
-                PartNumber = partNumber.Article,
-                Manufacturer = partNumber.Brand,
-                SupplierID = partNumber.SupplierID,
-                Qty = partNumber.Count.Value,
-                DeliveryDaysMax = 0,
-                DeliveryDaysMin = 0,
-                PartName = "test",
-                UnitPrice = Convert.ToDecimal(0.00),
-                StrictlyThisNumber = false,
-                CurrentStatus = 0,
-                Processed = 0,
-                OrderLineStatuses = orderStatus
-            });
-            db.Orders.Add(order);
+                ol.DeliveryDaysMin = 0;
+                ol.DeliveryDaysMax = 0;
+                ol.PartName = "test";
+                ol.UnitPrice = Convert.ToDecimal(0.00);
+                ol.StrictlyThisNumber = false;
+                ol.CurrentStatus = 0;
+                ol.Processed = 0;
+                ol.OrderLineStatuses = orderStatus;
+            }
+            order.OrderLines = orderLines;
+
             try
             {
+                var createorder = db.Orders.Add(order);
                 db.SaveChanges();
+                if (order.OrderID != 0)
+                {
+                    var createdOrder = Mapper.Map<Orders, Order>(order);
+                    var parts = Mapper.Map<ICollection<OrderLines>, List<PartNumber>>(order.OrderLines);
+                    createdOrder.PartNumbers = parts;
+                    return Ok(createdOrder);
+                }
+
             }
             catch (DbEntityValidationException e)
             {
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-                throw;
+              
             }
 
-
-            return Ok(partNumber);
+            return Ok(order);
         }
     }
 }
