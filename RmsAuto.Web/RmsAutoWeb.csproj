@@ -267,7 +267,11 @@
     <Compile Include="Models\ApiParameter.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
+    <Compile Include="Models\OrderPartNumbers.cs" />
+    <Compile Include="Models\PaymentMethod.cs" />
+    <Compile Include="Models\ResponsePartNumber.cs" />
     <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderResponsePartNumbers.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\PartNumber.cs" />
     <Compile Include="Models\LoginModel.cs" />

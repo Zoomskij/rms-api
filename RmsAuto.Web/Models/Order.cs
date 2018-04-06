@@ -5,7 +5,7 @@ using System.Web;
 
 namespace RMSAutoAPI.Models
 {
-    public class Order
+    public class Order<T>
     {
         public int OrderId { get; set; }
         public string OrderName { get; set; }
@@ -15,6 +15,6 @@ namespace RMSAutoAPI.Models
         public DateTime? CompletedDate { get; set; }
         public byte Status { get; set; }
         public decimal Total { get; set; }
-        public List<PartNumber> PartNumbers { get; set; } = new List<PartNumber>();
+        public List<T> PartNumbers { get; set; } = new List<T>();
     }
 }

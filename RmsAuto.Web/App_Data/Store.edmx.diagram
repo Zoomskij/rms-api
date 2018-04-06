@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="44694bb822804644b5280b433cb7bdde" Name="Diagram1" ZoomLevel="70">
+      <Diagram DiagramId="44694bb822804644b5280b433cb7bdde" Name="Diagram1" ZoomLevel="68">
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.Rates" Width="1.5" PointX="0.75" PointY="0.875" />
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.Settings" Width="1.5" PointX="3" PointY="1" />
         <AssociationConnector Association="ex_rmsauto_storeModel.FK__Settings__RatesI__6F57D01E" />
