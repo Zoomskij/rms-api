@@ -7,6 +7,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web.Http;
 
 namespace RMSAutoAPI.Controllers
@@ -19,46 +20,72 @@ namespace RMSAutoAPI.Controllers
         public Users CurrentUser { get; set; }
 
         [HttpGet]
+        [Route("orders")]
+        public IHttpActionResult GetOrders()
+        {
+            CurrentUser = db.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
+            var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
+            if (!orders.Any()) return NotFound();
+            List<Order<PartNumber>> userOrders = new List<Order<PartNumber>>();
+
+            foreach (var order in orders)
+            {
+                var newOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
+
+                userOrders.Add(newOrder);
+            }
+            return Ok(userOrders);
+        }
+
+        [HttpGet]
         [Route("orders/{orderId}")]
-        public IHttpActionResult GetOrders(int orderId)
+        public IHttpActionResult GetOrder(int orderId)
         {
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId);
             if (order == null) return NotFound();
-            Order<PartNumber> newOrder = new Order<PartNumber>();
+            var userOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
 
-            newOrder.OrderId = order.OrderID;
-            newOrder.Username = order.Users.Username;
-            newOrder.OrderDate = order.OrderDate;
-            newOrder.CompletedDate = order.CompletedDate;
-            newOrder.Status = order.Status;
-            newOrder.Total = order.Total;
+            var orderLines = Mapper.Map<ICollection<OrderLines>, List<PartNumber>>(order.OrderLines);
 
-            foreach (var ol in order.OrderLines)
-            {
-                PartNumber pn = new PartNumber();
-                pn.Article = ol.PartNumber;
-                pn.Brand = ol.Manufacturer;
-                pn.SupplierID = ol.SupplierID;
-                pn.Count = ol.Qty;
-                pn.Price = ol.UnitPrice;
-                pn.Name = ol.PartName;
-                newOrder.PartNumbers.Add(pn);
-            }
-
-            return Ok(newOrder);
+            return Ok(userOrder);
         }
 
         [HttpPost]
         [Route("orders")]
 
+        public static string ConvertManufacturerToSP(string manufacturer)
+        {
+            Regex reg = new Regex("[&><\"]");
+            if (reg.IsMatch(manufacturer))
+            {
+                Dictionary<string, string> replaces = new Dictionary<string, string>();
+                replaces.Add("&", "&amp;");
+                replaces.Add("\"", "&quot;");
+                replaces.Add(">", "&gt;");
+                replaces.Add("<", "&lt;");
+
+                foreach (var ch in replaces)
+                    manufacturer = manufacturer.Replace(ch.Key, ch.Value);
+            }
+            return manufacturer;
+        }
+
+
+        [HttpPost]
+        [Route("orders")]
         public IHttpActionResult CreateOrderz([FromBody] Order<OrderPartNumbers> order)
         {
             using (var dc = new ex_rmsauto_storeEntities())
             {
                 using (var dbTransaction = dc.Database.BeginTransaction())
                 {
+                    var brand = "AC DELCO";
+                    var article = "41803";
+                    var supplierId = "8735";
+                    var articles = string.Format(@"'<b M=""{0}"" P=""{1}"" S=""{2}"" />'", ConvertManufacturerToSP(brand), article, supplierId);
+
                     CurrentUser = dc.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
-                    var articles = @"'<b M=""AC DELCO"" P=""41803"" S=""8735"" />'";
+                    //var articles = @"'<b M=""AC DELCO"" P=""41803"" S=""8735"" />'";
 
 
                     var prices = dc.spGetCartSpareParts(articles, CurrentUser.AcctgID, null, null);

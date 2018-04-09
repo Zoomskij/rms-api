@@ -139,7 +139,7 @@ var viewModel = function () {
         curl.html("curl -X GET \"" + mainUrl + "" + url + "\"");
         curl.append(" -H \"accept: application/json\"");
         if (token !== null && token !== "") {
-            if (method !== "GetPartners") {
+            if (method !== "GetPartners" && method !== "GetOrders") {
                 curl.append(" -H \"authorization: " + token + "\"");
             }
         }
@@ -236,6 +236,11 @@ var viewModel = function () {
         }
 
         Request("GetSpareParts", url);
+    }
+
+    GetOrders = function () {
+        var url = "/api/orders";
+        Request("GetOrders", url);
     }
 
     GetOrder = function () {
