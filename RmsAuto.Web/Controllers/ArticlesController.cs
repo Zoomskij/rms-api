@@ -30,6 +30,9 @@ namespace RMSAutoAPI.Controllers
         public int PerMinute { get; set; }
         public int PerHour { get; set; }
         public int PerDay { get; set; }
+        public string DbName { get; set; }
+        public string ServerName { get; set; }
+        
 
         public string CurrentRole { get; set; } 
 
@@ -50,6 +53,8 @@ namespace RMSAutoAPI.Controllers
             {
                 var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
                 db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                DbName = currentFranch.DbName;
+                ServerName = currentFranch.ServerName;
             }
             var userName = User.Identity.Name;
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName || x.Email == userName);
@@ -90,7 +95,7 @@ namespace RMSAutoAPI.Controllers
                 {
                     return NotFound();
                 }
-                _log.Add(article, string.Empty, HttpContext.Current.Request.UserHostAddress, Resources.LogTypeBrand, CurrentUser.AcctgID);
+                _log.Add(article, string.Empty, HttpContext.Current.Request.UserHostAddress, Resources.LogTypeBrand, CurrentUser.AcctgID, DbName, ServerName);
 
                 var brandsMap = Mapper.Map<List<spSearchBrands_Result>, List<Brand>>(brands.ToList());
 
@@ -138,7 +143,7 @@ namespace RMSAutoAPI.Controllers
                 {   
                     return NotFound();
                 }
-                _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID);
+                _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID, DbName, ServerName);
 
                 var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<PartNumber>>(crosses.ToList());
 

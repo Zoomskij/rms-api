@@ -8,6 +8,6 @@ namespace RMSAutoAPI.Services
 {
     interface ILoggerSerivce 
     {
-        bool Add(string partNumber, string brand, string ip, string sourcePage, string acctgId);
+        bool Add(string partNumber, string brand, string ip, string sourcePage, string acctgId, string DbName, string ServerName);
     }
 }
