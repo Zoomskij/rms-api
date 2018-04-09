@@ -57,14 +57,18 @@ namespace RMSAutoAPI.Controllers
             {
                 using (var dbTransaction = dc.Database.BeginTransaction())
                 {
-                    CurrentUser = db.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
+                    CurrentUser = dc.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
+                    var articles = @"'<b M=""AC DELCO"" P=""41803"" S=""8735"" />'";
 
-                    var orderStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
+
+                    var prices = dc.spGetCartSpareParts(articles, CurrentUser.AcctgID, null, null);
+
+                    var orderStatus = dc.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
 
                     decimal total = 0;
                     foreach (var pn in order.PartNumbers)
                     {
-                        var summary = db.SpareParts.FirstOrDefault(x =>
+                        var summary = dc.SpareParts.FirstOrDefault(x =>
                              x.SupplierID == pn.SupplierID &&
                              x.Manufacturer == pn.Brand &&
                              x.PartNumber == pn.Article);
@@ -102,8 +106,8 @@ namespace RMSAutoAPI.Controllers
                     // dc.Database.tra DataContext.Transaction = dc.DataContext.Connection.BeginTransaction();
                     try
                     {
-                        var createorder = db.Orders.Add(dbOrder);
-                        db.SaveChanges();
+                        var createorder = dc.Orders.Add(dbOrder);
+                        dc.SaveChanges();
                         dbTransaction.Commit();
                         if (dbOrder.OrderID != 0)
                         {

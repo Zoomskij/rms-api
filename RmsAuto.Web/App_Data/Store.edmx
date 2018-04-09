@@ -237,6 +237,12 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="spGetCartSpareParts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
+          <Parameter Name="Articles" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="AcctgID" Type="varchar" Mode="In" />
+          <Parameter Name="Region" Type="varchar" Mode="In" />
+          <Parameter Name="ClientGroup" Type="int" Mode="In" />
+        </Function>
         <Function Name="spGetFranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api" />
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
@@ -334,6 +340,12 @@
             <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
             <End Role="OrderLines" EntitySet="OrderLines" />
           </AssociationSet>
+          <FunctionImport Name="spGetCartSpareParts">
+            <Parameter Name="Articles" Mode="In" Type="String" />
+            <Parameter Name="AcctgID" Mode="In" Type="String" />
+            <Parameter Name="Region" Mode="In" Type="String" />
+            <Parameter Name="ClientGroup" Mode="In" Type="Int32" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -822,6 +834,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="spGetCartSpareParts" FunctionName="ex_rmsauto_storeModel.Store.spGetCartSpareParts" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
