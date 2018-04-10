@@ -89,8 +89,10 @@ namespace RMSAutoAPI.Controllers
                                     if (sparePart?.QtyInStock < pn?.Count)
                                     {
                                         respLine.Status = ResponsePartNumber.NotSetReactionByCount;
+                                        respOrder.PartNumbers.Add(respLine);
                                         continue;
                                     }
+                                    respLine.CountApproved = pn.Count.Value;
                                     break;
                                 case 1:
                                     if (sparePart?.QtyInStock < pn?.Count)
@@ -112,13 +114,15 @@ namespace RMSAutoAPI.Controllers
                                     if (sparePart?.FinalPrice > pn.Price)
                                     {
                                         respLine.Status = ResponsePartNumber.WrongPrice;
+                                        respOrder.PartNumbers.Add(respLine);
                                         continue;
                                     }
+                                    respLine.PriceApproved = sparePart.FinalPrice.Value;
                                     break;
                                 case 1:
                                     if (sparePart.FinalPrice.HasValue)
                                     {
-                                        orderLine.UnitPrice = sparePart.FinalPrice.Value;
+                                        orderLine.UnitPrice = respLine.PriceApproved = sparePart.FinalPrice.Value;
                                     }
                                     break;
                             }
@@ -133,6 +137,7 @@ namespace RMSAutoAPI.Controllers
                             orderLine.Processed = 0;
                             orderLine.OrderLineStatuses = orderStatus;
 
+                            respOrder.OrderName = order.OrderName;
                             respOrder.PartNumbers.Add(respLine);
                             dbOrder.OrderLines.Add(orderLine);
                         }
@@ -151,6 +156,8 @@ namespace RMSAutoAPI.Controllers
                         dbTransaction.Commit();
                         if (dbOrder.OrderID != 0)
                         {
+                            respOrder.OrderDate = dbOrder.OrderDate;
+                            respOrder.OrderId = dbOrder.OrderID;
                             return Ok(respOrder);
                         }
                     }

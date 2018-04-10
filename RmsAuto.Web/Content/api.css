@@ -75,6 +75,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
 
 .opblock.opblock-post {
     border-color: #49cc90;
+    background: rgba(73,204,144,.1);
 }
 
 .opblock.opblock-post .opblock-summary-method {
@@ -416,4 +417,21 @@ section.models h4 span {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+
+textarea {
+    font-size: 12px;
+    width: 100%;
+    min-width:800px;
+    min-height: 400px;
+    height: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    outline: none;
+    background: hsla(0,0%,100%,.8);
+    font-family: Source Code Pro,monospace;
+    font-weight: 600;
+    color: #3b4151;
+    border:initial 1px #41444e;
 }

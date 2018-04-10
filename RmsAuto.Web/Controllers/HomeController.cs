@@ -76,6 +76,27 @@ namespace RMSAutoAPI.Controllers
             methods[5].Description = "Возвращает список партнёров";
             methods[5].TitleDescription = "Для авторизации клиентов наших региональных партнёров необходимо передавать код партнёра, полученный в этом методе (параметр Code)";
 
+
+            ViewBag.OrderModel = new Order<OrderPartNumbers>
+            {
+                OrderName = "Новый Заказ",
+                Reaction = Reaction.AnyPush,
+                PartNumbers = new List<OrderPartNumbers>()
+                 {
+                      new OrderPartNumbers()
+                      {
+                            Article = "333310",
+                            Brand = "KAYABA",
+                            SupplierID = 21,
+                            Count = 2,
+                            Price = 1000,
+                            ReacionByChange = 0,
+                            ReactionByCount = 0,
+                            ReactionByPrice = 0,
+                            ReactionBySupplier = 0
+                      }
+                 }
+            };
             return View(methods);
         }
     }

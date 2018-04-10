@@ -39,6 +39,7 @@ var viewModel = function () {
     if (token === null) {
         token = "";
     }
+
     var isVisible = false;
     var json = [{
 
@@ -125,21 +126,26 @@ var viewModel = function () {
     }
 
     // Generating request
-    function Request(method, url) {
-        changeVisible(document.getElementById(method + "_loader"));
-        var resp = $('#' + method + '_resp');
-        var code = $('#' + method + '_code');
-        var loader = $('#' + method + '_loader');
-        var curl = $('#' + method + '_curl');
-        var reqUrl = $('#' + method + '_request-url');
+    function Request(methodName, url) {
+        var type = "GET";
+        if (methodName === "CreateOrder")
+            type = "POST"
 
-        document.getElementById(method + '_divCurl').style.display = 'block';
-        document.getElementById(method + '_divRequestUrl').style.display = 'block';
+        changeVisible(document.getElementById(methodName + "_loader"));
+        var resp = $('#' + methodName + '_resp');
+        var code = $('#' + methodName + '_code');
+        var loader = $('#' + methodName + '_loader');
+        var curl = $('#' + methodName + '_curl');
+        var reqUrl = $('#' + methodName + '_request-url');
+        var orders = document.getElementById('CreateOrder_orders').value;
+
+        document.getElementById(methodName + '_divCurl').style.display = 'block';
+        document.getElementById(methodName + '_divRequestUrl').style.display = 'block';
 
         curl.html("curl -X GET \"" + mainUrl + "" + url + "\"");
         curl.append(" -H \"accept: application/json\"");
         if (token !== null && token !== "") {
-            if (method !== "GetPartners" && method !== "GetOrders") {
+            if (methodName !== "GetPartners" && methodName !== "GetOrders") {
                 curl.append(" -H \"authorization: " + token + "\"");
             }
         }
@@ -147,11 +153,11 @@ var viewModel = function () {
 
         $.ajax({
             url: url,
-            method: "GET",
+            method: type,
             dataType: "json",
             crossDomain: true,
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(data),
+            data: orders,
             cache: false,
             beforeSend: function (xhr) {
                 /* Authorization header */
@@ -165,7 +171,7 @@ var viewModel = function () {
 
                 code.html("200");
 
-                changeVisible(document.getElementById(method + "_loader"));
+                changeVisible(document.getElementById(methodName + "_loader"));
 
             },
             error: function (jqXHR, textStatus, errorThrown) {
@@ -180,7 +186,7 @@ var viewModel = function () {
                 if (jqXHR.status === 400) {
                     resp.html("{\n    \"Message\": " + jqXHR.responseJSON +"\n}");
                 }
-                changeVisible(document.getElementById(method + "_loader"));
+                changeVisible(document.getElementById(methodName + "_loader"));
             }
         });
     }
@@ -243,6 +249,16 @@ var viewModel = function () {
         Request("GetOrders", url);
     }
 
+    CreateOrder = function () {
+        orderId = document.getElementById("CreateOrder_orders");
+        var url = "/api/orders";
+        var isOrderId = validation(orderId);
+        if (isOrderId === false) {
+            return false;
+        }
+        Request("CreateOrder", url);
+    }
+
     GetOrder = function () {
         orderId = document.getElementById("GetOrder_orderId");
         var url = "/api/orders/" + orderId.value;
@@ -265,6 +281,16 @@ var viewModel = function () {
         changeVisible(allModels);
     };
 
+
+    //BODY
+    delete orderModel.CompletedDate;
+    delete orderModel.OrderDate;
+    delete orderModel.OrderId;
+    delete orderModel.Status;
+    delete orderModel.Username;
+    delete orderModel.Total;
+    var odJson = JSON.stringify(orderModel, null, 2);
+    document.getElementById('CreateOrder_orders').value = odJson;
 }
 
 ko.applyBindings(new viewModel());
