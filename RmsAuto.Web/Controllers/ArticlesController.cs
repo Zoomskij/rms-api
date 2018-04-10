@@ -46,10 +46,8 @@ namespace RMSAutoAPI.Controllers
         {
             var claims = (ClaimsIdentity)User.Identity;
             var region = claims.Claims.FirstOrDefault(x => x.Type.Equals("Region"))?.Value;
-            if (string.IsNullOrWhiteSpace(region))
-                region = "rmsauto";
 
-            if (!region.Equals("rmsauto"))
+            if (!string.IsNullOrWhiteSpace(region) && !region.Equals("rmsauto"))
             {
                 var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
                 db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
