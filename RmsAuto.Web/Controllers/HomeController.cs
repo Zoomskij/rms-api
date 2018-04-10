@@ -39,6 +39,7 @@ namespace RMSAutoAPI.Controllers
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetSpareParts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetOrders", Uri = "/api/orders", Group = "Orders" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetOrder", Uri = "/api/orders/{orderId}", Group = "Orders" });
+            methods.Add(new ApiMethod() { Type = "POST", Name = "CreateOrder", Uri = "/api/orders", Group = "Orders" });
             methods.Add(new ApiMethod() { Type = "GET", Name = "GetPartners", Uri = "/api/partners", Group = "Partners" });
 
             methods[0].Response = new Brand();
@@ -65,11 +66,15 @@ namespace RMSAutoAPI.Controllers
             methods[3].TitleDescription = "Для авторизации в HTTP-заголовок необходимо передавать пару key = “Authorization” value = “Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%”";
             methods[3].Parameters.Add(new ApiParameter() { Name = "orderId", Description = "ID заказа", IsRequired = true, Type = "int", TypeParameter = TypeParameter.path });
 
+            methods[4].Response = new Order<PartNumber>();
+            methods[4].Description = "Позволяет создать заказ";
+            methods[4].TitleDescription = "Для авторизации в HTTP-заголовок необходимо передавать пару key = “Authorization” value = “Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%”";
+            methods[4].Parameters.Add(new ApiParameter() { Name = "orders", Description = "Заказ", IsRequired = true, Type = "object", TypeParameter = TypeParameter.body });
 
             ////////
-            methods[4].Response = new Partner();
-            methods[4].Description = "Возвращает список партнёров";
-            methods[4].TitleDescription = "Для авторизации клиентов наших региональных партнёров необходимо передавать код партнёра, полученный в этом методе (параметр Code)";
+            methods[5].Response = new Partner();
+            methods[5].Description = "Возвращает список партнёров";
+            methods[5].TitleDescription = "Для авторизации клиентов наших региональных партнёров необходимо передавать код партнёра, полученный в этом методе (параметр Code)";
 
             return View(methods);
         }

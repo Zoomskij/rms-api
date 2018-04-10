@@ -73,6 +73,20 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     border-color: #61affe;
 }
 
+.opblock.opblock-post {
+    border-color: #49cc90;
+}
+
+.opblock.opblock-post .opblock-summary-method {
+    background: #49cc90;
+}
+
+.opblock.opblock-post .opblock-summary {
+    border-color: #49cc90;
+}
+
+
+
 .opblock .opblock-summary-method {
     font-size: 14px;
     font-weight: 700;
