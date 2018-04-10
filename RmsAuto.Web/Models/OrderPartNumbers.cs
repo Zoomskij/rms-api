@@ -28,11 +28,15 @@ namespace RMSAutoAPI.Models
         /// </summary>
         public decimal Price { get; set; }
         /// <summary>
+        /// Reference (необязательное поле)
+        /// </summary>
+        public byte Reference { get; set; }
+        /// <summary>
         /// - признак разрешения замены у поставщика (обязательное поле)
         /// 0 - только заказанный номер
         /// 1 - разрешена замена от поставщика
         /// </summary>
-        public byte Reference { get; set; }
+        public byte ReacionByChange { get; set; }
         /// <summary>
         /// - признак реакции на коллизию кол-ва
         ///0 - только указанное кол-во

@@ -244,6 +244,12 @@
           <Parameter Name="ClientGroup" Type="int" Mode="In" />
         </Function>
         <Function Name="spGetFranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api" />
+        <Function Name="spGetSparePart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
+          <Parameter Name="Brand" Type="varchar" Mode="In" />
+          <Parameter Name="PartNumber" Type="varchar" Mode="In" />
+          <Parameter Name="SupplierID" Type="int" Mode="In" />
+          <Parameter Name="ClientID" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
           <Parameter Name="ShowAnalogs" Type="bit" Mode="In" />
@@ -345,6 +351,12 @@
             <Parameter Name="AcctgID" Mode="In" Type="String" />
             <Parameter Name="Region" Mode="In" Type="String" />
             <Parameter Name="ClientGroup" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="spGetSparePart" ReturnType="Collection(ex_rmsauto_storeModel.spGetSparePart_Result)">
+            <Parameter Name="Brand" Mode="In" Type="String" />
+            <Parameter Name="PartNumber" Mode="In" Type="String" />
+            <Parameter Name="SupplierID" Mode="In" Type="Int32" />
+            <Parameter Name="ClientID" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
@@ -613,6 +625,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="spGetSparePart_Result">
+          <Property Type="String" Name="Manufacturer" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PartNumber" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PartName" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="SupplierID" Nullable="false" />
+          <Property Type="Int32" Name="DeliveryDaysMin" Nullable="false" />
+          <Property Type="Int32" Name="DeliveryDaysMax" Nullable="true" />
+          <Property Type="Decimal" Name="InitialPrice" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="FinalPrice" Nullable="true" Precision="38" Scale="6" />
+          <Property Type="Int32" Name="QtyInStock" Nullable="true" />
+          <Property Type="Int32" Name="MinOrderQty" Nullable="true" />
+          <Property Type="String" Name="Region" Nullable="false" MaxLength="50" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -835,6 +860,23 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="spGetCartSpareParts" FunctionName="ex_rmsauto_storeModel.Store.spGetCartSpareParts" />
+          <FunctionImportMapping FunctionImportName="spGetSparePart" FunctionName="ex_rmsauto_storeModel.Store.spGetSparePart">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="ex_rmsauto_storeModel.spGetSparePart_Result">
+                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
+                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
+                <ScalarProperty Name="PartName" ColumnName="PartName" />
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="DeliveryDaysMin" ColumnName="DeliveryDaysMin" />
+                <ScalarProperty Name="DeliveryDaysMax" ColumnName="DeliveryDaysMax" />
+                <ScalarProperty Name="InitialPrice" ColumnName="InitialPrice" />
+                <ScalarProperty Name="FinalPrice" ColumnName="FinalPrice" />
+                <ScalarProperty Name="QtyInStock" ColumnName="QtyInStock" />
+                <ScalarProperty Name="MinOrderQty" ColumnName="MinOrderQty" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

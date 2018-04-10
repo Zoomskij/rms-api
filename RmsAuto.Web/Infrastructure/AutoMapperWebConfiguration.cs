@@ -62,7 +62,7 @@ namespace RMSAutoAPI.Infrastructure
                             .ForMember(dest => dest.Qty, opt => opt.MapFrom(src => src.Count))
                             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price));
 
-                cfg.CreateMap<OrderLines, OrderResponsePartNumbers>()
+                cfg.CreateMap<OrderLines, ResponsePartNumbers>()
                             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
                             .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
                             .ForMember(dest => dest.CountOrder, opt => opt.MapFrom(src => src.Qty))
@@ -75,7 +75,7 @@ namespace RMSAutoAPI.Infrastructure
                 cfg.CreateMap<Orders, Order<OrderPartNumbers>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
-                cfg.CreateMap<Orders, Order<OrderResponsePartNumbers>>()
+                cfg.CreateMap<Orders, Order<ResponsePartNumbers>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
             });

@@ -226,6 +226,9 @@
     <Compile Include="App_Data\spGetFranches_Result.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\spGetSparePart_Result.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
@@ -271,7 +274,7 @@
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\ResponsePartNumber.cs" />
     <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderResponsePartNumbers.cs" />
+    <Compile Include="Models\ResponsePartNumbers.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\PartNumber.cs" />
     <Compile Include="Models\LoginModel.cs" />
