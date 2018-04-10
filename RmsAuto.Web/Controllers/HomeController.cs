@@ -89,7 +89,7 @@ namespace RMSAutoAPI.Controllers
                             Brand = "KAYABA",
                             SupplierID = 21,
                             Count = 2,
-                            Price = 1000,
+                            Price = Convert.ToDecimal(1000.25),
                             ReacionByChange = 0,
                             ReactionByCount = 0,
                             ReactionByPrice = 0,
