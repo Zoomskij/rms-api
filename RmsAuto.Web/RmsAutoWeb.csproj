@@ -271,6 +271,7 @@
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
     <Compile Include="Models\OrderPartNumbers.cs" />
+    <Compile Include="Models\Part.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\ResponsePartNumber.cs" />
     <Compile Include="Models\Order.cs" />

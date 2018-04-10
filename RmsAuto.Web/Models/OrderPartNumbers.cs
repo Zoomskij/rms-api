@@ -1,24 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace RMSAutoAPI.Models
+﻿namespace RMSAutoAPI.Models
 {
-    public class OrderPartNumbers
+    public class OrderPartNumbers : Part 
     {
-        /// <summary>
-        /// Код поставщика
-        /// </summary>
-        public int SupplierID { get; set; }
-        /// <summary>
-        /// Бренд
-        /// </summary>
-        public string Brand { get; set; }
-        /// <summary>
-        /// Артикул
-        /// </summary>
-        public string Article { get; set; }
         /// <summary>
         /// Количество
         /// </summary>
@@ -36,28 +19,28 @@ namespace RMSAutoAPI.Models
         /// 0 - только заказанный номер
         /// 1 - разрешена замена от поставщика
         /// </summary>
-        public byte ReacionByChange { get; set; }
+        public byte ReacionByChange { get; set; } = 0;
         /// <summary>
         /// - признак реакции на коллизию кол-ва
-        ///0 - только указанное кол-во
-        ///1 - брать сколько есть, но не выше указанного
-        //2 - разрешение при необходимости на выравнивание вверх по MinQty
+        /// 0 - только указанное кол-во
+        /// 1 - брать сколько есть, но не выше указанного
+        /// 2 - разрешение при необходимости на выравнивание вверх по MinQty
         /// </summary>
-        public byte ReactionByCount { get; set; }
+        public byte ReactionByCount { get; set; } = 0;
         /// <summary>
         /// - признак реакции на коллизию цены
-        //0 - не выше указанной цены
-        //1 - текущая цена поставщика(т.е.без проверки цены из заказа не зависимо от ее указания в заказе)
+        /// 0 - не выше указанной цены
+        /// 1 - текущая цена поставщика(т.е.без проверки цены из заказа не зависимо от ее указания в заказе)
         /// </summary>
-        public byte ReactionByPrice { get; set; }
+        public byte ReactionByPrice { get; set; } = 0;
         /// <summary>
         /// признак реакции на выбор поставщика
         /// 0 - только указанный поставщик
-        ///1 - (зарезервировано для автоматического подбора поставщика по цене)
-        ///2 - (зарезервировано для автоматического подбора поставщика по сроку)
-        ///3 - (зарезервировано для автоматического подбора поставщика по качеству поставки)
+        /// 1 - (зарезервировано для автоматического подбора поставщика по цене)
+        /// 2 - (зарезервировано для автоматического подбора поставщика по сроку)
+        /// 3 - (зарезервировано для автоматического подбора поставщика по качеству поставки)
         /// </summary>
-        public byte ReactionBySupplier { get; set; }
+        public byte ReactionBySupplier { get; set; } = 0;
 
     }
 }

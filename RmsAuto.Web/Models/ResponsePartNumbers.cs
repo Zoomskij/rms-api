@@ -1,10 +1,7 @@
 ﻿namespace RMSAutoAPI.Models
 {
-    public class ResponsePartNumbers
+    public class ResponsePartNumbers : Part
     {
-        public int SupplierID { get; set; }
-        public string Brand { get; set; }
-        public string Article { get; set; }
         public int CountOrder { get; set; }
         public int CountApproved { get; set; }
         public decimal PriceOrder { get; set; }

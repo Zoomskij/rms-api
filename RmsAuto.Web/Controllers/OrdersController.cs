@@ -55,29 +55,32 @@ namespace RMSAutoAPI.Controllers
         [Route("orders")]
         public IHttpActionResult CreateOrder([FromBody] Order<OrderPartNumbers> order)
         {
-            //var order = JsonConvert.DeserializeObject<Order<OrderPartNumbers>>(orderz.ToString());
             using (var dc = new ex_rmsauto_storeEntities())
             {
+                CurrentUser = dc.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
                 using (var dbTransaction = dc.Database.BeginTransaction())
                 {
-                    CurrentUser = dc.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
-
-
                     var orderStatus = dc.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
-
                     decimal total = 0;
-                    List<spGetSparePart_Result> spareParts = new List<spGetSparePart_Result>();
+                    Orders dbOrder = new Orders
+                    {
+                        UserID = CurrentUser.UserID,
+                        ClientID = CurrentUser.AcctgID,
+                        StoreNumber = "StoreNumber",
+                        ShippingMethod = 0,
+                        PaymentMethod = (byte)PaymentMethod.Cash,
+                        Status = 0,
+                        OrderDate = DateTime.Now,
+                        Users = CurrentUser
+                    };
 
-                    Orders dbOrder = new Orders();
-                    dbOrder.UserID = CurrentUser.UserID;
-                    dbOrder.ClientID = CurrentUser.AcctgID;
-                    dbOrder.StoreNumber = "StoreNumber";
-                    dbOrder.ShippingMethod = 0;
-                    dbOrder.PaymentMethod = (byte)PaymentMethod.Cash;
-                    dbOrder.Status = 0;
-                    dbOrder.OrderDate = DateTime.Now;
-                   
-                    dbOrder.Users = CurrentUser;
+                    foreach (var sp in order.PartNumbers)
+                    {
+
+                    }
+
+
+                    List<spGetSparePart_Result> spareParts = new List<spGetSparePart_Result>();
 
                     var orderLines = Mapper.Map<List<OrderPartNumbers>, ICollection<OrderLines>>(order.PartNumbers);
                     foreach (var ol in orderLines)

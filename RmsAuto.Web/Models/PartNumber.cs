@@ -2,18 +2,8 @@
 
 namespace RMSAutoAPI.Models
 {
-    public class PartNumber
+    public class PartNumber : Part
     {
-        /// <summary>
-        /// Бренд
-        /// </summary>
-        [Description("Бренд")]
-        public string Brand { get; set; }
-        /// <summary>
-        /// Артикул
-        /// </summary>
-        [Description("Артикул")]
-        public string Article { get; set; }
         /// <summary>
         /// Описание артикула
         /// </summary>
@@ -49,11 +39,6 @@ namespace RMSAutoAPI.Models
         /// </summary>
         [Description("Цена")]
         public decimal Price { get; set; }
-        /// <summary>
-        /// Код поставщика
-        /// </summary>
-        [Description("Код поставщика")]
-        public int SupplierID { get; set; }
         /// <summary>
         /// Минимальное количество для заказа
         /// </summary>
