@@ -74,12 +74,45 @@ namespace RMSAutoAPI.Controllers
                         Users = CurrentUser
                     };
 
-                    foreach (var sp in order.PartNumbers)
+                    foreach (var pn in order.PartNumbers)
                     {
+                        var ol = Mapper.Map<OrderPartNumbers, OrderLines>(pn);
+                        var sparePart = dc.spGetSparePart(pn.Brand, pn.Article, pn.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
+                        if (sparePart != null)
+                        {
+                            switch (pn.ReactionByCount)
+                            {
+                                case 0:
+                                    if (sparePart?.QtyInStock < pn?.Count)
+                                    {
+                                        continue;
+                                    }
+                                    break;
+                                case 1:
+                                    if (sparePart?.QtyInStock < pn?.Count)
+                                    {
+                                        ol.Qty = sparePart.QtyInStock.Value;
+                                    }
+                                    break;
+                                case 2:
+                                    if (sparePart?.QtyInStock < pn?.Count && sparePart.MinOrderQty.HasValue)
+                                    {
+                                        ol.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
+                                    }
+                                    break;
+                            }
+                            
+                        }
+                        else
+                        {
+                            // wrong
+                        }
+
+
 
                     }
 
-
+                    ////////
                     List<spGetSparePart_Result> spareParts = new List<spGetSparePart_Result>();
 
                     var orderLines = Mapper.Map<List<OrderPartNumbers>, ICollection<OrderLines>>(order.PartNumbers);
