@@ -95,15 +95,13 @@ namespace RMSAutoAPI.Controllers
                                 case 1:
                                     if (sparePart?.QtyInStock < pn?.Count)
                                     {
-                                        ol.Qty = sparePart.QtyInStock.Value;
-                                        respLine.CountApproved = ol.Qty;
+                                        respLine.CountApproved = ol.Qty = sparePart.QtyInStock.Value;
                                     }
                                     break;
                                 case 2:
                                     if (sparePart?.QtyInStock < pn?.Count && sparePart.MinOrderQty.HasValue)
                                     {
-                                        ol.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
-                                        respLine.CountApproved = ol.Qty;
+                                        respLine.CountApproved = ol.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
                                     }
                                     break;
                             }
