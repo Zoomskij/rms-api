@@ -78,8 +78,8 @@ namespace RMSAutoAPI.Controllers
                     var respOrder = Mapper.Map<Orders, Order<ResponsePartNumbers>>(dbOrder);
                     foreach (var pn in order.PartNumbers)
                     {
-                        var ol = Mapper.Map<OrderPartNumbers, OrderLines>(pn);
-                        var respLine = Mapper.Map<OrderLines, ResponsePartNumbers>(ol);
+                        var orderLine = Mapper.Map<OrderPartNumbers, OrderLines>(pn);
+                        var respLine = Mapper.Map<OrderLines, ResponsePartNumbers>(orderLine);
                         var sparePart = dc.spGetSparePart(pn.Brand, pn.Article, pn.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
                         if (sparePart != null)
                         {
@@ -95,29 +95,46 @@ namespace RMSAutoAPI.Controllers
                                 case 1:
                                     if (sparePart?.QtyInStock < pn?.Count)
                                     {
-                                        respLine.CountApproved = ol.Qty = sparePart.QtyInStock.Value;
+                                        respLine.CountApproved = orderLine.Qty = sparePart.QtyInStock.Value;
                                     }
                                     break;
                                 case 2:
                                     if (sparePart?.QtyInStock < pn?.Count && sparePart.MinOrderQty.HasValue)
                                     {
-                                        respLine.CountApproved = ol.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
+                                        respLine.CountApproved = orderLine.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
                                     }
                                     break;
                             }
+
+                            switch (pn.ReactionByPrice)
+                            {
+                                case 0:
+                                    if (sparePart?.FinalPrice > pn.Price)
+                                    {
+                                        respLine.Status = ResponsePartNumber.WrongPrice;
+                                        continue;
+                                    }
+                                    break;
+                                case 1:
+                                    if (sparePart.FinalPrice.HasValue)
+                                    {
+                                        orderLine.UnitPrice = sparePart.FinalPrice.Value;
+                                    }
+                                    break;
+                            }
+                            total += sparePart.FinalPrice.Value * orderLine.Qty;
+
+                            orderLine.DeliveryDaysMin = sparePart != null ? sparePart.DeliveryDaysMin : 0;
+                            orderLine.DeliveryDaysMax = sparePart != null ? sparePart.DeliveryDaysMax ?? 0 : 0;
+                            orderLine.PartName = sparePart != null ? sparePart.PartName : string.Empty;
+                            orderLine.UnitPrice = sparePart != null ? sparePart.FinalPrice.Value : 0;
+                            orderLine.StrictlyThisNumber = false;
+                            orderLine.CurrentStatus = 0;
+                            orderLine.Processed = 0;
+                            orderLine.OrderLineStatuses = orderStatus;
+
                             respOrder.PartNumbers.Add(respLine);
-
-                            total += sparePart.FinalPrice.Value * ol.Qty;
-
-                            ol.DeliveryDaysMin = sparePart != null ? sparePart.DeliveryDaysMin : 0;
-                            ol.DeliveryDaysMax = sparePart != null ? sparePart.DeliveryDaysMax ?? 0 : 0;
-                            ol.PartName = sparePart != null ? sparePart.PartName : string.Empty;
-                            ol.UnitPrice = sparePart != null ? sparePart.FinalPrice.Value : 0;
-                            ol.StrictlyThisNumber = false;
-                            ol.CurrentStatus = 0;
-                            ol.Processed = 0;
-                            ol.OrderLineStatuses = orderStatus;
-                            dbOrder.OrderLines.Add(ol);
+                            dbOrder.OrderLines.Add(orderLine);
                         }
                         else
                         {
