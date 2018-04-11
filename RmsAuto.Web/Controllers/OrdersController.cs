@@ -81,119 +81,116 @@ namespace RMSAutoAPI.Controllers
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult CreateOrder([FromBody] Order<OrderPartNumbers> order)
         {
-            using (var dc = new ex_rmsauto_storeEntities())
+            using (var dbTransaction = db.Database.BeginTransaction())
             {
-                using (var dbTransaction = dc.Database.BeginTransaction())
+                var orderStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
+                decimal total = 0;
+                Orders dbOrder = new Orders
                 {
-                    var orderStatus = dc.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
-                    decimal total = 0;
-                    Orders dbOrder = new Orders
+                    UserID = CurrentUser.UserID,
+                    ClientID = CurrentUser.AcctgID,
+                    StoreNumber = "StoreNumber",
+                    ShippingMethod = 0,
+                    PaymentMethod = (byte)PaymentMethod.Cash,
+                    Status = 0,
+                    OrderDate = DateTime.Now,
+                    Users = CurrentUser
+                };
+
+
+                var respOrder = Mapper.Map<Orders, Order<ResponsePartNumbers>>(dbOrder);
+                foreach (var pn in order.PartNumbers)
+                {
+                    var orderLine = Mapper.Map<OrderPartNumbers, OrderLines>(pn);
+                    var respLine = Mapper.Map<OrderLines, ResponsePartNumbers>(orderLine);
+                    var sparePart = db.spGetSparePart(pn.Brand, pn.Article, pn.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
+                    if (sparePart != null)
                     {
-                        UserID = CurrentUser.UserID,
-                        ClientID = CurrentUser.AcctgID,
-                        StoreNumber = "StoreNumber",
-                        ShippingMethod = 0,
-                        PaymentMethod = (byte)PaymentMethod.Cash,
-                        Status = 0,
-                        OrderDate = DateTime.Now,
-                        Users = CurrentUser
-                    };
-
-
-                    var respOrder = Mapper.Map<Orders, Order<ResponsePartNumbers>>(dbOrder);
-                    foreach (var pn in order.PartNumbers)
-                    {
-                        var orderLine = Mapper.Map<OrderPartNumbers, OrderLines>(pn);
-                        var respLine = Mapper.Map<OrderLines, ResponsePartNumbers>(orderLine);
-                        var sparePart = dc.spGetSparePart(pn.Brand, pn.Article, pn.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
-                        if (sparePart != null)
+                        switch (pn.ReactionByCount)
                         {
-                            switch (pn.ReactionByCount)
-                            {
-                                case 0:
-                                    if (sparePart?.QtyInStock < pn?.Count)
-                                    {
-                                        respLine.Status = ResponsePartNumber.NotSetReactionByCount;
-                                        respOrder.PartNumbers.Add(respLine);
-                                        continue;
-                                    }
-                                    respLine.CountApproved = pn.Count.Value;
-                                    break;
-                                case 1:
-                                    if (sparePart?.QtyInStock < pn?.Count)
-                                    {
-                                        respLine.CountApproved = orderLine.Qty = sparePart.QtyInStock.Value;
-                                    }
-                                    break;
-                                case 2:
-                                    if (sparePart?.QtyInStock < pn?.Count && sparePart.MinOrderQty.HasValue)
-                                    {
-                                        respLine.CountApproved = orderLine.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
-                                    }
-                                    break;
-                            }
-
-                            switch (pn.ReactionByPrice)
-                            {
-                                case 0:
-                                    if (sparePart?.FinalPrice > pn.Price)
-                                    {
-                                        respLine.Status = ResponsePartNumber.WrongPrice;
-                                        respOrder.PartNumbers.Add(respLine);
-                                        continue;
-                                    }
-                                    respLine.PriceApproved = sparePart.FinalPrice.Value;
-                                    break;
-                                case 1:
-                                    if (sparePart.FinalPrice.HasValue)
-                                    {
-                                        orderLine.UnitPrice = respLine.PriceApproved = sparePart.FinalPrice.Value;
-                                    }
-                                    break;
-                            }
-                            total += sparePart.FinalPrice.Value * orderLine.Qty;
-
-                            orderLine.DeliveryDaysMin = sparePart != null ? sparePart.DeliveryDaysMin : 0;
-                            orderLine.DeliveryDaysMax = sparePart != null ? sparePart.DeliveryDaysMax ?? 0 : 0;
-                            orderLine.PartName = sparePart != null ? sparePart.PartName : string.Empty;
-                            orderLine.UnitPrice = sparePart != null ? sparePart.FinalPrice.Value : 0;
-                            orderLine.StrictlyThisNumber = false;
-                            orderLine.CurrentStatus = 0;
-                            orderLine.Processed = 0;
-                            orderLine.OrderLineStatuses = orderStatus;
-
-                            respOrder.OrderName = order.OrderName;
-                            respOrder.PartNumbers.Add(respLine);
-                            dbOrder.OrderLines.Add(orderLine);
+                            case 0:
+                                if (sparePart?.QtyInStock < pn?.Count)
+                                {
+                                    respLine.Status = ResponsePartNumber.NotSetReactionByCount;
+                                    respOrder.PartNumbers.Add(respLine);
+                                    continue;
+                                }
+                                respLine.CountApproved = pn.Count.Value;
+                                break;
+                            case 1:
+                                if (sparePart?.QtyInStock < pn?.Count)
+                                {
+                                    respLine.CountApproved = orderLine.Qty = sparePart.QtyInStock.Value;
+                                }
+                                break;
+                            case 2:
+                                if (sparePart?.QtyInStock < pn?.Count && sparePart.MinOrderQty.HasValue)
+                                {
+                                    respLine.CountApproved = orderLine.Qty = pn.Count.Value + sparePart.MinOrderQty.Value - (pn.Count.Value % sparePart.MinOrderQty.Value);
+                                }
+                                break;
                         }
-                        else
+
+                        switch (pn.ReactionByPrice)
                         {
-                            respLine.Status = ResponsePartNumber.NotFound;
-                            respOrder.PartNumbers.Add(respLine);
+                            case 0:
+                                if (sparePart?.FinalPrice > pn.Price)
+                                {
+                                    respLine.Status = ResponsePartNumber.WrongPrice;
+                                    respOrder.PartNumbers.Add(respLine);
+                                    continue;
+                                }
+                                respLine.PriceApproved = sparePart.FinalPrice.Value;
+                                break;
+                            case 1:
+                                if (sparePart.FinalPrice.HasValue)
+                                {
+                                    orderLine.UnitPrice = respLine.PriceApproved = sparePart.FinalPrice.Value;
+                                }
+                                break;
                         }
+                        total += sparePart.FinalPrice.Value * orderLine.Qty;
+
+                        orderLine.DeliveryDaysMin = sparePart != null ? sparePart.DeliveryDaysMin : 0;
+                        orderLine.DeliveryDaysMax = sparePart != null ? sparePart.DeliveryDaysMax ?? 0 : 0;
+                        orderLine.PartName = sparePart != null ? sparePart.PartName : string.Empty;
+                        orderLine.UnitPrice = sparePart != null ? sparePart.FinalPrice.Value : 0;
+                        orderLine.StrictlyThisNumber = false;
+                        orderLine.CurrentStatus = 0;
+                        orderLine.Processed = 0;
+                        orderLine.OrderLineStatuses = orderStatus;
+
+                        respOrder.OrderName = order.OrderName;
+                        respOrder.PartNumbers.Add(respLine);
+                        dbOrder.OrderLines.Add(orderLine);
                     }
-                    respOrder.Total = dbOrder.Total = total;
-
-                    try
+                    else
                     {
-                        var createorder = dc.Orders.Add(dbOrder);
-                        dc.SaveChanges();
-                        dbTransaction.Commit();
-                        if (dbOrder.OrderID != 0)
-                        {
-                            respOrder.OrderDate = dbOrder.OrderDate;
-                            respOrder.OrderId = dbOrder.OrderID;
-                            return Ok(respOrder);
-                        }
-                    }
-                    catch (DbEntityValidationException e)
-                    {
-                        dbTransaction.Rollback();
+                        respLine.Status = ResponsePartNumber.NotFound;
+                        respOrder.PartNumbers.Add(respLine);
                     }
                 }
+                respOrder.Total = dbOrder.Total = total;
 
-                return Ok(order);
+                try
+                {
+                    var createorder = db.Orders.Add(dbOrder);
+                    db.SaveChanges();
+                    dbTransaction.Commit();
+                    if (dbOrder.OrderID != 0)
+                    {
+                        respOrder.OrderDate = dbOrder.OrderDate;
+                        respOrder.OrderId = dbOrder.OrderID;
+                        return Ok(respOrder);
+                    }
+                }
+                catch (DbEntityValidationException e)
+                {
+                    dbTransaction.Rollback();
+                }
             }
+
+            return Ok(order);
         }
 
         public static string ConvertManufacturerToSP(string manufacturer)

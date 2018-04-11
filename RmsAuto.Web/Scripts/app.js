@@ -135,20 +135,23 @@ var viewModel = function () {
         var loader = $('#' + methodName + '_loader');
         var curl = $('#' + methodName + '_curl');
         var reqUrl = $('#' + methodName + '_request-url');
-        if (methodType === "POST") {
-            var data = document.getElementById('CreateOrder_orders').value;
-        }
+
 
         document.getElementById(methodName + '_divCurl').style.display = 'block';
         document.getElementById(methodName + '_divRequestUrl').style.display = 'block';
 
-        curl.html("curl -X GET \"" + mainUrl + "" + url + "\"");
+        curl.html("curl -X " + methodType + " \"" + mainUrl + "" + url + "\"");
         curl.append(" -H \"accept: application/json\"");
         if (token !== null && token !== "") {
             if (methodName !== "GetPartners" && methodName !== "GetOrders") {
                 curl.append(" -H \"authorization: " + token + "\"");
             }
         }
+        if (methodType === "POST") {
+            var data = document.getElementById('CreateOrder_orders').value;
+            curl.append(" -d \"" + JSON.stringify(data, null, 0) + "\""); 
+        }
+
         reqUrl.html(mainUrl + url + "");
 
         $.ajax({
