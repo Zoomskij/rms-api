@@ -127,18 +127,17 @@ var viewModel = function () {
     }
 
     // Generating request
-    function Request(methodName, url) {
-        var type = "GET";
-        if (methodName === "CreateOrder")
-            type = "POST"
-
+    function Request(methodName, methodType, url) {
+        data = null;
         changeVisible(document.getElementById(methodName + "_loader"));
         var resp = $('#' + methodName + '_resp');
         var code = $('#' + methodName + '_code');
         var loader = $('#' + methodName + '_loader');
         var curl = $('#' + methodName + '_curl');
         var reqUrl = $('#' + methodName + '_request-url');
-        var orders = document.getElementById('CreateOrder_orders').value;
+        if (methodType === "POST") {
+            var data = document.getElementById('CreateOrder_orders').value;
+        }
 
         document.getElementById(methodName + '_divCurl').style.display = 'block';
         document.getElementById(methodName + '_divRequestUrl').style.display = 'block';
@@ -154,16 +153,18 @@ var viewModel = function () {
 
         $.ajax({
             url: url,
-            method: type,
-            dataType: "json",
+            method: methodType,
             crossDomain: true,
             contentType: "application/json; charset=utf-8",
-            data: orders,
+            dataType: "json",
+            data: data,
             cache: false,
             beforeSend: function (xhr) {
-                /* Authorization header */
-                xhr.setRequestHeader("Authorization", token);
-                xhr.setRequestHeader("X-Mobile", "false");
+                if (token !== null && token !== "") {
+                    /* Authorization header */
+                    xhr.setRequestHeader("Authorization", token);
+                    xhr.setRequestHeader("X-Mobile", "false");
+                }
             },
             success: function (data) {
                 var str = JSON.stringify(data, null, 2);
@@ -224,7 +225,7 @@ var viewModel = function () {
             url += "?analogues=" + analogues.value + "";
         }
 
-        Request("GetBrands", url);
+        Request("GetBrands", "GET", url);
     }
 
     GetSpareParts = function () {
@@ -242,12 +243,12 @@ var viewModel = function () {
             url += "?analogues=" + analogues.value + "";
         }
 
-        Request("GetSpareParts", url);
+        Request("GetSpareParts", "GET", url);
     }
 
     GetOrders = function () {
         var url = "/api/orders";
-        Request("GetOrders", url);
+        Request("GetOrders", "GET", url);
     }
 
     CreateOrder = function () {
@@ -257,7 +258,7 @@ var viewModel = function () {
         if (isOrderId === false) {
             return false;
         }
-        Request("CreateOrder", url);
+        Request("CreateOrder", "POST", url);
     }
 
     GetOrder = function () {
@@ -267,12 +268,12 @@ var viewModel = function () {
         if (isOrderId === false) {
             return false;
         }
-        Request("GetOrder", url);
+        Request("GetOrder", "GET", url);
     }
             
     GetPartners = function () {
         var url = "/api/Partners/";
-        Request("GetPartners", url);
+        Request("GetPartners", "GET", url);
     }
 
 
