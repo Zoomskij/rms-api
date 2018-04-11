@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
 using RMSAutoAPI.App_Data;
+using RMSAutoAPI.Infrastructure;
 using RMSAutoAPI.Models;
+using RMSAutoAPI.Properties;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Web.Http;
 
@@ -22,16 +25,18 @@ namespace RMSAutoAPI.Controllers
 
         public OrdersController()
         {
+            var claims = (ClaimsIdentity)User.Identity;
+            var region = claims.Claims.FirstOrDefault(x => x.Type.Equals("Region"))?.Value;
+
+            if (!string.IsNullOrWhiteSpace(region))
+            {
+                var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+            }
+            else db = new ex_rmsauto_storeEntities();
+
             var userName = User.Identity.Name;
-            if (string.IsNullOrWhiteSpace(userName))
-            {
-                CurrentUser = null;
-            }
-            else
-            {
-                if (CurrentUser == null || (CurrentUser != null && CurrentUser.Username != userName))
-                    CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
-            }
+            CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
         }
 
         [HttpGet]
@@ -41,7 +46,7 @@ namespace RMSAutoAPI.Controllers
         public IHttpActionResult GetOrders()
         {
             var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
-            if (!orders.Any()) return NotFound();
+            if (!orders.Any()) return Ok(new List<Orders>());
             List<Order<PartNumber>> userOrders = new List<Order<PartNumber>>();
 
             foreach (var order in orders)
@@ -62,7 +67,7 @@ namespace RMSAutoAPI.Controllers
             var userName = User.Identity.Name;
 
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId);
-            if (order == null) return NotFound();
+            if (order == null) return Ok(new Orders());
             var userOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
 
             var orderLines = Mapper.Map<ICollection<OrderLines>, List<PartNumber>>(order.OrderLines);
