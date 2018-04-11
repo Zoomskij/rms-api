@@ -18,13 +18,28 @@ namespace RMSAutoAPI.Controllers
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
 
-        public Users CurrentUser { get; set; }
+        public static Users CurrentUser { get; set; }
+
+        public OrdersController()
+        {
+            var userName = User.Identity.Name;
+            if (string.IsNullOrWhiteSpace(userName))
+            {
+                CurrentUser = null;
+            }
+            else
+            {
+                if (CurrentUser == null || (CurrentUser != null && CurrentUser.Username != userName))
+                    CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
+            }
+        }
 
         [HttpGet]
         [Route("orders")]
+        [Authorize]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult GetOrders()
         {
-            CurrentUser = db.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
             var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
             if (!orders.Any()) return NotFound();
             List<Order<PartNumber>> userOrders = new List<Order<PartNumber>>();
@@ -40,8 +55,12 @@ namespace RMSAutoAPI.Controllers
 
         [HttpGet]
         [Route("orders/{orderId}")]
+        [Authorize]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult GetOrder(int orderId)
         {
+            var userName = User.Identity.Name;
+
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId);
             if (order == null) return NotFound();
             var userOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
@@ -53,11 +72,12 @@ namespace RMSAutoAPI.Controllers
 
         [HttpPost]
         [Route("orders")]
+        [Authorize]
+        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult CreateOrder([FromBody] Order<OrderPartNumbers> order)
         {
             using (var dc = new ex_rmsauto_storeEntities())
             {
-                CurrentUser = dc.Users.FirstOrDefault(x => x.Username == "api" || x.Email == "api");
                 using (var dbTransaction = dc.Database.BeginTransaction())
                 {
                     var orderStatus = dc.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);

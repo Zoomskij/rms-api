@@ -283,6 +283,8 @@ var viewModel = function () {
         changeVisible(allModels);
     };
 
+  
+
     var purchaseOrderNo = document.cookie;
     //BODY
     delete orderModel.CompletedDate;
