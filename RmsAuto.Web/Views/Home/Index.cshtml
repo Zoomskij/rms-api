@@ -70,7 +70,14 @@
                             <span class="opblock-summary-path">@item.Uri</span>
                             <div class="opblock-summary-description">@item.Description</div>
                         </div>
-                        <hr style="width:99.5%; margin-top:0px; margin-bottom:-1px; border-top: 1px solid #61affe;" />
+                        @{
+                            var hrColor = "1px solid #61affe;";
+                            if (item.Type == "POST")
+                            {
+                                hrColor = "1px solid #49cc90;";
+                            }
+                        }
+                        <hr style="width:99.5%; margin-top:0px; margin-bottom:-1px; border-top: @hrColor" />
                     </a>
 
                     <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
@@ -124,15 +131,16 @@
                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                     @param.Type
                                 </div>
-                                <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
+                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                     @if ((TypeParameter)param.TypeParameter == TypeParameter.body)
                                     {
                                         var id = item.Name + "_" + param.Name;
                                         <div class="body-param">
-                                            <textarea id="@id" class="body-param__text">
+                                            <textarea id="@id" style="width:100%">
                                     
                                             </textarea>
                                         </div>
+                                        <div style="clear:both;"></div>
                                     }
                                     @if (param.Name != "analogues")
                                     {
