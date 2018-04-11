@@ -16,6 +16,31 @@
           <Property Name="OrderID" Type="int" />
           <Property Name="ResponseData" Type="xml" />
         </EntityType>
+        <EntityType Name="Methods">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Group" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Type" Type="nchar" MaxLength="10" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Uri" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" />
+          <Property Name="TitleDescription" Type="nvarchar" MaxLength="4000" />
+          <Property Name="Response" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Parameters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MethodId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" />
+          <Property Name="TypeParameter" Type="int" Nullable="false" />
+          <Property Name="IsRequired" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Rates">
           <Key>
             <PropertyRef Name="Id" />
@@ -177,6 +202,18 @@
           <Property Name="PassportIssuedBy" Type="varchar" MaxLength="200" />
           <Property Name="PassportWhenIssued" Type="datetime" />
         </EntityType>
+        <Association Name="FK__Parameter__Metho__4CCDADF0">
+          <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
+          <End Role="Parameters" Type="Self.Parameters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Parameters">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Settings__RatesI__6F57D01E">
           <End Role="Rates" Type="Self.Rates" Multiplicity="1" />
           <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
@@ -267,6 +304,8 @@
         </Function>
         <EntityContainer Name="ex_rmsauto_storeModelStoreContainer">
           <EntitySet Name="LogRequests" EntityType="Self.LogRequests" Schema="Acctg" store:Type="Tables" />
+          <EntitySet Name="Methods" EntityType="Self.Methods" Schema="api" store:Type="Tables" />
+          <EntitySet Name="Parameters" EntityType="Self.Parameters" Schema="api" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="api" store:Type="Tables" />
           <EntitySet Name="Settings" EntityType="Self.Settings" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrderLineStatuses" EntityType="Self.OrderLineStatuses" Schema="Cms" store:Type="Tables" />
@@ -275,6 +314,10 @@
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpareParts" EntityType="Self.SpareParts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="Self.FK__Parameter__Metho__4CCDADF0">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Parameters" EntitySet="Parameters" />
+          </AssociationSet>
           <AssociationSet Name="FK__Settings__RatesI__6F57D01E" Association="Self.FK__Settings__RatesI__6F57D01E">
             <End Role="Rates" EntitySet="Rates" />
             <End Role="Settings" EntitySet="Settings" />
@@ -358,6 +401,12 @@
             <Parameter Name="SupplierID" Mode="In" Type="Int32" />
             <Parameter Name="ClientID" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Methods" EntityType="ex_rmsauto_storeModel.Methods" />
+          <EntitySet Name="Parameters" EntityType="ex_rmsauto_storeModel.Parameters" />
+          <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Parameters" EntitySet="Parameters" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -638,6 +687,45 @@
           <Property Type="Int32" Name="MinOrderQty" Nullable="true" />
           <Property Type="String" Name="Region" Nullable="false" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="Methods">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Group" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Uri" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="TitleDescription" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="Response" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Parameters" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Methods" ToRole="Parameters" />
+        </EntityType>
+        <EntityType Name="Parameters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MethodId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="TypeParameter" Type="Int32" Nullable="false" />
+          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Methods" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Parameters" ToRole="Methods" />
+        </EntityType>
+        <Association Name="FK__Parameter__Metho__4CCDADF0">
+          <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.Parameters" Role="Parameters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Parameters">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -877,6 +965,33 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Methods">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Methods">
+              <MappingFragment StoreEntitySet="Methods">
+                <ScalarProperty Name="Response" ColumnName="Response" />
+                <ScalarProperty Name="TitleDescription" ColumnName="TitleDescription" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Uri" ColumnName="Uri" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Parameters">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Parameters">
+              <MappingFragment StoreEntitySet="Parameters">
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="TypeParameter" ColumnName="TypeParameter" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MethodId" ColumnName="MethodId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -36,6 +36,8 @@ namespace RMSAutoAPI.App_Data
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<SpareParts> SpareParts { get; set; }
         public virtual DbSet<OrderLineStatuses> OrderLineStatuses { get; set; }
+        public virtual DbSet<Methods> Methods { get; set; }
+        public virtual DbSet<Parameters> Parameters { get; set; }
     
         public virtual ObjectResult<spSearchCrossesWithPriceSVC_Result> spSearchCrossesWithPriceSVC(string partNumber, string manufacturer, Nullable<bool> showAnalogs, string selectedBrands, string acctgID, Nullable<int> clientGroup, string region)
         {

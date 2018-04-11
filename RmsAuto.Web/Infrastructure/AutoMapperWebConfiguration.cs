@@ -78,6 +78,10 @@ namespace RMSAutoAPI.Infrastructure
                 cfg.CreateMap<Orders, Order<ResponsePartNumbers>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
+                cfg.CreateMap<Methods, ApiMethod>();
+                cfg.CreateMap<Parameters, ApiParameter>()
+                            .ForMember(dest => dest.TypeParameter, opt => opt.MapFrom(src => (TypeParameter)src.TypeParameter));
+
             });
 
         }

@@ -211,6 +211,9 @@
     <Compile Include="App_Data\LogRequests.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\Methods.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\OrderLines.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
@@ -218,6 +221,9 @@
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Data\Orders.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\Parameters.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Data\SpareParts.cs">

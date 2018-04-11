@@ -20,6 +20,9 @@
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.SpareParts" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.OrderLineStatuses" Width="1.5" PointX="7.375" PointY="7" />
         <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLines_OrderLineStatuses" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.Methods" Width="1.5" PointX="9.375" PointY="1" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.Parameters" Width="1.5" PointX="11.625" PointY="1" />
+        <AssociationConnector Association="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
