@@ -20,6 +20,7 @@ function SampleMethod(method) {
     self.TitleDescription = ko.observable(method.TitleDescription);
     self.Type = ko.observable(method.Type);
     self.Uri = ko.observable(method.Uri);
+    self.Response = ko.observable(method.Response);
 }
 
 
@@ -281,7 +282,7 @@ var viewModel = function () {
         changeVisible(allModels);
     };
 
-
+    var purchaseOrderNo = document.cookie;
     //BODY
     delete orderModel.CompletedDate;
     delete orderModel.OrderDate;
@@ -291,6 +292,16 @@ var viewModel = function () {
     delete orderModel.Total;
     var odJson = JSON.stringify(orderModel, null, 2);
     document.getElementById('CreateOrder_orders').value = odJson;
+
+    for (var i = 0; i < jsonModel.length; i++) {
+        var jsonResponse = JSON.stringify(jsonModel[i].Response, null, 2);
+        //document.getElementById(jsonModel[i].Name + '_resp').innerHTML = JSON.stringify(jsonModel[i].Response, null, 2);
+        document.getElementById(jsonModel[i].Name + '_resp').innerText = jsonResponse;
+    }
+
+   // var aa = JSON.stringify(jsonModel[1].Response, null,2);
+
+   // alert(aa);
 }
 
 ko.applyBindings(new viewModel());
@@ -302,4 +313,11 @@ function replaceString(oldS, newS, fullS) {
         }
     }
     return fullS;
+}
+
+function getCookie(name) {
+    var matches = document.cookie.match(new RegExp(
+        "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+    ));
+    return matches ? decodeURIComponent(matches[1]) : undefined;
 }

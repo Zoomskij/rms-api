@@ -206,7 +206,7 @@
                                                 @{ 
                                                     var idCurl = @item.Name + "_curl";
                                                 }
-                                    <div id="@idCurl" style="margin-top: -40px"></div>
+                                    <div id="@idCurl"></div>
                                                     
                                             </pre>
                                 </div>
@@ -222,11 +222,11 @@
                                 </div>
 
                                 <div class="execute-wrapper" style="padding-top:0">
-                                    <pre class="example" style="height:30px;">
+                                    <pre class="example">
                                                 @{ 
                                                     var idRequestUrl = @item.Name + "_request-url";
                                                 }
-                                    <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
+                                    <div class="request-url" id="@idRequestUrl"></div>
                                                     
                                             </pre>
                                 </div>
@@ -269,54 +269,13 @@
                                                 @{ 
                                                     var idResp = @item.Name + "_resp";
                                                 }
-                                            
-<div id="@idResp" style="margin-top: -50px; overflow-y:auto; max-height:600px">
-@switch (item.Name)
-{
-    case "GetBrands":
-<span>
-[
-  {
-    "Name": "string",
-    "Description": "string"
-  }
-]
-</span>
-    break;
-case "GetSpareParts":
-<span>
-[
-  {
-    "Brand": "string",
-    "Article": "string",
-    "Name": "string",
-    "Type": 0,
-    "DeliveryQuality": 0,
-    "Count": 0,
-    "DeliveryDaysMin": 0,
-    "DeliveryDaysMax": 0,
-    "Price": 0,
-    "SupplierID": 0,
-    "MinOrderQty": 0
-  }
-]
-</span>                                                     
-    break;
-case "GetPartners":
-<span>
-[
-  {
-    "City": "string",
-    "Code": "string",
-    "Name": "string"
-  }
-]
-</span>
-    break;
-}
-</div>
+                                  
 
-                                            </pre>
+                                                <div id="@idResp" style="max-height:600px">
+
+                                                </div>
+
+                                    </pre>
                                 </div>
                             </div>
 

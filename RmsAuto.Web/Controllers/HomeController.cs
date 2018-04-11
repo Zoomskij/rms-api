@@ -49,7 +49,7 @@ namespace RMSAutoAPI.Controllers
                         case "GetSpareParts": method.Response = new PartNumber(); break;
                         case "GetOrders": method.Response = new List<Order<PartNumber>>(); break;
                         case "GetOrder": method.Response = new Order<PartNumber>(); break;
-                        case "CreateOrder": method.Response = new Order<PartNumber>(); break;
+                        case "CreateOrder": method.Response = new Order<ResponsePartNumbers>(); break;
                         case "GetPartners": method.Response = new Partner(); break;
                     }
                 }

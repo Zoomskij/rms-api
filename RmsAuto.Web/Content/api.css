@@ -183,6 +183,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
 
 
 .example {
+    display: flex;
     font-size: 12px;
     margin: 0;
     padding: 10px;
@@ -200,6 +201,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     font-weight: 600;
     color: #fff;
     text-align: left;
+    overflow-y: auto;
 }
 
 button {
