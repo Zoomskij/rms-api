@@ -50,16 +50,23 @@ namespace RMSAutoAPI.Controllers
                         case "GetSpareParts": method.Response = new PartNumber(); break;
                         case "GetOrders": method.Response = new List<Order<PartNumber>>(); break;
                         case "GetOrder": method.Response = new Order<PartNumber>(); break;
-                        case "CreateOrder": method.Response = new Order<ResponsePartNumbers>(); break;
+                        case "CreateOrder": method.Response = new Order<PartNumber>(); break;
                         case "GetPartners": method.Response = new Partner(); break;
                     }
                 }
 
+                List<object> objModels = new List<object>();
+                objModels.Add(new Brand());
+                objModels.Add(new PartNumber());
+                objModels.Add(new Order<PartNumber>());
+                objModels.Add(new ResponsePartNumbers());
+                objModels.Add(new Partner());
+
                 var models = new List<Model>();
-                foreach (var response in methods.Select(x => x.Response))
+                foreach (var response in objModels)
                 {
                     var model = new Model();
-                    model.Name = response.GetType().Name;
+                    model.Name = response.GetType().Name.Replace("`1", string.Empty);
                     foreach (var property in response.GetType().GetProperties())
                     {
                         var parameter = new Parameter();
@@ -68,6 +75,9 @@ namespace RMSAutoAPI.Controllers
                         {
                             case "nullable`1":
                                 parameter.Type = "int 32 (nullable)";
+                                break;
+                            case "list`1":
+                                parameter.Type = "array[]";
                                 break;
                             case "sparepartitemtype":
                                 parameter.Type = "int32";
