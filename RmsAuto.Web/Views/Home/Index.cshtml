@@ -43,11 +43,11 @@
                 <div style="height: auto; border: none; margin: 0px; padding: 0px;">
 
                     @*<div v-for="group in jsonModel" track-by="group.Group">
-                        <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
-                            <a class="nostyle"><span>{{group.Group}}</span></a>
-                        </h4>
-                        <hr style="margin-bottom:10px; margin-top:15px;" />
-                    </div>*@
+                    <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
+                        <a class="nostyle"><span>{{group.Group}}</span></a>
+                    </h4>
+                    <hr style="margin-bottom:10px; margin-top:15px;" />
+                </div>*@
 
                     <div v-for="method in jsonModel">
                         <div class="opblock" v-bind:class="{'opblock-get': method.Type === 'GET', 'opblock-post': method.Type === 'POST'}" id="operations">
@@ -105,7 +105,7 @@
                                             </div>
                                             <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
 
-                                                <div v-if="parameter.TypeParameter === 3" >
+                                                <div v-if="parameter.TypeParameter === 3">
                                                     <textarea v-bind:id="method.Name + '_' + parameter.Name" style="width:100%"></textarea>
                                                 </div>
                                                 <div style="clear:both;"></div>
@@ -149,7 +149,7 @@
 
                                         <div class="execute-wrapper" style="padding-top:0">
                                             <pre class="example">
-                                                <div v-bind:id="method.Name + '_curl'"></div>             
+                                            <div v-bind:id="method.Name + '_curl'"></div>             
                                             </pre>
                                         </div>
                                     </div>
@@ -161,7 +161,7 @@
 
                                         <div class="execute-wrapper" style="padding-top:0">
                                             <pre class="example">
-                                                <div class="request-url" v-bind:id="method.Name + '_request-url'"></div>               
+                                            <div class="request-url" v-bind:id="method.Name + '_request-url'"></div>               
                                             </pre>
                                         </div>
                                     </div>
@@ -193,7 +193,7 @@
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                             <pre class="example" style="margin-right: -25px;">
-                                                <div v-bind:id="method.Name + '_resp'" style="max-height:600px"></div>
+                                            <div v-bind:id="method.Name + '_resp'" style="max-height:600px"></div>
                                             </pre>
                                         </div>
                                     </div>
@@ -207,107 +207,54 @@
 
                 </div>
             </div>
-        </div>
 
 
-        @*MODELS*@
-        <section class="models">
-            <div id="models-header" class="models-header">
-                <h4>
-                    <span>Models</span>
-                    <svg width="20" height="20"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#large-arrow-down"></use></svg>
-                </h4>
-            </div>
-            <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
-
-                @foreach (var method in Model.Where(x => x.Response != null))
-                {
-                    <div id="model-Brand" class="model-container">
-                        <div class="model-box">
-                            <p><span class="model-title"> @method.Response.GetType().Name</span> { </p>
-                            @foreach (var property in @method.Response.GetType().GetProperties())
-                            {
-                                <table class="properties">
+            <section class="models">
+                <div id="models-header" class="models-header">
+                    <h4>
+                        <span>Models</span>
+                    </h4>
+                </div>
+                <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
+                    <div v-for="model in models">
+                        <div id="model-Brand" class="model-container">
+                            <div class="model-box">
+                                <p><span class="model-title"> {{ model.Name }}</span> { </p>
+                                <div v-for="parameter in model.Parameters">
+                                    <table class="properties">
                                     <tr>
                                         <td valign="top" width="150">
-                                            <span class="prop-name">@property.Name </span>
+                                            <span class="prop-name">{{parameter.Name}} </span>
                                         </td>
                                         <td valign="top">
-                                            <span class="model">
-                                                <span class="prop">
+                                            <div class="model">
+                                                <div class="prop">
                                                     <span class="prop-type">
-                                                        @if (property.PropertyType.Name.ToLower().Equals("nullable`1"))
-                                                        {
-                                                            <span>int32 (nullable)</span>
-                                                        }
-                                                        else if (property.PropertyType.Name.ToLower().Equals("sparepartitemtype"))
-                                                        {
-                                                            <span>int32 </span>
-                                                        }
-                                                        else if (property.PropertyType.Name.ToLower().Equals("quality"))
-                                                        {
-                                                            <span>int32 </span>
-                                                        }
-                                                        else
-                                                        {
-                                                            @property.PropertyType.Name.ToLower()
-                                                        }
-
+                                                        {{parameter.Type}}
                                                     </span>
                                                     <div class="markdown">
                                                         <span>
-                                                            @{
-                                                                if (method.Response.GetType().Name.Equals("Brand"))
-                                                                {
-                                                                    var prop = typeof(RMSAutoAPI.Models.Brand).GetProperty(property.Name);
-                                                                    if (prop != null)
-                                                                    {
-                                                                        var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                                                                        <p>@attribute.Description</p>
-                                                                    }
-                                                                }
-
-                                                                if (method.Response.GetType().Name.Equals("PartNumber"))
-                                                                {
-                                                                    var prop = typeof(RMSAutoAPI.Models.PartNumber).GetProperty(property.Name);
-                                                                    if (prop != null)
-                                                                    {
-                                                                        var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                                                                        <p>@attribute.Description</p>
-                                                                    }
-                                                                }
-
-                                                                if (method.Response.GetType().Name.Equals("Partner"))
-                                                                {
-                                                                    var prop = typeof(RMSAutoAPI.Models.Partner).GetProperty(property.Name);
-                                                                    if (prop != null)
-                                                                    {
-                                                                        var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                                                                        <p>@attribute.Description</p>
-                                                                    }
-                                                                }
-
-                                                            }
+                                                            {{parameter.Description}}
                                                         </span>
-
                                                     </div>
-                                                </span>
-                                            </span>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 </table>
-                            }
-                            }
+                                </div>
+                            </div>
                         </div>
                     </div>
-                }
-            </div>
-        </section>
+                </div>
+            </section>
+        </div>
     </div> @*End wrapper*@
 
     <script type="text/javascript">
         var jsonModel = @Html.Raw(Json.Encode(@Model));
         var orderModel = @Html.Raw(Json.Encode(@ViewBag.OrderModel));
+        var models = @Html.Raw(Json.Encode(@ViewBag.Models));
         var token = @Html.Raw(Json.Encode(@ViewBag.Token));
     </script>
 

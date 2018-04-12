@@ -276,7 +276,9 @@
     <Compile Include="Models\ApiParameter.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
+    <Compile Include="Models\Model.cs" />
     <Compile Include="Models\OrderPartNumbers.cs" />
+    <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\Part.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\ResponsePartNumber.cs" />

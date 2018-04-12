@@ -3,6 +3,7 @@ using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -53,6 +54,37 @@ namespace RMSAutoAPI.Controllers
                         case "GetPartners": method.Response = new Partner(); break;
                     }
                 }
+
+                var models = new List<Model>();
+                foreach (var response in methods.Select(x => x.Response))
+                {
+                    var model = new Model();
+                    model.Name = response.GetType().Name;
+                    foreach (var property in response.GetType().GetProperties())
+                    {
+                        var parameter = new Parameter();
+                        parameter.Name = property.Name;
+                        switch (property.PropertyType.Name.ToLower())
+                        {
+                            case "nullable`1":
+                                parameter.Type = "int 32 (nullable)";
+                                break;
+                            case "sparepartitemtype":
+                                parameter.Type = "int32";
+                                break;
+                            case "quality":
+                                parameter.Type = "int32";
+                                break;
+                            default:
+                                parameter.Type = property.PropertyType.Name.ToLower();
+                                break;
+                        }
+                        parameter.Description = ((DescriptionAttribute)property.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault())?.Description;
+                        model.Parameters.Add(parameter);
+                    }
+                    models.Add(model);
+                }
+                ViewBag.Models = models;
 
                 ViewBag.OrderModel = new Order<OrderPartNumbers>
                 {
