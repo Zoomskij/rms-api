@@ -149,7 +149,7 @@ var viewModel = function () {
         }
         if (methodType === "POST") {
             var data = document.getElementById('CreateOrder_orders').value;
-            curl.append(" -d \"" + JSON.stringify(data, null, 0) + "\""); 
+            curl.append(" -d " + JSON.stringify(data, null, 0) + ""); 
         }
 
         reqUrl.html(mainUrl + url + "");
@@ -300,8 +300,21 @@ var viewModel = function () {
     document.getElementById('CreateOrder_orders').value = odJson;
 
     for (var i = 0; i < jsonModel.length; i++) {
+        var parameters = jsonModel[i].Response;
+        for (var j = 0; j < Object.keys(parameters).length; j++) {
+            var key = Object.keys(parameters)[j];
+            var value = Object.values(parameters)[j];
+            if (value === null) {
+                if (key === "Name") {
+
+                    
+                    //parameters.values[j] = "string";
+                }
+            }
+
+        }
+
         var jsonResponse = JSON.stringify(jsonModel[i].Response, null, 2);
-        //document.getElementById(jsonModel[i].Name + '_resp').innerHTML = JSON.stringify(jsonModel[i].Response, null, 2);
         document.getElementById(jsonModel[i].Name + '_resp').innerText = jsonResponse;
     }
 
