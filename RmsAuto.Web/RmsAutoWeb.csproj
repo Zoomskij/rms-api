@@ -358,6 +358,7 @@
       <LastGenOutput>Log.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\appvue.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -404,6 +405,8 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Store.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\vue.js" />
+    <Content Include="Scripts\vue.min.js" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
