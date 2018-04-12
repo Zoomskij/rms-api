@@ -124,6 +124,7 @@ var viewModel = function () {
 
     // Generating request
     function Request(method, url) {
+        var data = null;
         changeVisible(document.getElementById(method + "_loader"));
         var resp = $('#' + method + '_resp');
         var code = $('#' + method + '_code');
@@ -149,12 +150,14 @@ var viewModel = function () {
             dataType: "json",
             crossDomain: true,
             contentType: "application/json; charset=utf-8",
-            data: JSON.stringify(data),
+            data: data,
             cache: false,
             beforeSend: function (xhr) {
                 /* Authorization header */
-                xhr.setRequestHeader("Authorization", token);
-                xhr.setRequestHeader("X-Mobile", "false");
+                if (token !== null && token !== "") {
+                    xhr.setRequestHeader("Authorization", token);
+                    xhr.setRequestHeader("X-Mobile", "false");
+                }
             },
             success: function (data) {
                 var str = JSON.stringify(data, null, 2);
