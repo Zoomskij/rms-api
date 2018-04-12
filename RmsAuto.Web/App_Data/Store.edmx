@@ -22,12 +22,13 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Group" Type="nvarchar" MaxLength="255" Nullable="false" />
-          <Property Name="Type" Type="nchar" MaxLength="10" />
+          <Property Name="Type" Type="nvarchar" MaxLength="10" />
           <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Uri" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="4000" />
           <Property Name="TitleDescription" Type="nvarchar" MaxLength="4000" />
           <Property Name="Response" Type="nvarchar" MaxLength="255" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Parameters">
           <Key>
@@ -693,13 +694,14 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Group" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Uri" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="TitleDescription" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="Response" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Parameters" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Methods" ToRole="Parameters" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Parameters">
           <Key>
@@ -968,6 +970,7 @@
           <EntitySetMapping Name="Methods">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Methods">
               <MappingFragment StoreEntitySet="Methods">
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
                 <ScalarProperty Name="Response" ColumnName="Response" />
                 <ScalarProperty Name="TitleDescription" ColumnName="TitleDescription" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

@@ -39,24 +39,24 @@ namespace RMSAutoAPI.Controllers
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
         }
 
-        [HttpGet]
-        [Route("orders")]
-        [Authorize]
-        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
-        public IHttpActionResult GetOrders()
-        {
-            var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
-            if (!orders.Any()) return Ok(new List<Orders>());
-            List<Order<PartNumber>> userOrders = new List<Order<PartNumber>>();
+        //[HttpGet]
+        //[Route("orders")]
+        //[Authorize]
+        ////[Authorize(Roles = "Client_SearchApi, NoAccess")]
+        //public IHttpActionResult GetOrders()
+        //{
+        //    var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
+        //    if (!orders.Any()) return Ok(new List<Orders>());
+        //    List<Order<PartNumber>> userOrders = new List<Order<PartNumber>>();
 
-            foreach (var order in orders)
-            {
-                var newOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
+        //    foreach (var order in orders)
+        //    {
+        //        var newOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
 
-                userOrders.Add(newOrder);
-            }
-            return Ok(userOrders);
-        }
+        //        userOrders.Add(newOrder);
+        //    }
+        //    return Ok(userOrders);
+        //}
 
         [HttpGet]
         [Route("orders/{orderId}")]

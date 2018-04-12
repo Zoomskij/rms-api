@@ -1,14 +1,9 @@
 ﻿@using System.Web.Configuration;
-@using System.ComponentModel;
 @model List<RMSAutoAPI.Models.ApiMethod>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-
 }
-
 <!DOCTYPE html>
-
-
 
 <html>
 <head>
@@ -71,7 +66,7 @@
                                     <div class="opblock-section-header">
                                         <div class="tab-header">
                                             <span class="opblock-title"><b>Parameters</b></span>
-                                            <button v-bind:id="method.Name + '_tryIt'" class="btn try-out__btn pull-right" v-on:click="tryIt(method.Name)">Try it out</button>
+                                            <button v-bind:id="method.Name + '_tryIt'" class="btn try pull-right" v-on:click="tryIt(method.Name)">Try it out</button>
                                         </div>
                                     </div>
 
@@ -89,7 +84,7 @@
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                 <b>{{parameter.Name}} </b>
-                                                <span v-if="parameter.IsRequired" class="required">&nbsp;*&nbsp;required</span>
+                                                <span v-if="parameter.IsRequired" class="required"> * required</span>
                                             </div>
                                             <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                                 {{parameter.Description}}
@@ -106,9 +101,8 @@
                                             <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
 
                                                 <div v-if="parameter.TypeParameter === 3">
-                                                    <textarea v-bind:id="method.Name + '_' + parameter.Name" style="width:100%"></textarea>
+                                                    <textarea v-bind:id="method.Name + '_' + parameter.Name" style="width:100%; margin-right:-25px;"></textarea>
                                                 </div>
-                                                <div style="clear:both;"></div>
 
                                                 <span v-if="parameter.Name !== 'analogues'">
                                                     <input v-bind:id="method.Name + '_' + parameter.Name" style="display:none" type="text" class="" title="" value="" v-bind:placeholder="parameter.Description">
@@ -129,7 +123,7 @@
 
                                     <div v-if="method.Parameters.length > 0">
                                         <div class="execute-wrapper">
-                                            <button v-bind:id="method.Name + '_execute'" class="btn execute opblock-control__btn" v-on:click="select(method.Name)" style="width:100%; display:none">Execute</button>
+                                            <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">Execute</button>
                                         </div>
                                     </div>
 
