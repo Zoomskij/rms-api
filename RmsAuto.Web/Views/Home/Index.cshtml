@@ -27,12 +27,6 @@
 
         [ Base URL: @WebConfigurationManager.AppSettings["UrlApi"] ]
         <br /><br />
-        @*<td>@ViewBag.Token</td> <br /><br />*@
-
-
-        @*<div>
-                <h2 class="title"> API.RMSAUTO </h2>
-            </div>*@
 
         <div class="rms-title">
             API.RMSAUTO представляет собой REST-сервис.
@@ -47,6 +41,13 @@
         <div id="app">
             <div class="opblock-tag-section">
                 <div style="height: auto; border: none; margin: 0px; padding: 0px;">
+
+                    @*<div v-for="group in jsonModel" track-by="group.Group">
+                        <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
+                            <a class="nostyle"><span>{{group.Group}}</span></a>
+                        </h4>
+                        <hr style="margin-bottom:10px; margin-top:15px;" />
+                    </div>*@
 
                     <div v-for="method in jsonModel">
                         <div class="opblock" v-bind:class="{'opblock-get': method.Type === 'GET', 'opblock-post': method.Type === 'POST'}" id="operations">
@@ -124,9 +125,7 @@
                                             </div>
                                         </div>
                                         <div style="padding-top:20px"></div>
-
                                     </div>
-
                                     @*  END PARAMETERS *@
 
                                     <div v-if="method.Parameters.length > 0">
@@ -143,7 +142,6 @@
                                         </div>
                                     </div>
 
-
                                     <div v-bind:id="method.Name + '_divCurl'" style="display:none">
                                         <br />
                                         <div class="execute-wrapper">
@@ -152,11 +150,10 @@
 
                                         <div class="execute-wrapper" style="padding-top:0">
                                             <pre class="example">
-                                            <div v-bind:id="method.Name + '_curl'"></div>             
+                                                <div v-bind:id="method.Name + '_curl'"></div>             
                                             </pre>
                                         </div>
                                     </div>
-
 
                                     <div v-bind:id="method.Name + '_divRequestUrl'" style="display:none">
                                         <div class="execute-wrapper">
@@ -165,7 +162,7 @@
 
                                         <div class="execute-wrapper" style="padding-top:0">
                                             <pre class="example">
-                                            <div class="request-url" v-bind:id="method.Name + '_request-url'"></div>               
+                                                <div class="request-url" v-bind:id="method.Name + '_request-url'"></div>               
                                             </pre>
                                         </div>
                                     </div>
@@ -197,7 +194,7 @@
                                         </div>
                                         <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                             <pre class="example" style="margin-right: -25px;">
-                                            <div v-bind:id="method.Name + '_resp'" style="max-height:600px"></div>
+                                                <div v-bind:id="method.Name + '_resp'" style="max-height:600px"></div>
                                             </pre>
                                         </div>
                                     </div>
