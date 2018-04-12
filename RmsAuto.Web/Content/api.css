@@ -443,3 +443,17 @@ textarea {
 .body-param {
     margin-right: -25px;
 }
+
+.hr-border-get {
+    width: 99.5%;
+    margin-top: 0px;
+    margin-bottom: -1px;
+    border-top: 1px solid #61affe;
+}
+
+.hr-border-post {
+    width: 99.5%;
+    margin-top: 0px;
+    margin-bottom: -1px;
+    border-top: 1px solid #49cc90;
+}

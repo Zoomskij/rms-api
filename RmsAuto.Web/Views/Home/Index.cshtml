@@ -57,6 +57,7 @@
                                     <div class="opblock-summary-path"> {{ method.Uri }} </div>
                                     <div class="opblock-summary-description"> {{ method.Description }} </div>
                                 </div>
+                                <hr v-bind:class="{'hr-border-get': method.Type === 'GET', 'hr-border-post': method.Type === 'POST'}" />
                             </a>
                             <div v-bind:id="method.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
                                 <div class="opblock-body">
