@@ -98,31 +98,29 @@
 
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                {{parameter.Type}}
+                                                {{parameter.Type}}<br />
+                                                <span v-if="parameter.TypeParameter === 1">(path)</span>
+                                                <span v-if="parameter.TypeParameter === 2">(query)</span>
+                                                <span v-if="parameter.TypeParameter === 3">(body)</span>
                                             </div>
                                             <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
 
-                                                <div v-if="parameter.TypeParameter === 3" class="body-param">
+                                                <div v-if="parameter.TypeParameter === 3" >
                                                     <textarea v-bind:id="method.Name + '_' + parameter.Name" style="width:100%"></textarea>
                                                 </div>
                                                 <div style="clear:both;"></div>
 
-                                                <span v-if="parameter.Name !== 'analogues'" class="body-param">
+                                                <span v-if="parameter.Name !== 'analogues'">
                                                     <input v-bind:id="method.Name + '_' + parameter.Name" style="display:none" type="text" class="" title="" value="" v-bind:placeholder="parameter.Description">
                                                 </span>
 
-                                                <span v-if="parameter.Name === 'analogues'" class="body-param">
+                                                <span v-if="parameter.Name === 'analogues'">
                                                     <select v-bind:id="method.Name + '_' + parameter.Name" class="" style="display:none">
                                                         <option value="">--</option>
                                                         <option value="true">true</option>
                                                         <option value="false">false</option>
                                                     </select>
                                                 </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                ({{parameter.TypeParameter}})
                                             </div>
                                         </div>
                                         <div style="padding-top:20px"></div>

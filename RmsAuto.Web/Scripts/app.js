@@ -34,6 +34,7 @@
     var odJson = JSON.stringify(orderModel, null, 2);
 
     document.getElementById('CreateOrder_orders').value = odJson;
+    var a = jsonModel[0].Parameters;
 
     for (var i = 0; i < jsonModel.length; i++) {
         var parameters = jsonModel[i].Response;
