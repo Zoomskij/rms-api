@@ -43,260 +43,7 @@
             (код партнёра можно получить, воспользовавшись методом /api/Partners).
         </div>
 
-        <div class="opblock-tag-section">
-            <div style="height: auto; border: none; margin: 0px; padding: 0px;">
-                @foreach (var group in Model.GroupBy(x => x.Group))
-                {
-
-                    <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
-                        <a class="nostyle" href="#/@group.Key"><span>@group.Key</span></a>
-                    </h4>
-                    <hr style="margin-bottom:10px; margin-top:15px;" />
-
-                    foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
-                    {
-
-
-                        var groupStyle = "opblock opblock-get";
-                        if (item.Type.Equals("POST"))
-                        {
-                            groupStyle = "opblock opblock-post";
-                        }
-
-                        <div class="@groupStyle" id="operations-Articles-Articles_GetBrands">
-                            <a class="nostyle" href="#/@group.Key/@item.Name" data-bind="click:notify.bind(this,'@item.Name')">
-                                <div class="opblock-summary opblock-summary-get">
-                                    <span class="opblock-summary-method">@item.Type</span>
-                                    <span class="opblock-summary-path">@item.Uri</span>
-                                    <div class="opblock-summary-description">@item.Description</div>
-                                </div>
-                                @{
-                                    var hrColor = "1px solid #61affe;";
-                                    if (item.Type == "POST")
-                                    {
-                                        hrColor = "1px solid #49cc90;";
-                                    }
-                                }
-                                <hr style="width:99.5%; margin-top:0px; margin-bottom:-1px; border-top: @hrColor" />
-                            </a>
-
-                            <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
-                                <div class="opblock-body">
-
-                                    <div class="opblock-description-wrapper">
-                                        <div class="opblock-description">
-                                            @item.TitleDescription
-                                        </div>
-                                    </div>
-
-
-                                    @*============PARAMETERS=============*@
-                                    @if (Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
-                                    {
-
-                                        var idTryIt = @item.Name + "_tryIt";
-
-                                        <div class="opblock-section-header">
-                                            <div class="tab-header">
-                                                <span class="opblock-title"><b>Parameters</b></span>
-                                                <button id="@idTryIt" class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,'@item.Name')">Try it out</button>
-                                            </div>
-                                        </div>
-                                        foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
-                                        {
-                                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                    <div class="param-name">Name</div>
-                                                </div>
-                                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                                    <div class="param-name">Description</div>
-                                                </div>
-                                            </div>
-                                            <hr style="margin-top:5px; margin-bottom:10px" />
-                                            foreach (var param in parameter.Key)
-                                            {
-                                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                        <b>@param.Name </b>
-                                                        @if (param.IsRequired == true)
-                                                        {
-                                                            <span class="required">&nbsp;*&nbsp;required</span>
-                                                        }
-                                                    </div>
-                                                    <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                                        @param.Description
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                        @param.Type
-                                                    </div>
-                                                    <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                                        @if ((TypeParameter)param.TypeParameter == TypeParameter.body)
-                                                        {
-                                                            var id = item.Name + "_" + param.Name;
-                                                            <div class="body-param">
-                                                                <textarea id="@id" style="width:100%"></textarea>
-                                                            </div>
-                                                            <div style="clear:both;"></div>
-                                                        }
-                                                        @if (param.Name != "analogues")
-                                                        {
-                                                            var id = item.Name + "_" + param.Name;
-                                                            <input id="@id" style="display:none" type="text" class="" title="" value="" placeholder="@param.Description">
-                                                        }
-                                                        @if (param.Name == "analogues")
-                                                        {
-                                                            var id = item.Name + "_" + param.Name;
-                                                            <select id="@id" class="" style="display:none">
-                                                                <option value="">--</option>
-                                                                <option value="true">true</option>
-                                                                <option value="false">false</option>
-                                                            </select>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                                    <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                        (@Enum.GetName(typeof(TypeParameter), param.TypeParameter))
-                                                    </div>
-                                                </div>
-
-                                                <div style="padding-top:20px"></div>
-                                            }
-                                        }
-                                    }
-                                    @*onclick="executeMethod()"*@
-                                    @*==============EXECUTE================*@
-                                    @{
-                                        var idExecute = @item.Name + "_execute";
-                                    }
-                                    @if (!Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
-                                    {
-                                        <div class="execute-wrapper">
-                                            <button id="@idExecute" class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div id="@idExecute" class="execute-wrapper" style="display:none">
-                                            <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
-                                        </div>
-                                    }
-                                    @{
-                                        var idLoader = @item.Name + "_loader";
-                                    }
-                                    <div id="@idLoader" class="loader" style="display:none">Loading...</div>
-                                    @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
-
-                                    @*===============RESPONSES===============*@
-                                    <div class="opblock-section-header">
-                                        <div class="tab-header">
-                                            <span class="opblock-title"><b>Responses</b></span>
-                                        </div>
-                                    </div>
-
-
-                                    @*  CURL *@
-                                    @{
-                                        var idDivCurl = @item.Name + "_divCurl";
-                                    }
-                                    <div id="@idDivCurl" style="display:none">
-                                        <br />
-                                        <div class="execute-wrapper">
-                                            <span class="response-label"> Curl</span>
-                                        </div>
-
-                                        <div class="execute-wrapper" style="padding-top:0">
-                                            <pre class="example">
-                                                @{ 
-                                                    var idCurl = @item.Name + "_curl";
-                                                }
-                                            <div id="@idCurl"></div>
-                                                    
-                                            </pre>
-                                        </div>
-                                    </div>
-
-                                    @*  REQUEST URL *@
-                                    @{
-                                        var idDivRequestUrl = @item.Name + "_divRequestUrl";
-                                    }
-                                    <div id="@idDivRequestUrl" style="display:none">
-                                        <div class="execute-wrapper">
-                                            <span class="response-label"> Request URL</span>
-                                        </div>
-
-                                        <div class="execute-wrapper" style="padding-top:0">
-                                            <pre class="example">
-                                                @{ 
-                                                    var idRequestUrl = @item.Name + "_request-url";
-                                                }
-                                            <div class="request-url" id="@idRequestUrl"></div>
-                                                    
-                                            </pre>
-                                        </div>
-                                    </div>
-                                    @* ====================== *@
-
-
-
-                                    <br />
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                            <span class="response-label"> Server response</span>
-                                        </div>
-                                    </div>
-
-                                    <br />
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                            <b>Code</b>
-                                        </div>
-                                        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                            <b>Details</b>
-                                        </div>
-                                    </div>
-                                    <hr style="margin-top:5px; margin-bottom:10px" />
-
-                                    <div style="margin-top:20px"></div>
-
-
-                                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                        <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                            @{
-                                                var idCode = item.Name + "_code";
-                                            }
-                                            <div id="@idCode"></div>
-                                        </div>
-                                        <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                            <pre class="example" style="margin-right: -25px;">
-
-                                                @{ 
-                                                    var idResp = @item.Name + "_resp";
-                                                }
-                                  
-
-                                            <div id="@idResp" style="max-height:600px">
-
-                                                </div>
-
-                                    </pre>
-                                        </div>
-                                    </div>
-
-                                    <div style="padding-bottom:20px"></div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                }
-
-
-            </div>
-        </div>
-
-
+    
 
         @*MODELS*@
         <section class="models">
@@ -394,16 +141,11 @@
     </div> @*End wrapper*@
 
 
-
-
-
-
     <div id="app">
-        <p>Кнопка выше была нажата {{counter}} раз</p>
         <div class="opblock-tag-section">
             <div style="height: auto; border: none; margin: 0px; padding: 0px;">
-                <ul>
-                    <li v-for="method in jsonModel">
+                
+                    <div v-for="method in jsonModel">
                         <div class="opblock" v-bind:class="{'opblock-get': method.Type === 'GET', 'opblock-post': method.Type === 'POST'}" id="operations">
                             <a class="nostyle" v-on:click="changeVisible(method.Name)">
                                 <div class="opblock-summary opblock-summary-get">
@@ -424,7 +166,7 @@
                                     <div class="opblock-section-header">
                                         <div class="tab-header">
                                             <span class="opblock-title"><b>Parameters</b></span>
-                                            <button id="IDBUTTON" class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,{{method.Name}})">Try it out</button>
+                                            <button v-bind:id="method.Name + '_tryIt'" class="btn try-out__btn pull-right" v-on:click="tryIt(method.Name)">Try it out</button>
                                         </div>
                                     </div>
 
@@ -437,8 +179,8 @@
                                         </div>
                                     </div>
                                     <hr style="margin-top:5px; margin-bottom:10px" />
-                                    <ul>
-                                        <li v-for="parameter in method.Parameters">
+                                   
+                                        <div v-for="parameter in method.Parameters">
                                             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                     <b>{{parameter.Name}} </b>
@@ -461,7 +203,7 @@
                                                     <div style="clear:both;"></div>
 
                                                     <span v-if="parameter.Name !== 'analogues'" class="body-param">
-                                                        <input v-bind:id="method.Name + '_' + parameter.Name" type="text" class="" title="" value="" v-bind:placeholder="parameter.Description">
+                                                        <input v-bind:id="method.Name + '_' + parameter.Name" style="display:none" type="text" class="" title="" value="" v-bind:placeholder="parameter.Description">
                                                     </span>
 
                                                     <span v-if="parameter.Name === 'analogues'" class="body-param">
@@ -480,13 +222,13 @@
                                             </div>
                                             <div style="padding-top:20px"></div>
 
-                                        </li>
-                                    </ul>
+                                        </div>
+                                    
                                     @*  END PARAMETERS *@
 
                                     <div v-if="method.Parameters.length > 0">
                                         <div class="execute-wrapper">
-                                            <button v-bind:id="method.Name + '_execute'" class="btn execute opblock-control__btn" data-bind="click: method.Name" style="width:100%">Execute</button>
+                                            <button v-bind:id="method.Name + '_execute'" class="btn execute opblock-control__btn" data-bind="click: method.Name" style="width:100%; display:none">Execute</button>
                                         </div>
                                     </div>
                                     <div v-bind:id="method.Name + '_loader'" class="loader" style="display:none">Loading...</div>
@@ -559,8 +301,8 @@
                             </div>
                             @*END BODY*@
                         </div>
-                    </li>
-                </ul>
+                    </div>
+
             </div>
         </div>
     </div>

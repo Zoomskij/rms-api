@@ -288,39 +288,33 @@ var viewModel = function () {
 
   
 
-    var purchaseOrderNo = document.cookie;
-    //BODY
-    delete orderModel.CompletedDate;
-    delete orderModel.OrderDate;
-    delete orderModel.OrderId;
-    delete orderModel.Status;
-    delete orderModel.Username;
-    delete orderModel.Total;
-    var odJson = JSON.stringify(orderModel, null, 2);
-    document.getElementById('CreateOrder_orders').value = odJson;
+    //var purchaseOrderNo = document.cookie;
+    ////BODY
+    //delete orderModel.CompletedDate;
+    //delete orderModel.OrderDate;
+    //delete orderModel.OrderId;
+    //delete orderModel.Status;
+    //delete orderModel.Username;
+    //delete orderModel.Total;
+    //var odJson = JSON.stringify(orderModel, null, 2);
+    //document.getElementById('CreateOrder_orders').value = odJson;
 
-    for (var i = 0; i < jsonModel.length; i++) {
-        var parameters = jsonModel[i].Response;
-        for (var j = 0; j < Object.keys(parameters).length; j++) {
-            var key = Object.keys(parameters)[j];
-            var value = Object.values(parameters)[j];
-            if (value === null) {
-                if (key === "Name") {
+    //for (var i = 0; i < jsonModel.length; i++) {
+    //    var parameters = jsonModel[i].Response;
+    //    for (var j = 0; j < Object.keys(parameters).length; j++) {
+    //        var key = Object.keys(parameters)[j];
+    //        var value = Object.values(parameters)[j];
+    //        if (value === null) {
+    //            if (key === "Name") {
 
-                    
-                    //parameters.values[j] = "string";
-                }
-            }
+    //            }
+    //        }
 
-        }
+    //    }
 
-        var jsonResponse = JSON.stringify(jsonModel[i].Response, null, 2);
-        document.getElementById(jsonModel[i].Name + '_resp').innerText = jsonResponse;
-    }
-
-   // var aa = JSON.stringify(jsonModel[1].Response, null,2);
-
-   // alert(aa);
+    //    var jsonResponse = JSON.stringify(jsonModel[i].Response, null, 2);
+    //    document.getElementById(jsonModel[i].Name + '_resp').innerText = jsonResponse;
+    //}
 }
 
 ko.applyBindings(new viewModel());
