@@ -7,9 +7,6 @@ namespace RMSAutoAPI.Models
     {
         public string Name { get; set; }
         public string Type { get; set; }
-
-        [JsonIgnore]
-        //[ScriptIgnore]
         public string Description { get; set; }
     }
 }
