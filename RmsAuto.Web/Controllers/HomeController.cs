@@ -85,6 +85,9 @@ namespace RMSAutoAPI.Controllers
                             case "quality":
                                 parameter.Type = "int32";
                                 break;
+                            case "reaction":
+                                parameter.Type = "int32";
+                                break;
                             default:
                                 parameter.Type = property.PropertyType.Name.ToLower();
                                 break;
