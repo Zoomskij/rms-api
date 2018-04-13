@@ -202,7 +202,6 @@
                 </div>
             </div>
 
-
             <section class="models">
                 <div id="models-header" class="models-header">
                     <h4>
@@ -216,26 +215,26 @@
                                 <p><span class="model-title"> {{ model.Name }}</span> { </p>
                                 <div v-for="parameter in model.Parameters">
                                     <table class="properties">
-                                    <tr>
-                                        <td valign="top" width="150">
-                                            <span class="prop-name">{{parameter.Name}} </span>
-                                        </td>
-                                        <td valign="top">
-                                            <div class="model">
-                                                <div class="prop">
-                                                    <span class="prop-type">
-                                                        {{parameter.Type}}
-                                                    </span>
-                                                    <div class="markdown">
-                                                        <span>
-                                                            {{parameter.Description}}
+                                        <tr>
+                                            <td valign="top" width="150">
+                                                <span class="prop-name">{{parameter.Name}} </span>
+                                            </td>
+                                            <td valign="top">
+                                                <div class="model">
+                                                    <div class="prop">
+                                                        <span class="prop-type">
+                                                            {{parameter.Type}}
                                                         </span>
+                                                        <div class="markdown">
+                                                            <span>
+                                                                {{parameter.Description}}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
                         </div>
