@@ -12,7 +12,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 
 [assembly: OwinStartup(typeof(RMSAutoAPI.Startup))]
@@ -63,12 +62,12 @@ namespace RMSAutoAPI
     public class AuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
         private IUserService _userService;
-        public string SelectedRegion { get; set; } = "rmsauto";
+        public string SelectedRegion { get; set; }
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
         public override async Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             var region = context.Parameters.FirstOrDefault(x => x.Key.ToLower().Equals("code")).Value?.FirstOrDefault();
-            SelectedRegion = region ?? "rmsauto";
+            SelectedRegion = region ?? null;
             context.Validated();
         }
 

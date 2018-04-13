@@ -1,25 +1,15 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.Owin;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.OAuth;
+﻿using Microsoft.Owin.Security;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Owin;
 using RestSharp;
 using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Models;
 using RMSAutoAPI.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
-using System.Web.Security;
 
 namespace RMSAutoAPI.Controllers
 {

@@ -14,12 +14,12 @@ namespace RMSAutoAPI.Services
     public class UserService : IUserService
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
-        public Users GetUser(string login, string password, string region = "rmsauto")
+        public Users GetUser(string login, string password, string region)
         {
             bool isRms = true;
             try
             {
-                if (!string.IsNullOrEmpty(region) && !region.Equals("rmsauto"))
+                if (!string.IsNullOrEmpty(region))
                 {
                     var franches = db.spGetFranches().ToList();
                     var currentFranch = franches.FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
