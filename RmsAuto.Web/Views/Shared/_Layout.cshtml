@@ -8,7 +8,19 @@
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/api.css" rel="stylesheet" />
     <link href="~/Content/navbar.css" rel="stylesheet" />
+    <style>
+
+        .nav > li {
+            padding: 15px 5px;
+            color: #fff;
+        }
+        .nav > li > a {
+            display:initial !important;
+            padding: 0 0 !important;
+        }
+    </style>
 </head>
+
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -24,12 +36,12 @@
                 <ul class="nav navbar-nav row pull-right">
                     
                     @*<li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>*@
-
+                    
                     @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentUser))
                     {
 
-                        var ex = (string)(@ViewBag.CurrentUser + " [выход]");
-                        <li class="pull-right">@Html.ActionLink(ex, "Logout", "Account")</li>
+                        var ex = " [выход]";
+                        <li class="pull-right">@ViewBag.CurrentUser@Html.ActionLink(ex, "Logout", "Account")</li>
                     }
                     else
                     {
