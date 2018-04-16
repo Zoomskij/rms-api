@@ -141,12 +141,12 @@ namespace RMSAutoAPI.Controllers
                                     respOrder.PartNumbers.Add(respLine);
                                     continue;
                                 }
-                                respLine.PriceApproved = sparePart.FinalPrice.Value;
+                                respLine.PriceApproved = Math.Round(sparePart.FinalPrice.Value,2);
                                 break;
                             case 1:
                                 if (sparePart.FinalPrice.HasValue)
                                 {
-                                    orderLine.UnitPrice = respLine.PriceApproved = sparePart.FinalPrice.Value;
+                                    orderLine.UnitPrice = respLine.PriceApproved = Math.Round(sparePart.FinalPrice.Value, 2);
                                 }
                                 break;
                         }
@@ -155,7 +155,7 @@ namespace RMSAutoAPI.Controllers
                         orderLine.DeliveryDaysMin = sparePart != null ? sparePart.DeliveryDaysMin : 0;
                         orderLine.DeliveryDaysMax = sparePart != null ? sparePart.DeliveryDaysMax ?? 0 : 0;
                         orderLine.PartName = sparePart != null ? sparePart.PartName : string.Empty;
-                        orderLine.UnitPrice = sparePart != null ? sparePart.FinalPrice.Value : 0;
+                        orderLine.UnitPrice = sparePart != null ? Math.Round(sparePart.FinalPrice.Value,2) : 0;
                         orderLine.StrictlyThisNumber = false;
                         orderLine.CurrentStatus = 0;
                         orderLine.Processed = 0;
@@ -176,14 +176,15 @@ namespace RMSAutoAPI.Controllers
                 try
                 {
                     var createorder = db.Orders.Add(dbOrder);
-                    var orderHelper = new OrderHelper();
-                    orderHelper.SendOrder(dbOrder, string.Empty);
+                    var orderHelper = new OrderHelper(db);
+                    
                     db.SaveChanges();
-                    dbTransaction.Commit();
                     if (dbOrder.OrderID != 0)
                     {
+                        orderHelper.SendOrder(dbOrder, string.Empty);
                         respOrder.OrderDate = dbOrder.OrderDate;
                         respOrder.OrderId = dbOrder.OrderID;
+                        dbTransaction.Commit();
                         return Ok(respOrder);
                     }
                 }

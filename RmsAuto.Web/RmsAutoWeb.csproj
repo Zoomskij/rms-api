@@ -226,6 +226,9 @@
     <Compile Include="App_Data\Parameters.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\Permutation1C.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\SpareParts.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
@@ -282,6 +285,7 @@
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Orders\CommonDac.cs" />
     <Compile Include="Models\Orders\CustomStringWriter.cs" />
     <Compile Include="Models\Orders\EnumHelpers.cs" />
     <Compile Include="Models\Orders\Envelope.cs" />

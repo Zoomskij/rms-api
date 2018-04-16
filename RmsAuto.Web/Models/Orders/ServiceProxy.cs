@@ -9,15 +9,16 @@ namespace RMSAutoAPI.Models.Orders
 {
     public class ServiceProxy
     {
-        private ex_rmsauto_storeEntities dc = new ex_rmsauto_storeEntities();
+        private ex_rmsauto_storeEntities _db = new ex_rmsauto_storeEntities();
         private static readonly Dictionary<Type, ProxyType> _proxyTypeCache = new Dictionary<Type, ProxyType>();
         private static readonly object _sync = new object();
         private ProxyType _proxyType;
 
-        public static readonly ServiceProxy Default = new ServiceProxy();
+       // public static readonly ServiceProxy Default = new ServiceProxy();
 
-        public ServiceProxy()
+        public ServiceProxy(ex_rmsauto_storeEntities db)
         {
+            _db = db;
             Type type = this.GetType();
             if (!_proxyTypeCache.ContainsKey(type))
                 lock (_sync)
@@ -71,7 +72,7 @@ namespace RMSAutoAPI.Models.Orders
             //{
             try
             {
-                dc.Database.ExecuteSqlCommand("INSERT into Acctg.Requests VALUES ({0}, {1}, GETDATE())", requestType, requestXml);
+                _db.Database.ExecuteSqlCommand("INSERT into Acctg.Requests VALUES ({0}, {1}, GETDATE())", requestType, requestXml);
             }
             catch (Exception ex)
             {

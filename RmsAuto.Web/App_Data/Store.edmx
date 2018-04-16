@@ -129,6 +129,13 @@
           <Property Name="CompletedDate" Type="datetime" />
           <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
         </EntityType>
+        <EntityType Name="Permutation1C">
+          <Key>
+            <PropertyRef Name="OldSupplierId" />
+          </Key>
+          <Property Name="OldSupplierId" Type="int" Nullable="false" />
+          <Property Name="NewSupplierId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="SpareParts">
           <Key>
             <PropertyRef Name="Manufacturer" />
@@ -313,6 +320,7 @@
           <EntitySet Name="BrandEquivalents" EntityType="Self.BrandEquivalents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderLines" EntityType="Self.OrderLines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permutation1C" EntityType="Self.Permutation1C" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpareParts" EntityType="Self.SpareParts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="Self.FK__Parameter__Metho__4CCDADF0">
@@ -408,6 +416,7 @@
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Parameters" EntitySet="Parameters" />
           </AssociationSet>
+          <EntitySet Name="Permutation1C" EntityType="ex_rmsauto_storeModel.Permutation1C" />
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -728,6 +737,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Permutation1C">
+          <Key>
+            <PropertyRef Name="OldSupplierId" />
+          </Key>
+          <Property Name="OldSupplierId" Type="Int32" Nullable="false" />
+          <Property Name="NewSupplierId" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -992,6 +1008,14 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="MethodId" ColumnName="MethodId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permutation1C">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Permutation1C">
+              <MappingFragment StoreEntitySet="Permutation1C">
+                <ScalarProperty Name="NewSupplierId" ColumnName="NewSupplierId" />
+                <ScalarProperty Name="OldSupplierId" ColumnName="OldSupplierId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

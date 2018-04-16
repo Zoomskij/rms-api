@@ -11,11 +11,16 @@ namespace RMSAutoAPI.Helpers
 {
     public class OrderHelper
     {
+        ex_rmsauto_storeEntities _db;
+        public OrderHelper(ex_rmsauto_storeEntities db)
+        {
+            _db = db;
+        }
         public void SendOrder(Orders order, string employeeId)
         {
             if (order == null) throw new ArgumentNullException("order");
 
-            //var perm1C = CommonDac.GetPermutations(); //Заполняем словарь перестановок SupplierID
+            var perm1C = CommonDac.GetPermutations(); //Заполняем словарь перестановок SupplierID
 
             var acctgOrder = new OrderInfo
             {
@@ -24,8 +29,8 @@ namespace RMSAutoAPI.Helpers
                 CustOrderNum = order.CustOrderNum,
                 OrderDate = order.OrderDate,
                 DeliveryAddress = string.Empty,// order.ShippingAddress,
-                PaymentType = string.Empty, // order.PaymentMethod.ToTextOrName(),
-                EmployeeId = string.Empty, // employeeId,
+                PaymentType = string.Empty, //order.PaymentMethod.ToTextOrName(),
+                EmployeeId = employeeId,
                 OrderNotes = string.Empty, // order.OrderNotes,
                 OrderLines = order.OrderLines.Select<OrderLines, OrderLineInfo>(
                     l => new OrderLineInfo
@@ -39,17 +44,17 @@ namespace RMSAutoAPI.Helpers
                             /* Реализована возможность продавать одну и ту же деталь (pn, brand, supplierID) по разным ценам (например если при разной "партионности" разная цена, т.е. 1 шт. - 10р. 10 шт. - 9р.):
 							 * в этом случае данная деталь заливается с разными SupplierID (реальный и "виртуальный"). Т.к. УС ничего не знает о данных "виртуальных" SupplierID, то при отправке в УС
 							 * должна производиться подмена "виртуальных" SupplierID реальными. */
-                            SupplierId = l.SupplierID, // SupplierId = perm1C.ContainsKey(l.SupplierID) ? (int)perm1C[l.SupplierID] : l.SupplierID,
+                            SupplierId = perm1C.ContainsKey(l.SupplierID) ? (int)perm1C[l.SupplierID] : l.SupplierID,
                             ReferenceID = l.ReferenceID,
                             DeliveryDaysMin = l.DeliveryDaysMin,
                             DeliveryDaysMax = l.DeliveryDaysMax,
                             Description = l.PartDescription,
                             DescriptionOrig = l.PartName,
                             InternalPartNumber = l.PartNumber, // l.Part.InternalPartNumber,
-                            SupplierPriceWithMarkup = 0, // l.Part.SupplierPriceWithMarkup,
+                            SupplierPriceWithMarkup = Convert.ToDecimal(l.SupplierPriceWithMarkup),
                             SupplierMarkup = 0, // l.Part.PriceConstantTerm.GetValueOrDefault(),
-                            WeightPhysical = 0, // l.WeightPhysical.GetValueOrDefault(),
-                            WeightVolume = 0, // l.WeightVolume.GetValueOrDefault(),
+                            WeightPhysical = l.WeightPhysical.GetValueOrDefault(), // l.WeightPhysical.GetValueOrDefault(),
+                            WeightVolume = l.WeightVolume.GetValueOrDefault(),
                             DiscountGroup = string.Empty // l.Part.RgCode
                         },
                         FinalSalePrice = l.UnitPrice,
@@ -77,7 +82,7 @@ namespace RMSAutoAPI.Helpers
             if (order == null)
                 throw new ArgumentNullException("order");
 
-            ServiceProxy proxy = new ServiceProxy();
+            ServiceProxy proxy = new ServiceProxy(_db);
             proxy.SendOrder(order);
         }
 
