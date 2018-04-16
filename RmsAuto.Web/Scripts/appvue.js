@@ -57,9 +57,11 @@ var app = new Vue({
             if (bTryit !== null) {
                 if (bTryit.innerHTML === 'Try it out') {
                     bTryit.innerHTML = "Cancel";
+                    bTryit.classList.add('cancel');
                 }
                 else {
                     bTryit.innerHTML = "Try it out";
+                    bTryit.classList.remove('cancel');
                 }
             }
         },

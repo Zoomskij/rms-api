@@ -25,16 +25,15 @@
                     
                     @*<li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>*@
 
-
                     @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentUser))
                     {
 
-                        var ex = (string)(@ViewBag.CurrentUser + " Выход");
+                        var ex = (string)(@ViewBag.CurrentUser + " [выход]");
                         <li class="pull-right">@Html.ActionLink(ex, "Logout", "Account")</li>
                     }
                     else
                     {
-                        <li class="pull-right"> @Html.ActionLink("Вход ", "Login", "Account", null, new { @class = "modal-link" })</li>
+                        <li class="pull-right"> @Html.ActionLink("вход ", "Login", "Account", null, new { @class = "modal-link" })</li>
                     }
 
                 </ul>
