@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Newtonsoft.Json;
 using RMSAutoAPI.App_Data;
+using RMSAutoAPI.Helpers;
 using RMSAutoAPI.Infrastructure;
 using RMSAutoAPI.Models;
 using RMSAutoAPI.Properties;
@@ -175,6 +176,8 @@ namespace RMSAutoAPI.Controllers
                 try
                 {
                     var createorder = db.Orders.Add(dbOrder);
+                    var orderHelper = new OrderHelper();
+                    orderHelper.SendOrder(dbOrder, string.Empty);
                     db.SaveChanges();
                     dbTransaction.Commit();
                     if (dbOrder.OrderID != 0)

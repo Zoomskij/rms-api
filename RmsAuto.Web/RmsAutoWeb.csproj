@@ -254,6 +254,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\OrderHelper.cs" />
     <Compile Include="Helpers\RequestDelimeter.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Infrastructure\AutoMapperWebConfiguration.cs" />
@@ -274,10 +275,29 @@
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\ApiParameter.cs" />
+    <Compile Include="Models\Orders\AcctgError.cs" />
+    <Compile Include="Models\Orders\AcctgException.cs" />
+    <Compile Include="Models\Orders\AltNameAttribute.cs" />
+    <Compile Include="Models\Orders\ArticleInfo.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Orders\CustomStringWriter.cs" />
+    <Compile Include="Models\Orders\EnumHelpers.cs" />
+    <Compile Include="Models\Orders\Envelope.cs" />
+    <Compile Include="Models\Orders\MessageSerializer.cs" />
+    <Compile Include="Models\Orders\OrderHandlingInfo.cs" />
+    <Compile Include="Models\Orders\OrderInfo.cs" />
+    <Compile Include="Models\Orders\OrderLineHandlingInfo.cs" />
+    <Compile Include="Models\Orders\OrderLineInfo.cs" />
     <Compile Include="Models\OrderPartNumbers.cs" />
+    <Compile Include="Models\Orders\ProxyType.cs" />
+    <Compile Include="Models\Orders\SendOrderEnvelope.cs" />
+    <Compile Include="Models\Orders\SendOrderResultsEnvelope.cs" />
+    <Compile Include="Models\Orders\ServiceMethodAttribute.cs" />
+    <Compile Include="Models\Orders\ServiceMethodInfo.cs" />
+    <Compile Include="Models\Orders\ServiceProxy.cs" />
+    <Compile Include="Models\Orders\TextAttribute.cs" />
     <Compile Include="Models\Parameter.cs" />
     <Compile Include="Models\Part.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
