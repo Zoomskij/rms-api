@@ -121,10 +121,9 @@
                                     </div>
                                     @*  END PARAMETERS *@
 
-                                    <div v-if="method.Parameters.length > 0">
-                                        <div class="execute-wrapper">
-                                            <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">Execute</button>
-                                        </div>
+                                    
+                                    <div class="execute-wrapper">
+                                        <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">Execute</button>
                                     </div>
 
                                     <div v-bind:id="method.Name + '_loader'" class="loader" style="display:none">Loading...</div>
