@@ -6,7 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Infrastructure;
-
+using System.Threading.Tasks;
 
 namespace RMSAutoAPI.Services
 {
@@ -14,7 +14,7 @@ namespace RMSAutoAPI.Services
     public class UserService : IUserService
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
-        public Users GetUser(string login, string password, string region)
+        public Task<Users> GetUser(string login, string password, string region)
         {
             bool isRms = true;
             try
@@ -30,8 +30,11 @@ namespace RMSAutoAPI.Services
                 Users use = new Users();
 
                 var md5Password = GetMD5Hash(password, isRms);
-                var user = db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
-                return user;
+                return Task.Run(() => {
+                    var user = db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
+                    return user;
+                });
+
             }
             catch (Exception ex)
             {

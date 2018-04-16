@@ -226,6 +226,9 @@
     <Compile Include="App_Data\Parameters.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\Permissions.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\Permutation1C.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>

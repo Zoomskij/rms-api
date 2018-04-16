@@ -7,6 +7,7 @@ using RMSAutoAPI.Models;
 using RMSAutoAPI.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -56,7 +57,7 @@ namespace RMSAutoAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult LoginAuth(string username, string password, string code)
+        public async Task<ActionResult> LoginAuth(string username, string password, string code)
         {
             _userService = new UserService();
             var _client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
@@ -74,12 +75,11 @@ namespace RMSAutoAPI.Controllers
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var user = _userService.GetUser(username, password, code);
                 var token = JsonConvert.DeserializeObject<Token>(response.Content);
                 var bearerToken = $"{token.TokenType} {token.AccessToken}";
 
                 TempData["bearerToken"] = bearerToken;
-                TempData["Username"] = user.Username;
+                TempData["Username"] = username;
                 
                 return RedirectToAction("Index", "Home");
             }

@@ -129,6 +129,13 @@
           <Property Name="CompletedDate" Type="datetime" />
           <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
         </EntityType>
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <EntityType Name="Permutation1C">
           <Key>
             <PropertyRef Name="OldSupplierId" />
@@ -161,6 +168,14 @@
           <Property Name="SparePartGroupID" Type="int" />
           <Property Name="Region" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SizeID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="UserPermissions">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="PermissionID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="PermissionID" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -282,6 +297,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_UserPermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="UserPermissions" Type="Self.UserPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserPermissions">
+              <PropertyRef Name="PermissionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPermissions_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserPermissions" Type="Self.UserPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserPermissions">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="spGetCartSpareParts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="Articles" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="AcctgID" Type="varchar" Mode="In" />
@@ -320,8 +359,10 @@
           <EntitySet Name="BrandEquivalents" EntityType="Self.BrandEquivalents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderLines" EntityType="Self.OrderLines" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permutation1C" EntityType="Self.Permutation1C" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpareParts" EntityType="Self.SpareParts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="Self.FK__Parameter__Metho__4CCDADF0">
             <End Role="Methods" EntitySet="Methods" />
@@ -346,6 +387,14 @@
           <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPermissions_Permissions" Association="Self.FK_UserPermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="UserPermissions" EntitySet="UserPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPermissions_Users" Association="Self.FK_UserPermissions_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -417,6 +466,11 @@
             <End Role="Parameters" EntitySet="Parameters" />
           </AssociationSet>
           <EntitySet Name="Permutation1C" EntityType="ex_rmsauto_storeModel.Permutation1C" />
+          <EntitySet Name="Permissions" EntityType="ex_rmsauto_storeModel.Permissions" />
+          <AssociationSet Name="UserPermissions" Association="ex_rmsauto_storeModel.UserPermissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -516,6 +570,7 @@
           <Property Name="PassportWhenIssued" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Settings" Relationship="ex_rmsauto_storeModel.FK__Settings__UserId__6E63ABE5" FromRole="Users" ToRole="Settings" />
           <NavigationProperty Name="Orders" Relationship="ex_rmsauto_storeModel.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
+          <NavigationProperty Name="Permissions" Relationship="ex_rmsauto_storeModel.UserPermissions" FromRole="Users" ToRole="Permissions" />
         </EntityType>
         <Association Name="FK__Settings__UserId__6E63ABE5">
           <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="1" />
@@ -744,6 +799,18 @@
           <Property Name="OldSupplierId" Type="Int32" Nullable="false" />
           <Property Name="NewSupplierId" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Users" Relationship="ex_rmsauto_storeModel.UserPermissions" FromRole="Permissions" ToRole="Users" />
+        </EntityType>
+        <Association Name="UserPermissions">
+          <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
+          <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="*" />
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1019,6 +1086,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Permissions">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Permissions">
+              <MappingFragment StoreEntitySet="Permissions">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="UserPermissions" TypeName="ex_rmsauto_storeModel.UserPermissions" StoreEntitySet="UserPermissions">
+            <EndProperty Name="Users">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+            <EndProperty Name="Permissions">
+              <ScalarProperty Name="ID" ColumnName="PermissionID" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
