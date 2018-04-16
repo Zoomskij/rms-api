@@ -36,22 +36,14 @@
         <div id="app">
             <div class="opblock-tag-section">
                 <div style="height: auto; border: none; margin: 0px; padding: 0px;">
-
-                    @*<div v-for="group in jsonModel" track-by="group.Group">
-                            <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
-                                <a class="nostyle"><span>{{group.Group}}</span></a>
-                            </h4>
-                            <hr style="margin-bottom:10px; margin-top:15px;" />
-                        </div>*@
-
-                    <div v-for="method in jsonModel">
-
-                        <div v-bind:style="{display: isShowGroup(method.Group)}">
+                    <div v-for="(method, index) in jsonModel">
+                        <div v-bind:style="{display: index == 0 || index == 2 || index == 4 ? 'block' : 'none' }">
                             <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
                                 <a class="nostyle"><span>{{method.Group}}</span></a>
                             </h4>
-                            <hr style="margin-bottom:10px; margin-top:15px;" />
                         </div>
+
+                        <hr style="margin-bottom:10px; margin-top:15px;" />
 
                         <div class="opblock" v-bind:class="{'opblock-get': method.Type === 'GET', 'opblock-post': method.Type === 'POST'}" id="operations">
                             <a class="nostyle" v-on:click="changeVisible(method.Name)">

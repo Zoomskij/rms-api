@@ -24,29 +24,14 @@ var app = new Vue({
         jsonModel,
         isArticleGroup: false,
         isOrderGroup: false,
-        isPartnerGroup: false
+        isPartnerGroup: false,
+        lastGroup: ""
     },
     methods: {
         loaded: function () {
             this.isArticleGroup = false,
             this.isOrderGroup = false,
             this.isPartnerGroup = false
-        },
-
-        isShowGroup: function (group) {
-            if (group === "Articles" && this.isArticleGroup === false) {
-                this.isArticleGroup = true;
-                return "block";
-            }
-            else if (group === "Orders" && this.isOrderGroup === false) {
-                this.isOrderGroup = true;
-                return "block";
-            }
-            else if (group === "Partners" && this.isPartnerGroup === false) {
-                this.isPartnerGroup = true;
-                return "block";
-            }
-            else return "none";
         },
 
         changeVisible: function (name) {
