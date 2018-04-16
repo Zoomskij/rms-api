@@ -29,6 +29,7 @@ namespace RMSAutoAPI.App_Data
         public string TitleDescription { get; set; }
         public string Response { get; set; }
         public bool Visible { get; set; }
+        public bool AllowAnonymous { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Parameters> Parameters { get; set; }

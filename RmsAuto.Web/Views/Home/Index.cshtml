@@ -12,7 +12,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/api.css" rel="stylesheet" />
-
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -32,8 +32,8 @@
             (код партнёра можно получить, воспользовавшись методом /api/Partners).
         </div>
 
-
         <div id="app">
+
             <div class="opblock-tag-section">
                 <div style="height: auto; border: none; margin: 0px; padding: 0px;">
                     <div v-for="(method, index) in jsonModel">
@@ -51,6 +51,12 @@
                                     <div class="opblock-summary-method"> {{ method.Type }} </div>
                                     <div class="opblock-summary-path"> {{ method.Uri }} </div>
                                     <div class="opblock-summary-description"> {{ method.Description }} </div>
+                                    <div v-if="method.AllowAnonymous == 0 && token == ''">
+                                        <i class="fa fa-lock" style="font-size:24px; margin-right:5px; color:#666" title="Необходимо авторизоваться"></i>
+                                    </div>
+                                    <div v-if="method.AllowAnonymous == 0 && token != ''">
+                                        <i class="fa fa-unlock" style="font-size:24px; margin-right:5px; color:#666" title="Доступен для выполнения"></i>
+                                    </div>
                                 </div>
                                 <hr v-bind:class="{'hr-border-get': method.Type === 'GET', 'hr-border-post': method.Type === 'POST'}" />
                             </a>
@@ -140,9 +146,9 @@
                                             <span class="response-label"> Curl</span>
                                         </div>
 
-                                        <div class="execute-wrapper" style="padding-top:0">
+                                        <div class="execute-wrapper" style="padding-top:0;max-height:600px">
                                             <pre class="example">
-                                            <div v-bind:id="method.Name + '_curl'"></div>             
+                                            <div v-bind:id="method.Name + '_curl'" style="max-height:600px"></div>             
                                             </pre>
                                         </div>
                                     </div>

@@ -202,6 +202,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     color: #fff;
     text-align: left;
     overflow-y: auto;
+    max-height: 600px;
 }
 
 button {

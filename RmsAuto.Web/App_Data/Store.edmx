@@ -29,6 +29,7 @@
           <Property Name="TitleDescription" Type="nvarchar" MaxLength="4000" />
           <Property Name="Response" Type="nvarchar" MaxLength="255" />
           <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="AllowAnonymous" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Parameters">
           <Key>
@@ -766,6 +767,7 @@
           <Property Name="Response" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Parameters" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Methods" ToRole="Parameters" />
           <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="AllowAnonymous" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Parameters">
           <Key>
@@ -1053,6 +1055,7 @@
           <EntitySetMapping Name="Methods">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Methods">
               <MappingFragment StoreEntitySet="Methods">
+                <ScalarProperty Name="AllowAnonymous" ColumnName="AllowAnonymous" />
                 <ScalarProperty Name="Visible" ColumnName="Visible" />
                 <ScalarProperty Name="Response" ColumnName="Response" />
                 <ScalarProperty Name="TitleDescription" ColumnName="TitleDescription" />
