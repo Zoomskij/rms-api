@@ -1,9 +1,54 @@
-﻿var app = new Vue({
+﻿'use strict';
+
+// import VuePreload from './vue-preload.js'
+
+//Vue.use(VuePreload)
+
+//Vue.use(VuePreload, {
+//    showProgress: true,
+//    onStart() {
+//        console.log('start')
+//    },
+//    onEnd() {
+//        console.log('end')
+//    }
+//})
+
+
+var app = new Vue({
     el: '#app',
+    mounted: function () {
+        this.loaded()
+    },
     data: {
-        jsonModel
+        jsonModel,
+        isArticleGroup: false,
+        isOrderGroup: false,
+        isPartnerGroup: false
     },
     methods: {
+        loaded: function () {
+            this.isArticleGroup = false,
+            this.isOrderGroup = false,
+            this.isPartnerGroup = false
+        },
+
+        isShowGroup: function (group) {
+            if (group === "Articles" && this.isArticleGroup === false) {
+                this.isArticleGroup = true;
+                return "block";
+            }
+            else if (group === "Orders" && this.isOrderGroup === false) {
+                this.isOrderGroup = true;
+                return "block";
+            }
+            else if (group === "Partners" && this.isPartnerGroup === false) {
+                this.isPartnerGroup = true;
+                return "block";
+            }
+            else return "none";
+        },
+
         changeVisible: function (name) {
             var item = document.getElementById(name);
             if (item !== null) {
