@@ -27,12 +27,9 @@ namespace RMSAutoAPI.Services
                     isRms = false;
                 }
 
-                Users use = new Users();
-
                 var md5Password = GetMD5Hash(password, isRms);
-                return Task.Run(() => {
-                    var user = db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
-                    return user;
+                return Task.Run<Users>(() =>{
+                    return db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
                 });
 
             }

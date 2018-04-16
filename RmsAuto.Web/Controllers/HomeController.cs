@@ -88,6 +88,9 @@ namespace RMSAutoAPI.Controllers
                             case "reaction":
                                 parameter.Type = "int32";
                                 break;
+                            case "responsepartnumber":
+                                parameter.Type = "int32";
+                                break;
                             default:
                                 parameter.Type = property.PropertyType.Name.ToLower();
                                 break;
@@ -111,7 +114,7 @@ namespace RMSAutoAPI.Controllers
                                 Brand = "KAYABA",
                                 SupplierID = 21,
                                 Count = 2,
-                                Price = Convert.ToDecimal(10000.25),
+                                Price = Convert.ToDecimal(10000.00),
                                 ReacionByChange = 0,
                                 ReactionByCount = 0,
                                 ReactionByPrice = 0,
