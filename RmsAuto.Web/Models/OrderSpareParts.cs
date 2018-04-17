@@ -1,6 +1,6 @@
 ﻿namespace RMSAutoAPI.Models
 {
-    public class OrderPartNumbers : Part 
+    public class OrderSpareParts : Part 
     {
         /// <summary>
         /// Количество

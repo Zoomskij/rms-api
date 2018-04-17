@@ -49,19 +49,19 @@ namespace RMSAutoAPI.Controllers
                     switch (method.Name)
                     {
                         case "GetBrands": method.Response = new Brand(); break;
-                        case "GetSpareParts": method.Response = new PartNumber(); break;
-                        case "GetOrders": method.Response = new List<Order<PartNumber>>(); break;
-                        case "GetOrder": method.Response = new Order<PartNumber>(); break;
-                        case "CreateOrder": method.Response = new Order<PartNumber>(); break;
+                        case "GetSpareParts": method.Response = new SparePart(); break;
+                        case "GetOrders": method.Response = new List<Order<SparePart>>(); break;
+                        case "GetOrder": method.Response = new Order<SparePart>(); break;
+                        case "CreateOrder": method.Response = new Order<SparePart>(); break;
                         case "GetPartners": method.Response = new Partner(); break;
                     }
                 }
 
                 List<object> objModels = new List<object>();
                 objModels.Add(new Brand());
-                objModels.Add(new PartNumber());
-                objModels.Add(new Order<PartNumber>());
-                objModels.Add(new ResponsePartNumbers());
+                objModels.Add(new SparePart());
+                objModels.Add(new Order<SparePart>());
+                objModels.Add(new ResponseSparePart());
                 objModels.Add(new Partner());
 
                 var models = new List<Model>();
@@ -90,7 +90,7 @@ namespace RMSAutoAPI.Controllers
                             case "reaction":
                                 parameter.Type = "int32";
                                 break;
-                            case "responsepartnumber":
+                            case "statussparepart":
                                 parameter.Type = "int32";
                                 break;
                             default:
@@ -104,13 +104,13 @@ namespace RMSAutoAPI.Controllers
                 }
                 ViewBag.Models = models;
 
-                ViewBag.OrderModel = new Order<OrderPartNumbers>
+                ViewBag.OrderModel = new Order<OrderSpareParts>
                 {
                     OrderName = "Новый Заказ",
                     Reaction = Reaction.AnyPush,
-                    PartNumbers = new List<OrderPartNumbers>()
+                    SpareParts = new List<OrderSpareParts>()
                      {
-                          new OrderPartNumbers()
+                          new OrderSpareParts()
                           {
                                 Article = "333310",
                                 Brand = "KAYABA",

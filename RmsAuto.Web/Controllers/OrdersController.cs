@@ -48,11 +48,11 @@ namespace RMSAutoAPI.Controllers
         {
             var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
             if (!orders.Any()) return Ok(new List<Orders>());
-            List<Order<PartNumber>> userOrders = new List<Order<PartNumber>>();
+            List<Order<SparePart>> userOrders = new List<Order<SparePart>>();
 
             foreach (var order in orders)
             {
-                var newOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
+                var newOrder = Mapper.Map<Orders, Order<SparePart>>(order);
 
                 userOrders.Add(newOrder);
             }
@@ -69,9 +69,9 @@ namespace RMSAutoAPI.Controllers
 
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId);
             if (order == null) return Ok(new Orders());
-            var userOrder = Mapper.Map<Orders, Order<PartNumber>>(order);
+            var userOrder = Mapper.Map<Orders, Order<SparePart>>(order);
 
-            var orderLines = Mapper.Map<ICollection<OrderLines>, List<PartNumber>>(order.OrderLines);
+            var orderLines = Mapper.Map<ICollection<OrderLines>, List<SparePart>>(order.OrderLines);
 
             return Ok(userOrder);
         }
@@ -80,7 +80,7 @@ namespace RMSAutoAPI.Controllers
         [Route("orders")]
         [Authorize]
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
-        public IHttpActionResult CreateOrder([FromBody] Order<OrderPartNumbers> order)
+        public IHttpActionResult CreateOrder([FromBody] Order<OrderSpareParts> order)
         {
             using (var dbTransaction = db.Database.BeginTransaction())
             {
@@ -99,11 +99,11 @@ namespace RMSAutoAPI.Controllers
                 };
 
 
-                var respOrder = Mapper.Map<Orders, Order<ResponsePartNumbers>>(dbOrder);
-                foreach (var pn in order.PartNumbers)
+                var respOrder = Mapper.Map<Orders, Order<ResponseSparePart>>(dbOrder);
+                foreach (var pn in order.SpareParts)
                 {
-                    var orderLine = Mapper.Map<OrderPartNumbers, OrderLines>(pn);
-                    var respLine = Mapper.Map<OrderLines, ResponsePartNumbers>(orderLine);
+                    var orderLine = Mapper.Map<OrderSpareParts, OrderLines>(pn);
+                    var respLine = Mapper.Map<OrderLines, ResponseSparePart>(orderLine);
                     var sparePart = db.spGetSparePart(pn.Brand, pn.Article, pn.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
                     if (sparePart != null)
                     {
@@ -113,7 +113,7 @@ namespace RMSAutoAPI.Controllers
                                 if (sparePart?.QtyInStock < pn?.Count)
                                 {
                                     respLine.Status = ResponsePartNumber.NotSetReactionByCount;
-                                    respOrder.PartNumbers.Add(respLine);
+                                    respOrder.SpareParts.Add(respLine);
                                     continue;
                                 }
                                 respLine.CountApproved = pn.Count.Value;
@@ -138,7 +138,7 @@ namespace RMSAutoAPI.Controllers
                                 if (sparePart?.FinalPrice > pn.Price)
                                 {
                                     respLine.Status = ResponsePartNumber.WrongPrice;
-                                    respOrder.PartNumbers.Add(respLine);
+                                    respOrder.SpareParts.Add(respLine);
                                     continue;
                                 }
                                 respLine.PriceApproved = Math.Round(sparePart.FinalPrice.Value,2);
@@ -162,13 +162,13 @@ namespace RMSAutoAPI.Controllers
                         orderLine.OrderLineStatuses = orderStatus;
 
                         respOrder.OrderName = order.OrderName;
-                        respOrder.PartNumbers.Add(respLine);
+                        respOrder.SpareParts.Add(respLine);
                         dbOrder.OrderLines.Add(orderLine);
                     }
                     else
                     {
                         respLine.Status = ResponsePartNumber.NotFound;
-                        respOrder.PartNumbers.Add(respLine);
+                        respOrder.SpareParts.Add(respLine);
                     }
                 }
                 respOrder.Total = dbOrder.Total = total;

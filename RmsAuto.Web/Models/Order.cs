@@ -24,6 +24,6 @@ namespace RMSAutoAPI.Models
         [Description("Сумма заказа")]
         public decimal Total { get; set; }
         [Description("Детали заказа")]
-        public List<T> PartNumbers { get; set; } = new List<T>();
+        public List<T> SpareParts { get; set; } = new List<T>();
     }
 }

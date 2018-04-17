@@ -2,7 +2,7 @@
 
 namespace RMSAutoAPI.Models
 {
-    public class ResponsePartNumbers : Part
+    public class ResponseSparePart : Part
     {
         [Description("Количество")]
         public int CountOrder { get; set; }

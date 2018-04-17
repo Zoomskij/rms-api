@@ -22,7 +22,7 @@ namespace RMSAutoAPI.Infrastructure
                          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Manufacturer))
                          .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
 
-                cfg.CreateMap<spSearchCrossesWithPriceSVC_Result, PartNumber>()
+                cfg.CreateMap<spSearchCrossesWithPriceSVC_Result, SparePart>()
                          .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
                          .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
                          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
@@ -35,14 +35,14 @@ namespace RMSAutoAPI.Infrastructure
                          .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Franch))
                          .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.InternalFranchName));
 
-                cfg.CreateMap<OrderLines, PartNumber>()
+                cfg.CreateMap<OrderLines, SparePart>()
                             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
                             .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
                             .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Qty))
                             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
                             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice));
 
-                cfg.CreateMap<PartNumber, OrderLines>()
+                cfg.CreateMap<SparePart, OrderLines>()
                             .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Brand))
                             .ForMember(dest => dest.PartNumber, opt => opt.MapFrom(src => src.Article))
                             .ForMember(dest => dest.Qty, opt => opt.MapFrom(src => src.Count))
@@ -50,32 +50,32 @@ namespace RMSAutoAPI.Infrastructure
                             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price));
 
 
-                cfg.CreateMap<OrderLines, OrderPartNumbers>()
+                cfg.CreateMap<OrderLines, OrderSpareParts>()
                             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
                             .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
                             .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Qty))
                             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice));
 
-                cfg.CreateMap<OrderPartNumbers, OrderLines>()
+                cfg.CreateMap<OrderSpareParts, OrderLines>()
                             .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Brand))
                             .ForMember(dest => dest.PartNumber, opt => opt.MapFrom(src => src.Article))
                             .ForMember(dest => dest.Qty, opt => opt.MapFrom(src => src.Count))
                             .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price));
 
-                cfg.CreateMap<OrderLines, ResponsePartNumbers>()
+                cfg.CreateMap<OrderLines, ResponseSparePart>()
                             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
                             .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
                             .ForMember(dest => dest.CountOrder, opt => opt.MapFrom(src => src.Qty))
                             .ForMember(dest => dest.PriceOrder, opt => opt.MapFrom(src => src.UnitPrice));
 
-                cfg.CreateMap<Orders, Order<PartNumber>>()
+                cfg.CreateMap<Orders, Order<SparePart>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
-                            .ForMember(dest => dest.PartNumbers, opt => opt.MapFrom(src => src.OrderLines));
+                            .ForMember(dest => dest.SpareParts, opt => opt.MapFrom(src => src.OrderLines));
 
-                cfg.CreateMap<Orders, Order<OrderPartNumbers>>()
+                cfg.CreateMap<Orders, Order<OrderSpareParts>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
-                cfg.CreateMap<Orders, Order<ResponsePartNumbers>>()
+                cfg.CreateMap<Orders, Order<ResponseSparePart>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
                 cfg.CreateMap<Methods, ApiMethod>();

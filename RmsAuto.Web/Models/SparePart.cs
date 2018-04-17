@@ -2,7 +2,7 @@
 
 namespace RMSAutoAPI.Models
 {
-    public class PartNumber : Part
+    public class SparePart : Part
     {
         /// <summary>
         /// Описание артикула
