@@ -26,12 +26,14 @@ namespace RMSAutoAPI.Controllers
             }
             if ((int?)TempData["logout"] == 1)
             {
+                TempData["bearerToken"] = null;
+                TempData["Username"] = null;
                 Token = string.Empty;
 				CurrentUser = string.Empty;
             }
 
             ViewBag.CurrentUser = CurrentUser;
-            ViewBag.Token = Token;
+            ViewBag.Token = Token ?? string.Empty;
 
             if (!string.IsNullOrWhiteSpace(ViewBag.Token))
                 Token = ViewBag.Token;

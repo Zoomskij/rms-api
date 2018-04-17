@@ -1,10 +1,6 @@
 ﻿var viewModel = function () {
     var self = this;
 
-    if (token === null) {
-        token = "";
-    }
-
     this.notify = function (str) {
         changeVisible(document.getElementById(str));
     }

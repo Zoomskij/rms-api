@@ -122,7 +122,7 @@ var app = new Vue({
 
             curl.html("curl -X " + methodType + " \"" + mainUrl + "" + url + "\"");
             curl.append(" -H \"accept: application/json\"");
-            if(token !== null && token !== "") {
+            if(token !== "") {
                 if (methodName !== "GetPartners" && methodName !== "GetOrders") {
                     curl.append(" -H \"authorization: " + token + "\"");
                 }
@@ -143,7 +143,7 @@ var app = new Vue({
                 data: data,
                 cache: false,
                 beforeSend: function (xhr) {
-                    if (token !== null && token !== "") {
+                    if (token !== "") {
                         /* Authorization header */
                         xhr.setRequestHeader("Authorization", token);
                         xhr.setRequestHeader("X-Mobile", "false");
