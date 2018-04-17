@@ -36,7 +36,7 @@
             <template>
                 <div class="opblock-tag-section">
                     <div style="height: auto; border: none; margin: 0px; padding: 0px;">
-                        <div v-for="(method, index) in jsonModel">
+                        <div v-for="(method, index) in jsonModel" style="padding-top:5px">
                             <div v-bind:style="{display: index == 0 || index == 2 || index == 4 ? 'block' : 'none' }">
                                 <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
                                     <a class="nostyle"><span>{{method.Group}}</span></a>
