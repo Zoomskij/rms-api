@@ -95,7 +95,8 @@ namespace RMSAutoAPI.Controllers
                     PaymentMethod = (byte)PaymentMethod.Cash,
                     Status = 0,
                     OrderDate = DateTime.Now,
-                    Users = CurrentUser
+                    Users = CurrentUser,
+                    OrderNotes = order.OrderName
                 };
 
 

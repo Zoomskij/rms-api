@@ -76,7 +76,8 @@ namespace RMSAutoAPI.Infrastructure
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
                 cfg.CreateMap<Orders, Order<ResponseSparePart>>()
-                            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
+                            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
+                            .ForMember(dest => dest.OrderName, opt => opt.MapFrom(src => src.OrderNotes));
 
                 cfg.CreateMap<Methods, ApiMethod>();
                 cfg.CreateMap<Parameters, ApiParameter>()
