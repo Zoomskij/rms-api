@@ -297,7 +297,7 @@
     <Compile Include="Models\Orders\OrderInfo.cs" />
     <Compile Include="Models\Orders\OrderLineHandlingInfo.cs" />
     <Compile Include="Models\Orders\OrderLineInfo.cs" />
-    <Compile Include="Models\OrderSpareParts.cs" />
+    <Compile Include="Models\OrderSparePart.cs" />
     <Compile Include="Models\Orders\ProxyType.cs" />
     <Compile Include="Models\Orders\SendOrderEnvelope.cs" />
     <Compile Include="Models\Orders\SendOrderResultsEnvelope.cs" />

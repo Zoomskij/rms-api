@@ -60,7 +60,8 @@ namespace RMSAutoAPI.Controllers
                 List<object> objModels = new List<object>();
                 objModels.Add(new Brand());
                 objModels.Add(new SparePart());
-                objModels.Add(new Order<SparePart>());
+                objModels.Add(new Order<OrderSparePart>());
+                objModels.Add(new OrderSparePart());
                 objModels.Add(new ResponseSparePart());
                 objModels.Add(new Partner());
 
@@ -104,13 +105,13 @@ namespace RMSAutoAPI.Controllers
                 }
                 ViewBag.Models = models;
 
-                ViewBag.OrderModel = new Order<OrderSpareParts>
+                ViewBag.OrderModel = new Order<OrderSparePart>
                 {
                     OrderName = "Новый Заказ",
                     Reaction = Reaction.AnyPush,
-                    SpareParts = new List<OrderSpareParts>()
+                    SpareParts = new List<OrderSparePart>()
                      {
-                          new OrderSpareParts()
+                          new OrderSparePart()
                           {
                                 Article = "333310",
                                 Brand = "KAYABA",

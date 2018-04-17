@@ -80,7 +80,7 @@ namespace RMSAutoAPI.Controllers
         [Route("orders")]
         [Authorize]
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
-        public IHttpActionResult CreateOrder([FromBody] Order<OrderSpareParts> order)
+        public IHttpActionResult CreateOrder([FromBody] Order<OrderSparePart> order)
         {
             using (var dbTransaction = db.Database.BeginTransaction())
             {
@@ -102,7 +102,7 @@ namespace RMSAutoAPI.Controllers
                 var respOrder = Mapper.Map<Orders, Order<ResponseSparePart>>(dbOrder);
                 foreach (var pn in order.SpareParts)
                 {
-                    var orderLine = Mapper.Map<OrderSpareParts, OrderLines>(pn);
+                    var orderLine = Mapper.Map<OrderSparePart, OrderLines>(pn);
                     var respLine = Mapper.Map<OrderLines, ResponseSparePart>(orderLine);
                     var sparePart = db.spGetSparePart(pn.Brand, pn.Article, pn.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
                     if (sparePart != null)

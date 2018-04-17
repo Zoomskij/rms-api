@@ -1,24 +1,32 @@
-﻿namespace RMSAutoAPI.Models
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
+using System.Web.Script.Serialization;
+
+namespace RMSAutoAPI.Models
 {
-    public class OrderSpareParts : Part 
+    public class OrderSparePart : Part 
     {
         /// <summary>
         /// Количество
         /// </summary>
+        [Description("заказанное количество")]
         public int? Count { get; set; }
         /// <summary>
         /// Цена
         /// </summary>
+        [Description("желаемая цена")]
         public decimal Price { get; set; }
         /// <summary>
         /// Reference (необязательное поле)
         /// </summary>
+        [Description("описание")]
         public byte Reference { get; set; }
         /// <summary>
-        /// - признак разрешения замены у поставщика (обязательное поле)
+        /// - признак запрещения замены у поставщика (обязательное поле)
         /// 0 - только заказанный номер
         /// 1 - разрешена замена от поставщика
         /// </summary>
+        [Description("признак запрещения замены у поставщика (обязательное поле) 0 - только заказанный номер. 1 - разрешена замена от поставщика")]
         public byte ReacionByChange { get; set; } = 0;
         /// <summary>
         /// - признак реакции на коллизию кол-ва
@@ -26,12 +34,14 @@
         /// 1 - брать сколько есть, но не выше указанного
         /// 2 - разрешение при необходимости на выравнивание вверх по MinQty
         /// </summary>
+        [Description("признак реакции на коллизию кол-ва. 0 - только указанное кол-во. 1 - брать сколько есть, но не выше указанного. 2 - разрешение при необходимости на выравнивание вверх по MinQty")]
         public byte ReactionByCount { get; set; } = 0;
         /// <summary>
         /// - признак реакции на коллизию цены
         /// 0 - не выше указанной цены
         /// 1 - текущая цена поставщика(т.е.без проверки цены из заказа не зависимо от ее указания в заказе)
         /// </summary>
+        [Description("признак реакции на коллизию цены. 0 - не выше указанной цены. 1 - текущая цена поставщика(т.е.без проверки цены из заказа не зависимо от ее указания в заказе)")]
         public byte ReactionByPrice { get; set; } = 0;
         /// <summary>
         /// признак реакции на выбор поставщика
@@ -40,6 +50,9 @@
         /// 2 - (зарезервировано для автоматического подбора поставщика по сроку)
         /// 3 - (зарезервировано для автоматического подбора поставщика по качеству поставки)
         /// </summary>
+        [JsonIgnore]
+        [ScriptIgnore]
+        [Description("наименование заказа (необязательное поле)")]
         public byte ReactionBySupplier { get; set; } = 0;
 
     }
