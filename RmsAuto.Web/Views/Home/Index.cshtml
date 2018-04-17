@@ -33,6 +33,11 @@
         </div>
 
         <div id="app">
+            <div class="row fa-3x">
+                <div class="col-md-1 col-md-offset-5">
+                    <i v-show="loading" class="fa fa-spinner fa-spin" style="color: #00539B"></i>
+                </div>
+            </div>
             <template>
                 <div class="opblock-tag-section">
                     <div style="height: auto; border: none; margin: 0px; padding: 0px;">
@@ -126,9 +131,12 @@
                                         </div>
                                         @*  END PARAMETERS *@
 
-
+                                        
                                         <div class="execute-wrapper">
-                                            <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">Execute</button>
+                                            
+                                            <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">
+                                                    Execute
+                                            </button>
                                         </div>
 
                                         <div v-bind:id="method.Name + '_loader'" class="loader" style="display:none">Loading...</div>

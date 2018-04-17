@@ -25,9 +25,22 @@ var app = new Vue({
         isArticleGroup: false,
         isOrderGroup: false,
         isPartnerGroup: false,
-        lastGroup: ""
+        lastGroup: "",
+        loading: false
     },
     methods: {
+        ready: function () {
+            this.loading = true;
+            // GET request
+            this.$http({ url: '/', method: 'GET' }).then(function (response) {
+                // success callback
+                this.loading = false;
+            }, function (response) {
+                // error callback
+            });
+        },
+
+
         loaded: function () {
             this.isArticleGroup = false,
             this.isOrderGroup = false,
