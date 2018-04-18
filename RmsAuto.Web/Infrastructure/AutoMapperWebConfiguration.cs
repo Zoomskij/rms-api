@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Models;
+using System;
 
 namespace RMSAutoAPI.Infrastructure
 {
@@ -54,13 +55,15 @@ namespace RMSAutoAPI.Infrastructure
                             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
                             .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
                             .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Qty))
-                            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice));
+                            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice))
+                            .ForMember(dest => dest.Reference, opt => opt.MapFrom(src => src.ReferenceID));
 
                 cfg.CreateMap<OrderSparePart, OrderLines>()
                             .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Brand))
                             .ForMember(dest => dest.PartNumber, opt => opt.MapFrom(src => src.Article))
                             .ForMember(dest => dest.Qty, opt => opt.MapFrom(src => src.Count))
-                            .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price));
+                            .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.Price))
+                            .ForMember(dest => dest.ReferenceID, opt => opt.MapFrom(src => src.Reference));
 
                 cfg.CreateMap<OrderLines, ResponseSparePart>()
                             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))

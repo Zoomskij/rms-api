@@ -14,5 +14,7 @@ namespace RMSAutoAPI.Models
         public decimal PriceApproved { get; set; }
         [Description("Статус размещения")]
         public ResponsePartNumber Status { get; set; }
+        [Description("Описание")]
+        public string Reference { get; set; }
     }
 }

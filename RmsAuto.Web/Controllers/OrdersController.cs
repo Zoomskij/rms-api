@@ -100,42 +100,46 @@ namespace RMSAutoAPI.Controllers
         //[Authorize(Roles = "Client_SearchApi, NoAccess")]
         public IHttpActionResult CreateOrder([FromBody] Order<OrderSparePart> order)
         {
+            Order<ResponseSparePart> RespOrder = new Order<ResponseSparePart>();
             DbOrder = new Orders();
             using (var dbTransaction = db.Database.BeginTransaction())
             {
                 var orderLineStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
-                decimal total = 0;
 
                 DbOrder = Mapper.Map<Order<OrderSparePart>, Orders>(order);
                 
                 foreach (var ol in DbOrder.OrderLines)
                 {
                     var sparePart = db.spGetSparePart(ol.Manufacturer, ol.PartNumber, ol.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
+                    var pn = order.SpareParts.FirstOrDefault(x => x.Article == ol.PartNumber && x.Brand == ol.Manufacturer && x.SupplierID == ol.SupplierID && x.Reference == ol.ReferenceID);
                     switch (order.Reaction)
                     {
                         case Reaction.AnyPush:
-                            if (sparePart?.QtyInStock < ol.Qty)
-                                ol.Qty = sparePart.QtyInStock.Value;
-                                //ol.Qty = MinValue(ol.Qty, sparePart.MinOrderQty);
+                            ol.Qty = GetQtyValue(ol.Qty, sparePart.QtyInStock, sparePart.MinOrderQty);
                             ol.UnitPrice = sparePart.FinalPrice ?? sparePart.InitialPrice;
                             break;
-                        case Reaction.NotPush:
+                        case Reaction.NotPush: 
                             if (sparePart?.QtyInStock < ol.Qty)
                                 return BadRequest();
                             if (ol.UnitPrice < sparePart?.FinalPrice)
                                 return BadRequest();
                             break;
                         case Reaction.CheckRow:
-                            var pn = order.SpareParts.FirstOrDefault(x => x.Article == ol.PartNumber && x.Brand == ol.Manufacturer && x.SupplierID == ol.SupplierID);
+                            
                             switch (pn.ReactionByCount)
                             {
                                 case 0:
+                                    if (ol.Qty > sparePart.QtyInStock)
+                                        ol.Qty = -1;
                                     break;
                                 case 1:
-                                    if (sparePart?.QtyInStock < ol.Qty)
-                                        ol.Qty = sparePart.QtyInStock.Value;
+                                    if (ol.Qty < sparePart.QtyInStock)
+                                    {
+                                        ol.Qty = GetQtyValue(ol.Qty, sparePart.QtyInStock, sparePart.MinOrderQty);
+                                    }
                                     break;
                                 case 2:
+                                    ol.Qty = GetQtyValue(ol.Qty, sparePart.QtyInStock, sparePart.MinOrderQty);
                                     break;
                             }
                             switch (pn.ReactionByPrice)
@@ -143,7 +147,7 @@ namespace RMSAutoAPI.Controllers
                                 case 0:
                                     if (sparePart?.FinalPrice > ol.UnitPrice)
                                     {
-
+                                        ol.UnitPrice = -1;
                                     }
                                     ol.UnitPrice = Math.Round(sparePart.FinalPrice.Value, 2);
                                     break;
@@ -164,29 +168,46 @@ namespace RMSAutoAPI.Controllers
                     ol.CurrentStatus = 0;
                     ol.Processed = 0;
                     ol.OrderLineStatuses = orderLineStatus;
-                    DbOrder.Total += sparePart.FinalPrice * ol.Qty ?? 0;
+                    DbOrder.Total += ol.Qty == -1 ? 0 : sparePart.FinalPrice * ol.Qty ?? 0;
                 }     
 
                 try
                 {
-                    var createorder = db.Orders.Add(DbOrder);
-                    var orderHelper = new OrderHelper(db);
-                    
-                    db.SaveChanges();
-                    if (DbOrder.OrderID != 0)
+                    RespOrder = Mapper.Map<Orders, Order<ResponseSparePart>>(DbOrder);
+                    foreach (var sp in RespOrder.SpareParts)
                     {
-                        var respOrder = Mapper.Map<Orders, Order<ResponseSparePart>>(DbOrder);
-                        foreach (var sp in respOrder.SpareParts)
+                        var sparePart = order.SpareParts.FirstOrDefault(x => x.Brand == sp.Brand && x.Article == sp.Article && x.SupplierID == sp.SupplierID && x.Reference == sp.Reference);
+                        sp.PriceOrder = sparePart.Price;
+                        sp.CountOrder = sparePart.Count ?? 0;
+                        if (sp.PriceApproved == -1)
                         {
-                            var sparePart = order.SpareParts.FirstOrDefault(x => x.Brand == sp.Brand && x.Article == sp.Article && x.SupplierID == sp.SupplierID);
-                            sp.PriceOrder = sparePart.Price;
-                            sp.CountOrder = sparePart.Count ?? 0;
+                            sp.Status = ResponsePartNumber.WrongPrice;
+                            sp.PriceApproved = 0;
+                        }
+                        if (sp.CountApproved == -1)
+                        {
+                            sp.Status = ResponsePartNumber.SomethingCount;
+                            sp.CountApproved = 0;
                         }
 
+                    }
 
-                        orderHelper.SendOrder(DbOrder, string.Empty);
-                        dbTransaction.Commit();
-                        return Ok(respOrder);
+                    var dbLines = DbOrder.OrderLines.Where(x => x.UnitPrice == -1 || x.Qty == -1).ToList();
+                    foreach (var orderLine in dbLines.ToList())
+                        DbOrder.OrderLines.Remove(orderLine);
+                    var createorder = db.Orders.Add(DbOrder);
+
+                    if (DbOrder.OrderLines.Any())
+                    {
+                        db.SaveChanges();
+                        if (DbOrder.OrderID != 0)
+                        {
+                            var orderHelper = new OrderHelper(db);
+                            RespOrder.OrderId = DbOrder.OrderID;
+                            orderHelper.SendOrder(DbOrder, string.Empty);
+                            dbTransaction.Commit();
+                            return Ok(RespOrder);
+                        }
                     }
                 }
                 catch (DbEntityValidationException e)
@@ -195,15 +216,22 @@ namespace RMSAutoAPI.Controllers
                 }
             }
 
-            return Ok(order);
+            return Ok(RespOrder);
         }
 
-        public int MinValue(int count, int? min)
+        public int GetQtyValue(int orderCount, int? stockCount, int? min)
         {
-            if (min.HasValue)
-                return count + min.Value - (count % min.Value);
-            else
-                return count;
+            if (min.HasValue && min != 1)
+            {
+                if (stockCount.Value + min < orderCount)
+                {
+                    return stockCount.Value - min.Value + (stockCount.Value % min.Value);
+                }
+                return orderCount + min.Value - (orderCount % min.Value);
+            }
+            if (orderCount < stockCount.Value)
+                return orderCount;
+            else return stockCount.Value;
         }
 
         public static string ConvertManufacturerToSP(string manufacturer)

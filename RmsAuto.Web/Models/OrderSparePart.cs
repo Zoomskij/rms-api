@@ -20,7 +20,7 @@ namespace RMSAutoAPI.Models
         /// Reference (необязательное поле)
         /// </summary>
         [Description("описание")]
-        public byte Reference { get; set; }
+        public string Reference { get; set; }
         /// <summary>
         /// - признак запрещения замены у поставщика (обязательное поле)
         /// 0 - только заказанный номер
