@@ -3,7 +3,7 @@
    /// <summary>
    /// Не размещать в случае ошибки
    /// </summary>
-   NotPush = 0,
+   NotErrorPush = 0,
    /// <summary>
    /// Размещать все что получится разместить
    /// </summary>

@@ -13,7 +13,7 @@ namespace RMSAutoAPI.Models
         [Description("Цена детали подтвержденная")]
         public decimal PriceApproved { get; set; }
         [Description("Статус размещения")]
-        public ResponsePartNumber Status { get; set; }
+        public ResponsePartNumber Status { get; set; } = ResponsePartNumber.Ok;
         [Description("Описание")]
         public string Reference { get; set; }
     }
