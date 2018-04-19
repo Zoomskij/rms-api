@@ -65,6 +65,7 @@ var app = new Vue({
             this.changeVisible(str + "_analogues");
             this.changeVisible(str + "_execute");
             this.changeVisible(str + "_orderId");
+            this.changeVisible(str + "_orders");
 
             var bTryit = document.getElementById(str + "_tryIt");
             if (bTryit !== null) {
