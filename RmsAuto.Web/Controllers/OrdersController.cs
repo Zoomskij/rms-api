@@ -118,6 +118,7 @@ namespace RMSAutoAPI.Controllers
                     var dbOrderLine = new OrderLines();
                     var respOrderLine = new ResponseSparePart();
                     respOrderLine.PriceOrder = sparePart.Price;
+                    respOrderLine.CountOrder = sparePart.Count ?? 0;
                     var part = parts.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
                     switch (order.Reaction)
                     {
@@ -130,15 +131,13 @@ namespace RMSAutoAPI.Controllers
                             {
                                 respOrderLine.Status = ResponsePartNumber.WrongPrice;
                             }
-                            respOrderLine.CountOrder = sparePart.Count ?? 0;
                             respOrderLine.PriceApproved = sparePart.Price;
                             respOrderLine.CountApproved = 0;
                             respOrderLine.PriceApproved = 0;
                             break;
                         case Reaction.AnyPush:
-                            respOrderLine.CountOrder = sparePart.Count ?? 0;
                             respOrderLine.PriceOrder = sparePart.Price;
-                            respOrderLine.CountApproved = dbOrderLine.Qty = GetQtyValue(sparePart.Count.Value, part.QtyInStock, part.MinOrderQty);
+                            respOrderLine.CountApproved = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count.Value, part.MinOrderQty, part.QtyInStock.Value);
                             respOrderLine.PriceApproved = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             break;
                         case Reaction.CheckRow:
@@ -149,7 +148,6 @@ namespace RMSAutoAPI.Controllers
                                     if (sparePart.Count > part.QtyInStock)
                                     {
                                         respOrderLine.CountApproved = 0;
-                                        respOrderLine.CountOrder = sparePart.Count.Value;
                                         respOrderLine.Status = ResponsePartNumber.ErrorCount;
                                     }
                                     else
@@ -162,16 +160,17 @@ namespace RMSAutoAPI.Controllers
                                     if (sparePart.Count > part.QtyInStock)
                                     {
                                         dbOrderLine.Qty = respOrderLine.CountApproved = part.QtyInStock.Value;
-                                        respOrderLine.CountOrder = sparePart.Count.Value;
                                     }
                                     else
                                         respOrderLine.Status = ResponsePartNumber.AllCount;
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
+                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetMoreMinQty(sparePart.Count.Value, part.MinOrderQty.Value, part.QtyInStock.Value);
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
+                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetLessMinQty(sparePart.Count.Value, part.MinOrderQty.Value, part.QtyInStock.Value);
                                     break;
                             }
 
@@ -257,20 +256,35 @@ namespace RMSAutoAPI.Controllers
             }
             return Ok(respOrder);
         }
-     
-        public int GetQtyValue(int orderCount, int? stockCount, int? min)
+
+        public int GetMoreMinQty(int orderCount, int? minQty, int stockCount)
         {
-            if (min.HasValue && min != 1)
+            if (minQty.HasValue)
             {
-                if (stockCount.Value + min < orderCount)
+                var value = orderCount + (orderCount % minQty.Value);
+                if (value < stockCount)
+                    return value;
+                else
                 {
-                    return stockCount.Value - min.Value + (stockCount.Value % min.Value);
+                    return stockCount - (stockCount % minQty.Value);
                 }
-                return orderCount + min.Value - (orderCount % min.Value);
             }
-            if (orderCount < stockCount.Value)
-                return orderCount;
-            else return stockCount.Value;
+            return orderCount;
+        }
+
+        public int GetLessMinQty(int orderCount, int? minQty, int stockCount)
+        {
+            if (minQty.HasValue)
+            {
+                var value = orderCount - (orderCount % minQty.Value);
+                if (value < stockCount)
+                    return value;
+                else
+                {
+                    return stockCount - (stockCount % minQty.Value);
+                }
+            }
+            return orderCount;
         }
 
         public static string ConvertManufacturerToSP(string manufacturer)
