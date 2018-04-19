@@ -253,25 +253,32 @@ namespace RMSAutoAPI.Controllers
 
                 DbOrder.OrderNotes = respOrder.OrderName = order.OrderName;
 
-                if (!respOrder.SpareParts.Any())
+                if (order.Reaction == 0)
                 {
-                    respOrder.Status = 2;  // заказ не размещен
+                    if (!respOrder.SpareParts.Any() || respOrder.SpareParts.Any(x => x.Status != 0))
+                        respOrder.Status = OrderStatus.Error; // заказ не размещен
                 }
-                if (!respOrder.SpareParts.Any(x => x.Status != 0))
+
+                if (order.Reaction != 0 && !respOrder.SpareParts.Any())
                 {
-                    respOrder.Status = 1; // заказ размещен частично
+                    respOrder.Status = OrderStatus.Error;  // заказ не размещен
+                }
+                if (order.Reaction != 0 && !respOrder.SpareParts.Any(x => x.Status != 0))
+                {
+                    respOrder.Status = OrderStatus.OkPart; // заказ размещен частично
                 }
 
                 try
                 {
-                    respOrder.Total = DbOrder.Total;
-                    respOrder.Username = CurrentUser.Username;
-                    var createorder = db.Orders.Add(DbOrder);
-                    if (DbOrder.OrderLines.Any())
-                    {
+                    if (respOrder.Status != OrderStatus.Error)
+                    { 
+                        respOrder.Total = DbOrder.Total;
+                        respOrder.Username = CurrentUser.Username;
+                        var createorder = db.Orders.Add(DbOrder);
+
                         if (respOrder.SpareParts.Any(x => x.Status != ResponsePartNumber.Ok))
                         {
-                            respOrder.Status = 3;
+                            respOrder.Status = OrderStatus.OkPart;
                         }
                         db.SaveChanges();
                         if (DbOrder.OrderID != 0)
@@ -285,10 +292,7 @@ namespace RMSAutoAPI.Controllers
                             respOrder.Status = 0;
                             return Ok(respOrder);
                         }
-                    }
-                    else
-                    {
-                        respOrder.Status = 1;
+
                     }
                 }
                 catch (DbEntityValidationException e)
