@@ -14,7 +14,7 @@ namespace RMSAutoAPI.Services
     public class UserService : IUserService
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
-        public Task<Users> GetUser(string login, string password, string region)
+        public async Task<Users> GetUser(string login, string password, string region)
         {
             bool isRms = true;
             try
@@ -28,9 +28,10 @@ namespace RMSAutoAPI.Services
                 }
 
                 var md5Password = GetMD5Hash(password, isRms);
-                return Task.Run<Users>(() =>{
+                var user = await Task.Run<Users>(() =>{
                     return db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
                 });
+                return user;
 
             }
             catch (Exception ex)
