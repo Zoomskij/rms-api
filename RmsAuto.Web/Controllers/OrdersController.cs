@@ -118,7 +118,7 @@ namespace RMSAutoAPI.Controllers
                     var dbOrderLine = new OrderLines();
                     var respOrderLine = new ResponseSparePart();
                     respOrderLine.PriceOrder = sparePart.Price;
-                    respOrderLine.CountOrder = sparePart.Count ?? 0;
+                    respOrderLine.CountOrder = sparePart.Count;
                     var part = parts.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
                     switch (order.Reaction)
                     {
@@ -126,18 +126,19 @@ namespace RMSAutoAPI.Controllers
                             if (sparePart.Count > part.QtyInStock)
                             {
                                 respOrderLine.Status = ResponsePartNumber.ErrorCount;
+                                break;
                             }
                             if (sparePart.Price < part.FinalPrice)
                             {
                                 respOrderLine.Status = ResponsePartNumber.WrongPrice;
+                                break;
                             }
                             respOrderLine.PriceApproved = sparePart.Price;
-                            respOrderLine.CountApproved = 0;
-                            respOrderLine.PriceApproved = 0;
+                            respOrderLine.CountApproved = sparePart.Count;
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
-                            respOrderLine.CountApproved = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count.Value, part.MinOrderQty, part.QtyInStock.Value);
+                            respOrderLine.CountApproved = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                             respOrderLine.PriceApproved = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             break;
                         case Reaction.CheckRow:
@@ -152,7 +153,7 @@ namespace RMSAutoAPI.Controllers
                                     }
                                     else
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountApproved = respOrderLine.CountOrder = sparePart.Count.Value;
+                                        dbOrderLine.Qty = respOrderLine.CountApproved = respOrderLine.CountOrder = sparePart.Count;
                                     }
                                     break;
                                 // Берем сколько есть, но не выше указанного
@@ -162,15 +163,18 @@ namespace RMSAutoAPI.Controllers
                                         dbOrderLine.Qty = respOrderLine.CountApproved = part.QtyInStock.Value;
                                     }
                                     else
+                                    {
+                                        dbOrderLine.Qty = respOrderLine.CountApproved = sparePart.Count;
                                         respOrderLine.Status = ResponsePartNumber.AllCount;
+                                    }
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
-                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetMoreMinQty(sparePart.Count.Value, part.MinOrderQty.Value, part.QtyInStock.Value);
+                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetMoreMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
-                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetLessMinQty(sparePart.Count.Value, part.MinOrderQty.Value, part.QtyInStock.Value);
+                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetLessMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
                                     break;
                             }
 
@@ -202,7 +206,7 @@ namespace RMSAutoAPI.Controllers
                     dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax ?? 0 : 0;
                     dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
                     dbOrderLine.UnitPrice = sparePart != null ? Math.Round(part.FinalPrice.Value, 2) : 0;
-                    dbOrderLine.StrictlyThisNumber = false;
+                    dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
                     dbOrderLine.CurrentStatus = 0;
                     dbOrderLine.Processed = 0;
                     dbOrderLine.OrderLineStatuses = orderLineStatus;
@@ -218,6 +222,7 @@ namespace RMSAutoAPI.Controllers
                 }
 
                 DbOrder.OrderNotes = respOrder.OrderName = order.OrderName;
+                
                 try
                 {
                     respOrder.Total = DbOrder.Total;

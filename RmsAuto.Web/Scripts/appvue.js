@@ -164,6 +164,14 @@ var app = new Vue({
                     }
                 },
                 success: function (data) {
+                    if (methodName === "CreateOrder") {
+                        delete data.Reaction;
+                        delete data.Username;
+                        delete data.OrderDate;
+                        delete data.CompletedDate;
+                        delete data.OrderName;
+                    }
+
                     var str = JSON.stringify(data, null, 2);
                     //var j = this.syntaxHighlight(str);
                     if (typeof str !== 'string') {

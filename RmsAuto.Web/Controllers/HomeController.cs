@@ -118,7 +118,7 @@ namespace RMSAutoAPI.Controllers
                                 SupplierID = 21,
                                 Count = 2,
                                 Price = Convert.ToDecimal(10000.00),
-                                ReacionByChange = 0,
+                                StrictlyThisNumber = false,
                                 ReactionByCount = 0,
                                 ReactionByPrice = 0,
                                 ReactionBySupplier = 0

@@ -10,7 +10,7 @@ namespace RMSAutoAPI.Models
         /// Количество
         /// </summary>
         [Description("заказанное количество")]
-        public int? Count { get; set; }
+        public int Count { get; set; }
         /// <summary>
         /// Цена
         /// </summary>
@@ -20,14 +20,14 @@ namespace RMSAutoAPI.Models
         /// Reference (необязательное поле)
         /// </summary>
         [Description("описание")]
-        public string Reference { get; set; }
+        public string Reference { get; set; } = string.Empty;
         /// <summary>
         /// - признак запрещения замены у поставщика (обязательное поле)
         /// 0 - только заказанный номер
         /// 1 - разрешена замена от поставщика
         /// </summary>
-        [Description("признак запрещения замены у поставщика (обязательное поле) 0 - только заказанный номер. 1 - разрешена замена от поставщика")]
-        public byte ReacionByChange { get; set; } = 0;
+        [Description("признак запрещения замены у поставщика (обязательное поле) false - только заказанный номер. true - разрешена замена от поставщика")]
+        public bool StrictlyThisNumber { get; set; } = false;
         /// <summary>
         /// - признак реакции на коллизию кол-ва
         /// 0 - только указанное кол-во

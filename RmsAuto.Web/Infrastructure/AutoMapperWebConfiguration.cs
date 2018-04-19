@@ -73,6 +73,7 @@ namespace RMSAutoAPI.Infrastructure
 
                 cfg.CreateMap<Orders, Order<SparePart>>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
+                            .ForMember(dest => dest.OrderName, opt => opt.MapFrom(src => src.OrderNotes))
                             .ForMember(dest => dest.SpareParts, opt => opt.MapFrom(src => src.OrderLines));
 
                 cfg.CreateMap<Orders, Order<OrderSparePart>>()
