@@ -23,5 +23,7 @@ namespace RMSAutoAPI.Models
         /// </summary>
         [Description("Цена")]
         public decimal Price { get; set; }
+        [Description("Описание")]
+        public string Reference { get; set; } = string.Empty;
     }
 }

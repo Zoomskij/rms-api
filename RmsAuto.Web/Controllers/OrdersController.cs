@@ -247,7 +247,7 @@ namespace RMSAutoAPI.Controllers
 
                     DbOrder.OrderLines.Add(dbOrderLine);
                     
-                    respOrderLine.Reference = sparePart.Reference;
+                    respOrderLine.Reference = dbOrderLine.ReferenceID = sparePart.Reference;
                     respOrder.OrderPlacedLines.Add(respOrderLine);
                 }
 
