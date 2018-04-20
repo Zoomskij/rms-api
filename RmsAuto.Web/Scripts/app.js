@@ -40,6 +40,7 @@
         }
         var jsonResponse = JSON.stringify(jsonModel[i].Response, null, 2);
         jsonResponse = jsonResponse.replace("/Date(-62135596800000)/", "0000-00-00T00:00:00.00");
+        jsonResponse = jsonResponse.replace("/Date(-62135596800000)/", "0000-00-00T00:00:00.00");
         document.getElementById(jsonModel[i].Name + '_resp').innerText = jsonResponse;
     }
 

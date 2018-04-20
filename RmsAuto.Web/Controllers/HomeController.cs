@@ -38,11 +38,9 @@ namespace RMSAutoAPI.Controllers
 
             if (!string.IsNullOrWhiteSpace(ViewBag.Token))
                 Token = ViewBag.Token;
-            //return result;
 
             using (var db = new ex_rmsauto_storeEntities())
             {
-               // db.Configuration.LazyLoadingEnabled = false;
                 var getMethods = db.Methods.Where(x => x.Visible == true).ToList();
                 var methods = Mapper.Map<List<Methods>, List<ApiMethod>>(getMethods);
                 foreach (var method in methods)
