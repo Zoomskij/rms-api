@@ -8,7 +8,7 @@ namespace RMSAutoAPI.Models
         /// Описание артикула
         /// </summary>
         [Description("Описание артикула")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
         /// <summary>
         /// Тип артикула (0 - точное совпадение; 1 - переход; 2 - аналог)
         /// </summary>

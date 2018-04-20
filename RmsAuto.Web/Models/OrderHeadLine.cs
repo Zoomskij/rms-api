@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace RMSAutoAPI.Models
 {
     public class OrderHeadLine : Part
     {
+        [Required]
         [Description("Количество")]
         public int Count { get; set; }
         [Description("Цена")]

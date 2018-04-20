@@ -4,6 +4,7 @@ using RMSAutoAPI.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -102,6 +103,8 @@ namespace RMSAutoAPI.Controllers
                                 break;
                         }
                         parameter.Description = ((DescriptionAttribute)property.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault())?.Description;
+                        var isRequired = ((RequiredAttribute)property.GetCustomAttributes(typeof(RequiredAttribute), true).FirstOrDefault());
+                        parameter.IsRequired = isRequired == null ? false : true;
                         model.Parameters.Add(parameter);
                     }
                     models.Add(model);

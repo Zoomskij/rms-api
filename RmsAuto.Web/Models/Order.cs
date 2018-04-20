@@ -8,7 +8,7 @@ namespace RMSAutoAPI.Models
     public class Order
     {
         public int OrderId { get; set; }
-        public string Username { get; set; }
+        public string Username { get; set; } = string.Empty;
         public DateTime OrderDate { get; set; }
         public DateTime CompletedDate { get; set; }
         public byte Status { get; set; }
