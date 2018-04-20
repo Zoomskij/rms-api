@@ -50,9 +50,9 @@ namespace RMSAutoAPI.Controllers
                     {
                         case "GetBrands": method.Response = new Brand(); break;
                         case "GetSpareParts": method.Response = new SparePart(); break;
-                        case "GetOrders": method.Response = new List<Order<SparePart>>(); break;
-                        case "GetOrder": method.Response = new Order<SparePart>(); break;
-                        case "CreateOrder": method.Response = new Order<SparePart>(); break;
+                        case "GetOrders": method.Response = new List<Order>(); break;
+                        case "GetOrder": method.Response = new Order(); break;
+                        case "CreateOrder": method.Response = new OrderPlaced(); break;
                         case "GetPartners": method.Response = new Partner(); break;
                     }
                 }
@@ -60,9 +60,12 @@ namespace RMSAutoAPI.Controllers
                 List<object> objModels = new List<object>();
                 objModels.Add(new Brand());
                 objModels.Add(new SparePart());
-                objModels.Add(new Order<OrderSparePart>());
-                objModels.Add(new OrderSparePart());
-                objModels.Add(new ResponseSparePart());
+                objModels.Add(new Order());
+                objModels.Add(new OrderLine());
+                objModels.Add(new OrderHead());
+                objModels.Add(new OrderHeadLine());
+                objModels.Add(new OrderPlaced());
+                objModels.Add(new OrderPlacedLine());
                 objModels.Add(new Partner());
 
                 var models = new List<Model>();
@@ -105,13 +108,14 @@ namespace RMSAutoAPI.Controllers
                 }
                 ViewBag.Models = models;
 
-                ViewBag.OrderModel = new Order<OrderSparePart>
+                ViewBag.OrderModel = new OrderHead
                 {
-                    OrderName = "Новый Заказ",
-                    Reaction = Reaction.AnyPush,
-                    SpareParts = new List<OrderSparePart>()
+                    CustOrderNum = "1234",
+                    OrderNotes = "Комментарий к заказу",
+                    ValidationType = Reaction.AnyPush,
+                    OrderHeadLines = new List<OrderHeadLine>()
                      {
-                          new OrderSparePart()
+                          new OrderHeadLine()
                           {
                                 Article = "333310",
                                 Brand = "KAYABA",
@@ -120,8 +124,7 @@ namespace RMSAutoAPI.Controllers
                                 Price = Convert.ToDecimal(10000.00),
                                 StrictlyThisNumber = false,
                                 ReactionByCount = 0,
-                                ReactionByPrice = 0,
-                                ReactionBySupplier = 0
+                                ReactionByPrice = 0
                           }
                      }
                 };

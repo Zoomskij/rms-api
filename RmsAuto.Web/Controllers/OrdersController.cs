@@ -56,24 +56,24 @@ namespace RMSAutoAPI.Controllers
             CurrentUser = db.Users.FirstOrDefault(x => x.Username == userName);
         }
 
-        [HttpGet]
-        [Route("orders")]
-        [Authorize]
-        //[Authorize(Roles = "Client_SearchApi, NoAccess")]
-        public IHttpActionResult GetOrders()
-        {
-            var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
-            if (!orders.Any()) return Ok(new List<Orders>());
-            var userOrders = new List<Order<SparePart>>();
+        //[HttpGet]
+        //[Route("orders")]
+        //[Authorize]
+        ////[Authorize(Roles = "Client_SearchApi, NoAccess")]
+        //public IHttpActionResult GetOrders()
+        //{
+        //    var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
+        //    if (!orders.Any()) return Ok(new List<Orders>());
+        //    var userOrders = new List<Order<SparePart>>();
 
-            foreach (var order in orders)
-            {
-                var newOrder = Mapper.Map<Orders, Order<SparePart>>(order);
+        //    foreach (var order in orders)
+        //    {
+        //        var newOrder = Mapper.Map<Orders, Order<SparePart>>(order);
 
-                userOrders.Add(newOrder);
-            }
-            return Ok(userOrders);
-        }
+        //        userOrders.Add(newOrder);
+        //    }
+        //    return Ok(userOrders);
+        //}
 
         [HttpGet]
         [Route("orders/{orderId}")]
@@ -85,9 +85,9 @@ namespace RMSAutoAPI.Controllers
 
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId);
             if (order == null) return Ok(new Orders());
-            var userOrder = Mapper.Map<Orders, Order<SparePart>>(order);
+            var userOrder = Mapper.Map<Orders, Order>(order);
 
-            var orderLines = Mapper.Map<ICollection<OrderLines>, List<SparePart>>(order.OrderLines);
+            var orderLines = Mapper.Map<ICollection<OrderLines>, List<OrderLine>>(order.OrderLines);
 
             return Ok(userOrder);
         }
@@ -95,26 +95,26 @@ namespace RMSAutoAPI.Controllers
         [HttpPost]
         [Route("orders")]
         [Authorize]
-        public IHttpActionResult CreateOrder([FromBody] Order<OrderSparePart> order)
+        public IHttpActionResult CreateOrder([FromBody] OrderHead orderHead)
         {
             DbOrder = new Orders();
-            var respOrder = new Order<ResponseSparePart>();
+            var respOrder = new OrderPlaced();
             var parts = new List<spGetSparePart_Result>();
             using (var dbTransaction = db.Database.BeginTransaction())
             {
                 var orderLineStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
 
                 // TO DO: Заменить на хранимку, которая будет извлекать все детали разом
-                foreach (var sparePart in order.SpareParts)
+                foreach (var sparePart in orderHead.OrderHeadLines)
                 {
                     var part = db.spGetSparePart(sparePart.Brand, sparePart.Article, sparePart.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
                     parts.Add(part);
                 }
 
-                foreach (var sparePart in order.SpareParts)
+                foreach (var sparePart in orderHead.OrderHeadLines)
                 {
                     var dbOrderLine = new OrderLines();
-                    var respOrderLine = new ResponseSparePart
+                    var respOrderLine = new OrderPlacedLine
                     {
                         PriceOrder = sparePart.Price,
                         CountOrder = sparePart.Count
@@ -124,31 +124,31 @@ namespace RMSAutoAPI.Controllers
                     if (string.IsNullOrWhiteSpace(sparePart.Article)  || string.IsNullOrWhiteSpace(sparePart.Brand) || sparePart.SupplierID == 0)
                     {
                         respOrderLine.Status = ResponsePartNumber.ErrorKey;
-                        respOrder.SpareParts.Add(respOrderLine);
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
                         continue;
                     }
                     if (sparePart.Count <= 0)
                     {
                         respOrderLine.Status = ResponsePartNumber.CountNotSet;
-                        respOrder.SpareParts.Add(respOrderLine);
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
                         continue;
                     }
                     //Проверяем коллизию по количеству
-                    if (order.Reaction == Reaction.CheckRow && ((sparePart.ReactionByCount < 0) || (sparePart.ReactionByCount > 3)))
+                    if (orderHead.ValidationType == Reaction.CheckRow && ((sparePart.ReactionByCount < 0) || (sparePart.ReactionByCount > 3)))
                     {
                         respOrderLine.Status = ResponsePartNumber.NotSetReactionByCount;
-                        respOrder.SpareParts.Add(respOrderLine);
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
                         continue;
                     }
-                    if (order.Reaction == Reaction.CheckRow && ((sparePart.ReactionByPrice < 0) || (sparePart.ReactionByPrice > 1)))
+                    if (orderHead.ValidationType == Reaction.CheckRow && ((sparePart.ReactionByPrice < 0) || (sparePart.ReactionByPrice > 1)))
                     {
                         respOrderLine.Status = ResponsePartNumber.NotSetReactionByPrice;
-                        respOrder.SpareParts.Add(respOrderLine);
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
                         continue;
                     }
 
                     var part = parts.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
-                    switch (order.Reaction)
+                    switch (orderHead.ValidationType)
                     {
                         case Reaction.NotErrorPush:
                             if (sparePart.Count > part.QtyInStock)
@@ -159,16 +159,16 @@ namespace RMSAutoAPI.Controllers
                             if (sparePart.Price < part.FinalPrice)
                             {
                                 respOrderLine.Status = ResponsePartNumber.WrongPrice;
-                                respOrder.SpareParts.Add(respOrderLine);
+                                respOrder.OrderPlacedLines.Add(respOrderLine);
                                 continue;
                             }
-                            respOrderLine.PriceApproved = sparePart.Price;
-                            respOrderLine.CountApproved = sparePart.Count;
+                            respOrderLine.PricePlaced = sparePart.Price;
+                            respOrderLine.CountPlaced = sparePart.Count;
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
-                            respOrderLine.CountApproved = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
-                            respOrderLine.PriceApproved = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
+                            respOrderLine.CountPlaced = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                            respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             break;
                         case Reaction.CheckRow:
                             switch (sparePart.ReactionByCount)
@@ -177,33 +177,33 @@ namespace RMSAutoAPI.Controllers
                                 case 0:
                                     if (sparePart.Count > part.QtyInStock)
                                     {
-                                        respOrderLine.CountApproved = 0;
+                                        respOrderLine.CountPlaced = 0;
                                         respOrderLine.Status = ResponsePartNumber.ErrorCount;
                                     }
                                     else
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountApproved = respOrderLine.CountOrder = sparePart.Count;
+                                        dbOrderLine.Qty = respOrderLine.CountPlaced = respOrderLine.CountOrder = sparePart.Count;
                                     }
                                     break;
                                 // Берем сколько есть, но не выше указанного
                                 case 1:
                                     if (sparePart.Count > part.QtyInStock)
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountApproved = part.QtyInStock.Value;
+                                        dbOrderLine.Qty = respOrderLine.CountPlaced = part.QtyInStock.Value;
                                     }
                                     else
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountApproved = sparePart.Count;
+                                        dbOrderLine.Qty = respOrderLine.CountPlaced = sparePart.Count;
                                     }
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
-                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetMoreMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
+                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetMoreMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
                                     respOrderLine.Status = ResponsePartNumber.OkCountMore;
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
-                                    dbOrderLine.Qty = respOrderLine.CountApproved = GetLessMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
+                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
                                     respOrderLine.Status = ResponsePartNumber.OkCountLess;
                                     break;
                             }
@@ -215,17 +215,17 @@ namespace RMSAutoAPI.Controllers
                                     if (sparePart.Price < part.FinalPrice)
                                     {
                                         respOrderLine.Status = ResponsePartNumber.WrongPrice;
-                                        respOrder.SpareParts.Add(respOrderLine);
+                                        respOrder.OrderPlacedLines.Add(respOrderLine);
                                         continue;
                                     }
                                     else
                                     {
-                                        dbOrderLine.UnitPrice = respOrderLine.PriceApproved = Math.Round(part.FinalPrice.Value, 2);
+                                        dbOrderLine.UnitPrice = respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
                                     }
                                     break;
                                 // текущая цена поставщика (без проверки)
                                 case 1:
-                                    dbOrderLine.UnitPrice = respOrderLine.PriceApproved = Math.Round(part.FinalPrice.Value, 2);
+                                    dbOrderLine.UnitPrice = respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
                                     break;
                             }
                             break;
@@ -248,22 +248,23 @@ namespace RMSAutoAPI.Controllers
                     DbOrder.OrderLines.Add(dbOrderLine);
                     
                     respOrderLine.Reference = sparePart.Reference;
-                    respOrder.SpareParts.Add(respOrderLine);
+                    respOrder.OrderPlacedLines.Add(respOrderLine);
                 }
 
-                DbOrder.OrderNotes = respOrder.OrderName = order.OrderName;
+                DbOrder.CustOrderNum = orderHead.CustOrderNum;
+                DbOrder.OrderNotes = orderHead.OrderNotes;
 
-                if (order.Reaction == 0)
+                if (orderHead.ValidationType == 0)
                 {
-                    if (!respOrder.SpareParts.Any() || respOrder.SpareParts.Any(x => x.Status != 0))
+                    if (!respOrder.OrderPlacedLines.Any() || respOrder.OrderPlacedLines.Any(x => x.Status != 0))
                         respOrder.Status = OrderStatus.Error; // заказ не размещен
                 }
 
-                if (order.Reaction != 0 && !respOrder.SpareParts.Any())
+                if (orderHead.ValidationType != 0 && !respOrder.OrderPlacedLines.Any())
                 {
                     respOrder.Status = OrderStatus.Error;  // заказ не размещен
                 }
-                if (order.Reaction != 0 && respOrder.SpareParts.All(x => x.Status == 0))
+                if (orderHead.ValidationType != 0 && respOrder.OrderPlacedLines.All(x => x.Status == 0))
                 {
                     respOrder.Status = OrderStatus.OkPart; // заказ размещен частично
                 }
@@ -273,10 +274,9 @@ namespace RMSAutoAPI.Controllers
                     if (respOrder.Status != OrderStatus.Error)
                     { 
                         respOrder.Total = DbOrder.Total;
-                        respOrder.Username = CurrentUser.Username;
                         var createorder = db.Orders.Add(DbOrder);
 
-                        if (respOrder.SpareParts.Any(x => x.Status != ResponsePartNumber.Ok))
+                        if (respOrder.OrderPlacedLines.Any(x => x.Status != ResponsePartNumber.Ok))
                         {
                             respOrder.Status = OrderStatus.OkPart;
                         }
@@ -288,7 +288,6 @@ namespace RMSAutoAPI.Controllers
                             dbTransaction.Commit();
 
                             respOrder.OrderId = DbOrder.OrderID;
-                            respOrder.OrderDate = DbOrder.OrderDate;
                             respOrder.Status = 0;
                             return Ok(respOrder);
                         }

@@ -43,6 +43,13 @@ namespace RMSAutoAPI.Infrastructure
                             .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
                             .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice));
 
+                cfg.CreateMap<OrderLines, OrderLine>()
+                            .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Manufacturer))
+                            .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.PartNumber))
+                            .ForMember(dest => dest.Count, opt => opt.MapFrom(src => src.Qty))
+                            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.PartName))
+                            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.UnitPrice));
+
                 cfg.CreateMap<SparePart, OrderLines>()
                             .ForMember(dest => dest.Manufacturer, opt => opt.MapFrom(src => src.Brand))
                             .ForMember(dest => dest.PartNumber, opt => opt.MapFrom(src => src.Article))
@@ -71,23 +78,28 @@ namespace RMSAutoAPI.Infrastructure
                             .ForMember(dest => dest.CountApproved, opt => opt.MapFrom(src => src.Qty))
                             .ForMember(dest => dest.PriceApproved, opt => opt.MapFrom(src => src.UnitPrice));
 
-                cfg.CreateMap<Orders, Order<SparePart>>()
+                cfg.CreateMap<Orders, Order>()
                             .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
-                            .ForMember(dest => dest.OrderName, opt => opt.MapFrom(src => src.OrderNotes))
-                            .ForMember(dest => dest.SpareParts, opt => opt.MapFrom(src => src.OrderLines));
+                            .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.OrderLines))
+                            ;
 
-                cfg.CreateMap<Orders, Order<OrderSparePart>>()
-                            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
+                //cfg.CreateMap<Orders, Order<SparePart>>()
+                //            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
+                //            .ForMember(dest => dest.OrderName, opt => opt.MapFrom(src => src.OrderNotes))
+                //            .ForMember(dest => dest.SpareParts, opt => opt.MapFrom(src => src.OrderLines));
 
-                cfg.CreateMap<Order<OrderSparePart>, Orders>()
-                            .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.SpareParts))
-                            .ForMember(dest => dest.OrderNotes, opt => opt.MapFrom(src => src.OrderName));
+                //cfg.CreateMap<Orders, Order<OrderSparePart>>()
+                //            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username));
 
-                cfg.CreateMap<Orders, Order<ResponseSparePart>>()
-                            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
-                            .ForMember(dest => dest.SpareParts, opt => opt.MapFrom(src => src.OrderLines))
-                            .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderID))
-                            .ForMember(dest => dest.OrderName, opt => opt.MapFrom(src => src.OrderNotes));
+                //cfg.CreateMap<Order<OrderSparePart>, Orders>()
+                //            .ForMember(dest => dest.OrderLines, opt => opt.MapFrom(src => src.SpareParts))
+                //            .ForMember(dest => dest.OrderNotes, opt => opt.MapFrom(src => src.OrderName));
+
+                //cfg.CreateMap<Orders, Order<ResponseSparePart>>()
+                //            .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.Users.Username))
+                //            .ForMember(dest => dest.SpareParts, opt => opt.MapFrom(src => src.OrderLines))
+                //            .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderID))
+                //            .ForMember(dest => dest.OrderName, opt => opt.MapFrom(src => src.OrderNotes));
 
                 cfg.CreateMap<Methods, ApiMethod>();
                 cfg.CreateMap<Parameters, ApiParameter>()

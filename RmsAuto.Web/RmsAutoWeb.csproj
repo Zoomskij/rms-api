@@ -281,6 +281,11 @@
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\ApiParameter.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderHead.cs" />
+    <Compile Include="Models\OrderHeadLine.cs" />
+    <Compile Include="Models\OrderLine.cs" />
+    <Compile Include="Models\OrderPlacedLine.cs" />
     <Compile Include="Models\OrderStatus.cs" />
     <Compile Include="Models\Orders\AcctgError.cs" />
     <Compile Include="Models\Orders\AcctgException.cs" />
@@ -310,7 +315,7 @@
     <Compile Include="Models\Part.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
     <Compile Include="Models\StatusSparePart.cs" />
-    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderPlaced.cs" />
     <Compile Include="Models\ResponseSparePart.cs" />
     <Compile Include="Models\Partner.cs" />
     <Compile Include="Models\SparePart.cs" />
