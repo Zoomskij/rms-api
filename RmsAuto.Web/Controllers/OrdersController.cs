@@ -21,13 +21,11 @@ namespace RMSAutoAPI.Controllers
     public class OrdersController : ApiController
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
-
-
         public static Users CurrentUser { get; set; }
         private Orders _dbOrder;
         public Orders DbOrder
         {
-            get { return _dbOrder; }
+            get => _dbOrder;
             set
             {
                 _dbOrder = value;
@@ -66,7 +64,7 @@ namespace RMSAutoAPI.Controllers
         {
             var orders = db.Orders.Where(x => x.UserID == CurrentUser.UserID);
             if (!orders.Any()) return Ok(new List<Orders>());
-            List<Order<SparePart>> userOrders = new List<Order<SparePart>>();
+            var userOrders = new List<Order<SparePart>>();
 
             foreach (var order in orders)
             {
@@ -116,9 +114,11 @@ namespace RMSAutoAPI.Controllers
                 foreach (var sparePart in order.SpareParts)
                 {
                     var dbOrderLine = new OrderLines();
-                    var respOrderLine = new ResponseSparePart();
-                    respOrderLine.PriceOrder = sparePart.Price;
-                    respOrderLine.CountOrder = sparePart.Count;
+                    var respOrderLine = new ResponseSparePart
+                    {
+                        PriceOrder = sparePart.Price,
+                        CountOrder = sparePart.Count
+                    };
 
                     //Обрабатываем ошибки
                     if (string.IsNullOrWhiteSpace(sparePart.Article)  || string.IsNullOrWhiteSpace(sparePart.Brand) || sparePart.SupplierID == 0)
@@ -263,7 +263,7 @@ namespace RMSAutoAPI.Controllers
                 {
                     respOrder.Status = OrderStatus.Error;  // заказ не размещен
                 }
-                if (order.Reaction != 0 && !respOrder.SpareParts.Any(x => x.Status != 0))
+                if (order.Reaction != 0 && respOrder.SpareParts.All(x => x.Status == 0))
                 {
                     respOrder.Status = OrderStatus.OkPart; // заказ размещен частично
                 }
@@ -307,48 +307,36 @@ namespace RMSAutoAPI.Controllers
 
         public int GetMoreMinQty(int orderCount, int? minQty, int stockCount)
         {
-            if (minQty.HasValue)
+            if (!minQty.HasValue) return orderCount;
+            var value = orderCount + (orderCount % minQty.Value);
+            if (value < stockCount)
+                return value;
+            else
             {
-                var value = orderCount + (orderCount % minQty.Value);
-                if (value < stockCount)
-                    return value;
-                else
-                {
-                    return stockCount - (stockCount % minQty.Value);
-                }
+                return stockCount - (stockCount % minQty.Value);
             }
-            return orderCount;
         }
 
         public int GetLessMinQty(int orderCount, int? minQty, int stockCount)
         {
-            if (minQty.HasValue)
+            if (!minQty.HasValue) return orderCount;
+            var value = orderCount - (orderCount % minQty.Value);
+            if (value < stockCount)
+                return value;
+            else
             {
-                var value = orderCount - (orderCount % minQty.Value);
-                if (value < stockCount)
-                    return value;
-                else
-                {
-                    return stockCount - (stockCount % minQty.Value);
-                }
+                return stockCount - (stockCount % minQty.Value);
             }
-            return orderCount;
         }
 
         public static string ConvertManufacturerToSP(string manufacturer)
         {
-            Regex reg = new Regex("[&><\"]");
-            if (reg.IsMatch(manufacturer))
-            {
-                Dictionary<string, string> replaces = new Dictionary<string, string>();
-                replaces.Add("&", "&amp;");
-                replaces.Add("\"", "&quot;");
-                replaces.Add(">", "&gt;");
-                replaces.Add("<", "&lt;");
+            var reg = new Regex("[&><\"]");
+            if (!reg.IsMatch(manufacturer)) return manufacturer;
+            var replaces = new Dictionary<string, string> {{"&", "&amp;"}, {"\"", "&quot;"}, {">", "&gt;"}, {"<", "&lt;"}};
 
-                foreach (var ch in replaces)
-                    manufacturer = manufacturer.Replace(ch.Key, ch.Value);
-            }
+            foreach (var ch in replaces)
+                manufacturer = manufacturer.Replace(ch.Key, ch.Value);
             return manufacturer;
         }
     }

@@ -57,10 +57,10 @@ namespace RMSAutoAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> LoginAuth(string username, string password, string code)
+        public async Task<RedirectToRouteResult> LoginAuth(string username, string password, string code)
         {
             _userService = new UserService();
-            var _client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
+            var client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
 
             var request = new RestRequest("/api/auth/token", Method.POST);
 
@@ -71,7 +71,7 @@ namespace RMSAutoAPI.Controllers
             request.AddParameter("code", code);
             request.AddParameter("grant_type", "password");
 
-            var response = _client.Execute<JObject>(request);
+            var response = client.Execute<JObject>(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -81,10 +81,10 @@ namespace RMSAutoAPI.Controllers
                 TempData["bearerToken"] = bearerToken;
                 TempData["Username"] = username;
                 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", $"Home");
             }
             ModelState.AddModelError("", "Неверный логин или пароль.");
-            return View();
+            return RedirectToAction("Index", $"Home");
         }
     }
 }
