@@ -120,6 +120,9 @@
   <data name="ErrorMaxRequests" xml:space="preserve">
     <value>Превышен лимит запросов</value>
   </data>
+  <data name="ErrorNotFound" xml:space="preserve">
+    <value>Not Found</value>
+  </data>
   <data name="GroupDescription" xml:space="preserve">
     <value />
   </data>

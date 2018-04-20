@@ -83,8 +83,8 @@ namespace RMSAutoAPI.Controllers
         {
             var userName = User.Identity.Name;
 
-            var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId);
-            if (order == null) return Ok(new Orders());
+            var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId && x.UserID == CurrentUser.UserID);
+            if (order == null) return Content(HttpStatusCode.NotFound, Resources.ErrorNotFound); ;
             var userOrder = Mapper.Map<Orders, Order>(order);
 
             var orderLines = Mapper.Map<ICollection<OrderLines>, List<OrderLine>>(order.OrderLines);

@@ -203,9 +203,14 @@ var app = new Vue({
                 error: function (jqXHR, textStatus, errorThrown) {
                     code.html(jqXHR.status);
 
-                    if (jqXHR.status === 401 || (jqXHR.status === 404)) {
+                    if (jqXHR.status === 401) {
                         resp.html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                     }
+
+                    if (jqXHR.status === 404) {
+                        resp.html("{\n    \"Message\": \"" + jqXHR.responseJSON + "\"\n}");
+                    }
+
                     if (jqXHR.status === 405) {
                         resp.html("{\n    \"Message\": \"Method not allowed.\"\n}");
                     }
