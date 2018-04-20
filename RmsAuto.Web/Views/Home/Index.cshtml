@@ -224,31 +224,39 @@
                         <div v-for="model in models">
                             <div id="model-Brand" class="model-container">
                                 <div class="model-box">
-                                    <p><span class="model-title"> {{ model.Name }} { </span> </p>
-                                    <div v-for="parameter in model.Parameters">
-                                        <table class="properties">
-                                            <tr>
-                                                <td valign="top" width="150">
-                                                    <span class="prop-name">{{parameter.Name}} </span>
-                                                </td>
-                                                <td valign="top">
-                                                    <div class="model">
-                                                        <div class="prop">
-                                                            <span class="prop-type">
-                                                                {{parameter.Type}}
-                                                            </span>
-                                                            <div class="markdown">
-                                                                <span>
-                                                                    {{parameter.Description}}
-                                                                </span>
+                                        <span v-on:click="ShowModel(model.Name)" style="cursor: pointer;">
+                                            <span class="model-title"> {{ model.Name }}  </span>
+                                            <span class="model-toggle" v-bind:id="model.Name + '_arrow'"></span>
+                                        </span>
+                                        {
+                                        <span v-bind:id="model.Name + '_toggles'">. . .</span>
+
+                                        <div v-bind:id="model.Name" style="display:none">
+                                            <div v-for="parameter in model.Parameters">
+                                                <table class="properties">
+                                                    <tr>
+                                                        <td valign="top" width="150">
+                                                            <span class="prop-name">{{parameter.Name}} </span>
+                                                        </td>
+                                                        <td valign="top">
+                                                            <div class="model">
+                                                                <div class="prop">
+                                                                    <span class="prop-type">
+                                                                        {{parameter.Type}}
+                                                                    </span>
+                                                                    <div class="markdown">
+                                                                        <span>
+                                                                            {{parameter.Description}}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <span class="model-title">}</span>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        }
                                 </div>
                             </div>
                         </div>

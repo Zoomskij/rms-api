@@ -47,8 +47,24 @@ var app = new Vue({
             this.isPartnerGroup = false
         },
 
-        changeVisible: function (name) {
-            var item = document.getElementById(name);
+        ShowModel: function (str) {
+            this.changeVisible(str);
+            this.IsCollapsed(str);
+        },
+        IsCollapsed: function (str) {
+            var item = document.getElementById(str + "_arrow");
+            var toggles = document.getElementById(str + "_toggles");
+            if (item.classList.contains("rotate")) {
+                item.classList.remove("rotate")
+                toggles.style.display = 'initial';
+            } else {
+                item.classList.add("rotate");
+                toggles.style.display = 'none';
+            }
+        },
+
+        changeVisible: function (str) {
+            var item = document.getElementById(str);
             if (item !== null) {
                 if (item.style.display === 'none') {
                     item.style.display = 'block'
