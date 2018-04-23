@@ -104,7 +104,6 @@ namespace RMSAutoAPI.Controllers
 
             DbOrder = new Orders();
             var respOrder = new OrderPlaced();
-            var parts = new List<spGetSparePart_Result>();
             using (var dbTransaction = db.Database.BeginTransaction())
             {
                 var orderLineStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
