@@ -104,6 +104,15 @@ namespace RMSAutoAPI.Controllers
             {
                 var orderLineStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
 
+                var orderXml = string.Empty;
+                foreach (var sparePart in orderHead.OrderHeadLines)
+                {
+                    orderXml += $"<b S=\"{sparePart.SupplierID}\" M=\"{sparePart.Brand}\" P=\"{sparePart.Article}\" C=\"{sparePart.Price.ToString("0.00")}\" R=\"{sparePart.Reference}\" />";
+                }
+                orderXml = orderXml.Replace(",", "."); // Fast fix for replacing dots
+
+                var calcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', {CurrentUser.ClientGroup}, NULL");
+
                 // TO DO: Заменить на хранимку, которая будет извлекать все детали разом
                 foreach (var sparePart in orderHead.OrderHeadLines)
                 {
@@ -147,7 +156,7 @@ namespace RMSAutoAPI.Controllers
                         continue;
                     }
 
-                    var part = parts.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
+                    var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
                     switch (orderHead.ValidationType)
                     {
                         case Reaction.NotErrorPush:
@@ -167,7 +176,7 @@ namespace RMSAutoAPI.Controllers
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
-                            respOrderLine.CountPlaced = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                            respOrderLine.CountPlaced = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             break;
                         case Reaction.CheckRow:
@@ -189,7 +198,7 @@ namespace RMSAutoAPI.Controllers
                                 case 1:
                                     if (sparePart.Count > part.QtyInStock)
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountPlaced = part.QtyInStock.Value;
+                                        dbOrderLine.Qty = respOrderLine.CountPlaced = part.QtyInStock;
                                     }
                                     else
                                     {
@@ -198,12 +207,12 @@ namespace RMSAutoAPI.Controllers
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
-                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetMoreMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
+                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
                                     respOrderLine.Status = ResponsePartNumber.OkCountMore;
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
-                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty.Value, part.QtyInStock.Value);
+                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
                                     respOrderLine.Status = ResponsePartNumber.OkCountLess;
                                     break;
                             }
@@ -235,14 +244,14 @@ namespace RMSAutoAPI.Controllers
                     dbOrderLine.Manufacturer = respOrderLine.Brand = part.Manufacturer;
                     dbOrderLine.SupplierID = respOrderLine.SupplierID = part.SupplierID;
                     dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
-                    dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax ?? 0 : 0;
+                    dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
                     dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
                     dbOrderLine.UnitPrice = sparePart != null ? Math.Round(part.FinalPrice.Value, 2) : 0;
                     dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
                     dbOrderLine.CurrentStatus = 0;
                     dbOrderLine.Processed = 0;
                     dbOrderLine.OrderLineStatuses = orderLineStatus;
-                    DbOrder.Total +=  Math.Round(part.FinalPrice.Value,2) * dbOrderLine.Qty;
+                    DbOrder.Total +=  Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
 
 
                     DbOrder.OrderLines.Add(dbOrderLine);

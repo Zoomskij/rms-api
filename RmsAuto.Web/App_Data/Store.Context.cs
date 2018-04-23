@@ -141,5 +141,26 @@ namespace RMSAutoAPI.App_Data
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetSparePart_Result>("spGetSparePart", brandParameter, partNumberParameter, supplierIDParameter, clientIDParameter);
         }
+    
+        public virtual int spCalcOrder(string articles, string acctgID, string region, Nullable<int> clientGroup)
+        {
+            var articlesParameter = articles != null ?
+                new ObjectParameter("Articles", articles) :
+                new ObjectParameter("Articles", typeof(string));
+    
+            var acctgIDParameter = acctgID != null ?
+                new ObjectParameter("AcctgID", acctgID) :
+                new ObjectParameter("AcctgID", typeof(string));
+    
+            var regionParameter = region != null ?
+                new ObjectParameter("Region", region) :
+                new ObjectParameter("Region", typeof(string));
+    
+            var clientGroupParameter = clientGroup.HasValue ?
+                new ObjectParameter("ClientGroup", clientGroup) :
+                new ObjectParameter("ClientGroup", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spCalcOrder", articlesParameter, acctgIDParameter, regionParameter, clientGroupParameter);
+        }
     }
 }

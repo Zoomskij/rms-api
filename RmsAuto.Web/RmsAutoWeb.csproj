@@ -281,6 +281,7 @@
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\ApiParameter.cs" />
+    <Compile Include="Models\CalcOrderLines.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\OrderHead.cs" />
     <Compile Include="Models\OrderHeadLine.cs" />
