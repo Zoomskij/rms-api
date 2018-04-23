@@ -157,6 +157,13 @@ namespace RMSAutoAPI.Controllers
                     }
 
                     var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
+                    if (part.FinalPrice == null)
+                    {
+                        respOrderLine.Status = ResponsePartNumber.NotFound;
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                        continue;
+                    }
+
                     switch (orderHead.ValidationType)
                     {
                         case Reaction.NotErrorPush:

@@ -50,7 +50,7 @@
     SupplierNotFound = 61,
 
     /// <summary>
-    /// Ненайдена позиция
+    /// позиция не найдена
     /// </summary>
     NotFound = 99
 }
