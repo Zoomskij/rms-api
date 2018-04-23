@@ -84,7 +84,7 @@ namespace RMSAutoAPI.Controllers
             var userName = User.Identity.Name;
 
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId && x.UserID == CurrentUser.UserID);
-            if (order == null) return Content(HttpStatusCode.NotFound, Resources.ErrorNotFound); ;
+            if (order == null) return Content(HttpStatusCode.NotFound, Resources.ErrorNotFound); 
             var userOrder = Mapper.Map<Orders, Order>(order);
 
             var orderLines = Mapper.Map<ICollection<OrderLines>, List<OrderLine>>(order.OrderLines);
@@ -97,6 +97,11 @@ namespace RMSAutoAPI.Controllers
         [Authorize]
         public IHttpActionResult CreateOrder([FromBody] OrderHead orderHead)
         {
+            if (orderHead == null)
+            {
+                return Content(HttpStatusCode.BadRequest, "Bad Request");
+            }
+
             DbOrder = new Orders();
             var respOrder = new OrderPlaced();
             var parts = new List<spGetSparePart_Result>();
