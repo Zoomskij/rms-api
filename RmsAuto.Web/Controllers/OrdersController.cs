@@ -182,7 +182,7 @@ namespace RMSAutoAPI.Controllers
                                 respOrderLine.Status = ResponsePartNumber.ErrorCount;
                                 break;
                             }
-                            if (sparePart.Price < part.FinalPrice)
+                            if (sparePart.Price <= part.FinalPrice)
                             {
                                 respOrderLine.Status = ResponsePartNumber.WrongPrice;
                                 respOrder.OrderPlacedLines.Add(respOrderLine);
@@ -238,7 +238,7 @@ namespace RMSAutoAPI.Controllers
                             {
                                 // Не выше указанной цены
                                 case 0:
-                                    if (sparePart.Price < part.FinalPrice)
+                                    if (sparePart.Price <= part.FinalPrice)
                                     {
                                         respOrderLine.Status = ResponsePartNumber.WrongPrice;
                                         respOrder.OrderPlacedLines.Add(respOrderLine);
