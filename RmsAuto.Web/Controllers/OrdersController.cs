@@ -112,7 +112,11 @@ namespace RMSAutoAPI.Controllers
                 var orderXml = string.Empty;
                 foreach (var sparePart in orderHead.OrderHeadLines)
                 {
-                    orderXml += $"<b S=\"{sparePart.SupplierID}\" M=\"{sparePart.Brand}\" P=\"{sparePart.Article}\" C=\"{sparePart.Price.ToString("0.00")}\" R=\"{sparePart.Reference}\" />";
+                    if (orderHead.ValidationType == Reaction.AnyPush)
+                        orderXml += $"<b S=\"{sparePart.SupplierID}\" M=\"{sparePart.Brand}\" P=\"{sparePart.Article}\" R=\"{sparePart.Reference}\" />";
+                    else
+                        orderXml += $"<b S=\"{sparePart.SupplierID}\" M=\"{sparePart.Brand}\" P=\"{sparePart.Article}\" C=\"{sparePart.Price.ToString("0.00")}\" R=\"{sparePart.Reference}\" />";
+
                 }
                 orderXml = orderXml.Replace(",", "."); // Fast fix for replacing dots
 
@@ -160,9 +164,15 @@ namespace RMSAutoAPI.Controllers
                     }
 
                     var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID);
-                    if (part.FinalPrice == null)
+                    if (part == null)
                     {
                         respOrderLine.Status = ResponsePartNumber.NotFound;
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                        continue;
+                    }
+                    if (part.FinalPrice == null)
+                    {
+                        respOrderLine.Status = ResponsePartNumber.WrongPrice;
                         respOrder.OrderPlacedLines.Add(respOrderLine);
                         continue;
                     }

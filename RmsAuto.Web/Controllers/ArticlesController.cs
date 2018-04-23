@@ -63,7 +63,6 @@ namespace RMSAutoAPI.Controllers
             return region;
         }
 
-
         /*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
         /// <summary>
         /// Возвращает список брендов по артикулу

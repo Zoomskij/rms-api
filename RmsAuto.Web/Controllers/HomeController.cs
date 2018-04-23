@@ -15,29 +15,37 @@ namespace RMSAutoAPI.Controllers
 {
     public class HomeController : Controller
     {
-        public static string Token { get; set; }
-        public static string CurrentUser { get; set; }
+        public string Token
+        {
+            get => Session["bearerToken"]?.ToString();
+        }
+        public string CurrentUser
+        {
+            get => Session["Username"]?.ToString();
+        }
 
+        [AllowAnonymous]
         public ActionResult Index()
         {
+            var a = User.Identity;
             if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
             {
-                Token = (string)TempData["bearerToken"];
-				CurrentUser = (string)TempData["Username"];
+                Session["bearerToken"] = (string)TempData["bearerToken"];
+                Session["Username"] = (string)TempData["Username"];
             }
+
             if ((int?)TempData["logout"] == 1)
             {
-                TempData["bearerToken"] = null;
-                TempData["Username"] = null;
-                Token = string.Empty;
-				CurrentUser = string.Empty;
+                Session["bearerToken"] = null;
+                Session["Username"] = null;
+                TempData["logout"] = null;
             }
 
             ViewBag.CurrentUser = CurrentUser;
             ViewBag.Token = Token ?? string.Empty;
 
             if (!string.IsNullOrWhiteSpace(ViewBag.Token))
-                Token = ViewBag.Token;
+                Session["bearerToken"] = ViewBag.Token;
 
             using (var db = new ex_rmsauto_storeEntities())
             {
