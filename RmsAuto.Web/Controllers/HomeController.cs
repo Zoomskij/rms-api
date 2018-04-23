@@ -122,11 +122,23 @@ namespace RMSAutoAPI.Controllers
                                 Brand = "KAYABA",
                                 SupplierID = 21,
                                 Count = 2,
-                                Price = Convert.ToDecimal(10000.00),
+                                Price = Convert.ToDecimal(3000.00),
                                 StrictlyThisNumber = false,
                                 ReactionByCount = 0,
                                 ReactionByPrice = 0
+                          },
+                          new OrderHeadLine()
+                          {
+                              Article = "555132E100",
+                              Brand = "MOBIS",
+                              SupplierID = 1203,
+                              Count = 1,
+                              Price = Convert.ToDecimal(120.00),
+                              StrictlyThisNumber = false,
+                              ReactionByCount = 0,
+                              ReactionByPrice = 0
                           }
+
                      }
                 };
                 return View(methods);

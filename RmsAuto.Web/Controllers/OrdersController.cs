@@ -129,6 +129,11 @@ namespace RMSAutoAPI.Controllers
                         CountOrder = sparePart.Count
                     };
 
+                    dbOrderLine.PartNumber = respOrderLine.Article = sparePart.Article;
+                    dbOrderLine.Manufacturer = respOrderLine.Brand = sparePart.Brand;
+                    dbOrderLine.SupplierID = respOrderLine.SupplierID = sparePart.SupplierID;
+                    dbOrderLine.ReferenceID = respOrderLine.Reference = sparePart.Reference;
+
                     //Обрабатываем ошибки
                     if (string.IsNullOrWhiteSpace(sparePart.Article)  || string.IsNullOrWhiteSpace(sparePart.Brand) || sparePart.SupplierID == 0)
                     {
@@ -247,9 +252,6 @@ namespace RMSAutoAPI.Controllers
                             break;
                     }
 
-                    dbOrderLine.PartNumber = respOrderLine.Article = part.PartNumber;
-                    dbOrderLine.Manufacturer = respOrderLine.Brand = part.Manufacturer;
-                    dbOrderLine.SupplierID = respOrderLine.SupplierID = part.SupplierID;
                     dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
                     dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
                     dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
@@ -263,7 +265,7 @@ namespace RMSAutoAPI.Controllers
 
                     DbOrder.OrderLines.Add(dbOrderLine);
                     
-                    respOrderLine.Reference = dbOrderLine.ReferenceID = sparePart.Reference;
+                    
                     respOrder.OrderPlacedLines.Add(respOrderLine);
                 }
 
