@@ -118,13 +118,6 @@ namespace RMSAutoAPI.Controllers
 
                 var calcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', {CurrentUser.ClientGroup}, NULL");
 
-                // TO DO: Заменить на хранимку, которая будет извлекать все детали разом
-                foreach (var sparePart in orderHead.OrderHeadLines)
-                {
-                    var part = db.spGetSparePart(sparePart.Brand, sparePart.Article, sparePart.SupplierID, CurrentUser.AcctgID).FirstOrDefault();
-                    parts.Add(part);
-                }
-
                 foreach (var sparePart in orderHead.OrderHeadLines)
                 {
                     var dbOrderLine = new OrderLines();
