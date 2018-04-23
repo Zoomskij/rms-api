@@ -257,6 +257,7 @@ namespace RMSAutoAPI.Controllers
                             break;
                     }
 
+                    
                     dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
                     dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
                     dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
@@ -266,7 +267,7 @@ namespace RMSAutoAPI.Controllers
                     dbOrderLine.Processed = 0;
                     dbOrderLine.OrderLineStatuses = orderLineStatus;
                     DbOrder.Total +=  Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
-
+                    DbOrder.IsTest = orderHead.IsTest;
 
                     DbOrder.OrderLines.Add(dbOrderLine);
                     
@@ -306,8 +307,11 @@ namespace RMSAutoAPI.Controllers
                         db.SaveChanges();
                         if (DbOrder.OrderID != 0)
                         {
-                            var orderHelper = new OrderHelper(db);
-                            orderHelper.SendOrder(DbOrder, string.Empty);
+                            if (orderHead.IsTest == false)
+                            {
+                                var orderHelper = new OrderHelper(db);
+                                orderHelper.SendOrder(DbOrder, string.Empty);
+                            }
                             dbTransaction.Commit();
 
                             respOrder.OrderId = DbOrder.OrderID;

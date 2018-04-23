@@ -129,6 +129,7 @@
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="CompletedDate" Type="datetime" />
           <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Permissions">
           <Key>
@@ -672,6 +673,7 @@
           <Property Name="Total" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
           <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLines_Orders" FromRole="Orders" ToRole="OrderLines" />
           <NavigationProperty Name="Users" Relationship="ex_rmsauto_storeModel.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_OrderLines_Orders">
           <End Type="ex_rmsauto_storeModel.Orders" Role="Orders" Multiplicity="1" />
@@ -989,6 +991,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
                 <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />

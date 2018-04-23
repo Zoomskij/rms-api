@@ -16,6 +16,11 @@ namespace RMSAutoAPI.Models
                     "\n2 - статусы строк размещения рассматриваются по отдельности")]
         [Required]
         public Reaction ValidationType { get; set; }
+
+        [Required]
+        [Description("false - размещать заказ. true - не размещать заказ")]
+        public bool IsTest { get; set; } = true;
+
         [Required]
         [Description("Детальки")]
         public List<OrderHeadLine> OrderHeadLines { get; set; }
