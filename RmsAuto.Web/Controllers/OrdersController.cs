@@ -94,8 +94,8 @@ namespace RMSAutoAPI.Controllers
 
         [HttpPost]
         [Route("orders")]
-        //[Authorize(Roles = "Create_Order")]
-        [Authorize]
+        [Authorize(Roles = "Create_Order")]
+        //[Authorize]
         public IHttpActionResult CreateOrder([FromBody] OrderHead orderHead)
         {
             if (orderHead == null)
