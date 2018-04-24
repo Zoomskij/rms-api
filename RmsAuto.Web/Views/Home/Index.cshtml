@@ -4,7 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -15,14 +14,10 @@
     <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
 </head>
 <body>
-
     <br />
-
     <div class="wrapper">
-
         [ Base URL: @WebConfigurationManager.AppSettings["UrlApi"] ]
         <br /><br />
-
         <div class="rms-title">
             API.RMSAUTO представляет собой REST-сервис.
             Для обращения к методам api нужно пройти авторизацию на сервисе посредством персонального логина/пароля.
@@ -31,7 +26,6 @@
             ПРИМЕЧАНИЕ: Клиентам наших региональных партнёров для авторизации необходимо дополнительно передать код партнёра
             (код партнёра можно получить, воспользовавшись методом /api/Partners).
         </div>
-
         <div id="app">
             <div class="row fa-3x">
                 <div class="col-md-1 col-md-offset-5">
@@ -48,7 +42,6 @@
                                 </h4>
                                 <hr style="margin-bottom:10px; margin-top:0;" />
                             </div>
-
                             <div class="opblock" v-bind:class="{'opblock-get': method.Type === 'GET', 'opblock-post': method.Type === 'POST'}" id="operations">
                                 <a class="nostyle" v-on:click="changeVisible(method.Name)">
                                     <div class="opblock-summary opblock-summary-get">
@@ -66,20 +59,17 @@
                                 </a>
                                 <div v-bind:id="method.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
                                     <div class="opblock-body">
-
                                         <div class="opblock-description-wrapper">
                                             <div class="opblock-description">
                                                 {{method.TitleDescription}}
                                             </div>
                                         </div>
-
                                         <div class="opblock-section-header">
                                             <div class="tab-header">
                                                 <span class="opblock-title"><b>Parameters</b></span>
                                                 <button v-bind:id="method.Name + '_tryIt'" class="btn try pull-right" v-on:click="tryIt(method.Name)">Try it out</button>
                                             </div>
                                         </div>
-
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                 <div class="param-name">Name</div>
@@ -89,7 +79,6 @@
                                             </div>
                                         </div>
                                         <hr style="margin-top:5px; margin-bottom:10px" />
-
                                         <div v-for="parameter in method.Parameters">
                                             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
@@ -103,7 +92,6 @@
                                                     {{parameter.Description}}
                                                 </div>
                                             </div>
-
                                             <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                     {{parameter.Type}}<br />
@@ -112,15 +100,12 @@
                                                     <span v-if="parameter.TypeParameter === 3">(body)</span>
                                                 </div>
                                                 <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-
                                                     <div v-if="parameter.TypeParameter === 3" style="margin-right:-25px;">
                                                         <textarea v-bind:id="method.Name + '_' + parameter.Name" style="width:100%;display:none"></textarea>
                                                     </div>
-
                                                     <span v-if="parameter.Name !== 'analogues'">
                                                         <input v-bind:id="method.Name + '_' + parameter.Name" style="display:none" type="text" class="" title="" value="" v-bind:placeholder="parameter.Description">
                                                     </span>
-
                                                     <span v-if="parameter.Name === 'analogues'">
                                                         <select v-bind:id="method.Name + '_' + parameter.Name" class="" style="display:none">
                                                             <option value="">--</option>
@@ -134,22 +119,17 @@
                                         </div>
                                         @*  END PARAMETERS *@
 
-
                                         <div class="execute-wrapper">
-
                                             <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">
                                                 Execute
                                             </button>
                                         </div>
-
                                         <div v-bind:id="method.Name + '_loader'" class="loader" style="display:none">Loading...</div>
-
                                         <div class="opblock-section-header">
                                             <div class="tab-header">
                                                 <span class="opblock-title"><b>Responses</b></span>
                                             </div>
                                         </div>
-
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                 <div class="param-name">Name</div>
@@ -158,60 +138,49 @@
                                                 <div class="param-name">Description</div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                        <div v-for="response in method.Responses" class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                <a v-on:click="ShowModel(method.ResponseName)" v-bind:href="'#' + method.ResponseName">
-                                                    <b>{{method.ResponseName}}</b>
+                                                <a v-on:click="ShowModel(response.Name)" v-bind:href="'#' + response.Name">
+                                                    <b>{{response.Name}}</b>
                                                 </a>
                                             </div>
                                             <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                                    {{method.Description}}
+                                                {{response.Description}}
                                             </div>
+                                            <br /><br />
                                         </div>
-
-
                                         <div v-bind:id="method.Name + '_divCurl'" style="display:none">
                                             <br />
                                             <div class="execute-wrapper">
                                                 <span class="response-label"> Curl</span>
                                             </div>
-
                                             <div class="execute-wrapper" style="padding-top:0;max-height:600px">
                                                 <pre class="example">
                                                 <div v-bind:id="method.Name + '_curl'" style="max-height:600px"></div>             
                                             </pre>
                                             </div>
                                         </div>
-
                                         <div v-bind:id="method.Name + '_divRequestUrl'" style="display:none">
                                             <div class="execute-wrapper">
                                                 <span class="response-label"> Request URL</span>
                                             </div>
-
                                             <div class="execute-wrapper" style="padding-top:0">
                                                 <pre class="example">
                                                 <div class="request-url" v-bind:id="method.Name + '_request-url'"></div>               
                                             </pre>
                                             </div>
                                         </div>
-
                                         <br />
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                                <b>Model</b>
-                                            </div>
-                                            <div class="col-lg-1 col-md-1 col-xs-1 col-sm-1">
                                                 <b>Code</b>
                                             </div>
-                                            <div class="col-lg-9 col-md-9 col-xs-9 col-sm-9">
+                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                                 <b>Details</b>
                                             </div>
                                         </div>
-
                                         <hr style="margin-top:5px; margin-bottom:10px" />
-
                                         <div style="margin-top:20px"></div>
-
                                         <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
                                             <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                 <div v-bind:id="method.Name + '_code'">200</div>
@@ -222,17 +191,14 @@
                                             </pre>
                                             </div>
                                         </div>
-
                                         <div style="padding-bottom:20px"></div>
                                     </div>
                                 </div>
                                 @*END BODY*@
                             </div>
                         </div>
-
                     </div>
                 </div>
-
                 <section class="models">
                     <div id="models-header" class="models-header">
                         <h4>
@@ -249,7 +215,6 @@
                                     </span>
                                     {
                                     <span v-bind:id="model.Name + '_toggles'">. . .</span>
-
                                     <div v-bind:id="model.Name" style="display:none">
                                         <div v-for="parameter in model.Parameters">
                                             <table class="properties">
@@ -285,7 +250,6 @@
             </template>
         </div>
     </div> @*End wrapper*@
-
     <script type="text/javascript">
         var jsonModel = @Html.Raw(Json.Encode(@Model));
         var orderModel = @Html.Raw(Json.Encode(@ViewBag.OrderModel));
@@ -293,13 +257,11 @@
         var token = @Html.Raw(Json.Encode(@ViewBag.Token));
         var userPermissions = @Html.Raw(Json.Encode(@ViewBag.UserPermissions));
     </script>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/vue.min.js"></script>
     <script src="~/Scripts/appvue.js"></script>
     <script src="~/Scripts/app.js"></script>
-
 </body>
 </html>

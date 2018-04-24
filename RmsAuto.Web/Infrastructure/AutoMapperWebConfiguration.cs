@@ -65,6 +65,7 @@ namespace RMSAutoAPI.Infrastructure
                 cfg.CreateMap<Methods, ApiMethod>();
                 cfg.CreateMap<Parameters, ApiParameter>()
                             .ForMember(dest => dest.TypeParameter, opt => opt.MapFrom(src => (TypeParameter)src.TypeParameter));
+                cfg.CreateMap<Responses, ApiResponse>();
 
             });
 
