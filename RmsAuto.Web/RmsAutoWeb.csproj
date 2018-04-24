@@ -260,6 +260,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ModelHelper.cs" />
     <Compile Include="Helpers\OrderHelper.cs" />
     <Compile Include="Helpers\RequestDelimeter.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
