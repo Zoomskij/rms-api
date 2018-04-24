@@ -15,6 +15,7 @@ namespace RMSAutoAPI.Models
         public string TitleDescription { get; set; }
         public List<ApiParameter> Parameters { get; set; } = new List<ApiParameter>();
         public object Response { get; set; }
+        public string ResponseName  => Response.GetType().Name.Replace("`1", string.Empty);
         public bool Visible { get; set; }
         public bool AllowAnonymous { get; set; }
     }

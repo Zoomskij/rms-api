@@ -106,6 +106,9 @@ namespace RMSAutoAPI
                         case 4:
                             identity.AddClaim(new Claim(ClaimTypes.Role, "Client_SearchApi"));
                             break;
+                        case 5:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "Create_Order"));
+                            break;
                     }
                 }
   

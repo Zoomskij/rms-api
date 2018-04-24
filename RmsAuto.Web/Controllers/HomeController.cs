@@ -64,6 +64,17 @@ namespace RMSAutoAPI.Controllers
 
                 ViewBag.Models = ModelHelper.InitModels();
                 ViewBag.OrderModel = ModelHelper.InitOrder();
+                var UserPermissions = new List<int>();
+                var userPermissions = db.Users.FirstOrDefault(x => x.Username == CurrentUser)?.Permissions;
+                if (userPermissions != null)
+                {
+                    foreach (var up in userPermissions)
+                    {
+                        UserPermissions.Add(up.ID);
+                    }
+                    ViewBag.UserPermissions = UserPermissions;
+                }
+                else ViewBag.UserPermissions = new List<int>();
 
                 return View(methods);
             }

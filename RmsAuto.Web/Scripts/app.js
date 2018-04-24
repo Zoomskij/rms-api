@@ -29,7 +29,7 @@
     delete orderModel.Total;
     var odJson = JSON.stringify(orderModel, null, 2);
 
-    document.getElementById('CreateOrder_orders').value = odJson;
+    document.getElementById('CreateOrder_OrderHead').value = odJson;
 
     for (var i = 0; i < jsonModel.length; i++) {
         var parameters = jsonModel[i].Response;

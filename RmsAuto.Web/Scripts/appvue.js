@@ -40,6 +40,22 @@ var app = new Vue({
             });
         },
 
+        IsAccess: function (allowAnonymous, methodName) {
+            var isPost = false;
+            for (var i = 0; i < userPermissions.length; ++i) {
+                if (userPermissions[i] === 5) {
+                    isPost = true;
+                }
+            }
+
+            if (allowAnonymous === false && token === '')
+                return false;
+
+            if (methodName === "CreateOrder" && isPost === false)
+                return false;
+
+            return true;
+        },
 
         loaded: function () {
             this.isArticleGroup = false,
@@ -81,7 +97,7 @@ var app = new Vue({
             this.changeVisible(str + "_analogues");
             this.changeVisible(str + "_execute");
             this.changeVisible(str + "_orderId");
-            this.changeVisible(str + "_orders");
+            this.changeVisible(str + "_OrderHead");
 
             var bTryit = document.getElementById(str + "_tryIt");
             if (bTryit !== null) {
@@ -158,7 +174,7 @@ var app = new Vue({
                 }
             }
             if (methodType === "POST") {
-                data = document.getElementById('CreateOrder_orders').value;
+                data = document.getElementById('CreateOrder_OrderHead').value;
                 curl.append(" -d " + JSON.stringify(data, null, 0) + "");
             }
 
@@ -212,7 +228,7 @@ var app = new Vue({
                     }
 
                     if (jqXHR.status === 404 && jqXHR.statusText === "Not Found" && jqXHR.responseJSON !== "Error Not Found") {
-                        resp.html("{\n    \"Message\": \"" + "Unauthorized Error" + "\"\n}");
+                        resp.html("{\n    \"Message\": \"" + "Access Denied" + "\"\n}");
                     }
 
                     if (jqXHR.status === 405) {
@@ -290,7 +306,7 @@ var app = new Vue({
         },
 
         CreateOrder: function () {
-            var orderId = document.getElementById("CreateOrder_orders");
+            var orderId = document.getElementById("CreateOrder_OrderHead");
             var url = "/api/orders";
             var isOrderId = this.validation(orderId);
             if (isOrderId === false) {
