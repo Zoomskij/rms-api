@@ -70,7 +70,7 @@ namespace RMSAutoAPI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Not Found.
+        ///   Looks up a localized string similar to Error Not Found.
         /// </summary>
         internal static string ErrorNotFound {
             get {

@@ -207,16 +207,24 @@ var app = new Vue({
                         resp.html("{\n    \"Message\": \"Authorization has been denied for this request.\"\n}");
                     }
 
-                    if (jqXHR.status === 404) {
+                    if (jqXHR.status === 404 && jqXHR.responseJSON === "Error Not Found") {
                         resp.html("{\n    \"Message\": \"" + jqXHR.responseJSON + "\"\n}");
+                    }
+
+                    if (jqXHR.status === 404 && jqXHR.statusText === "Not Found" && jqXHR.responseJSON !== "Error Not Found") {
+                        resp.html("{\n    \"Message\": \"" + "Unauthorized Error" + "\"\n}");
                     }
 
                     if (jqXHR.status === 405) {
                         resp.html("{\n    \"Message\": \"Method not allowed.\"\n}");
                     }
                     if (jqXHR.status === 400) {
-                        resp.html("{\n    \"Message\": " + jqXHR.responseJSON + "\n}");
+                        resp.html("{\n    \"Message\": \"" + jqXHR.responseJSON.MessageDetail + "\"\n}");
                     }
+                    if (jqXHR.status === 500) {
+                        resp.html("{\n    \"Message\":  \"Internal Server Error or Unauthorized Error\"\n}");
+                    }
+
                     document.getElementById(methodName + "_loader").style.display = 'none';
                 }
             });
