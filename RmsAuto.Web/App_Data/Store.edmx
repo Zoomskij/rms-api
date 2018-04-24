@@ -52,6 +52,15 @@
           <Property Name="PerHour" Type="int" Nullable="false" />
           <Property Name="PerDay" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Responses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MethodId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" />
+        </EntityType>
         <EntityType Name="Settings">
           <Key>
             <PropertyRef Name="Id" />
@@ -239,6 +248,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Responses__Metho__710B0E66">
+          <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
+          <End Role="Responses" Type="Self.Responses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Responses">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Settings__RatesI__6F57D01E">
           <End Role="Rates" Type="Self.Rates" Multiplicity="1" />
           <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
@@ -362,6 +383,7 @@
           <EntitySet Name="Methods" EntityType="Self.Methods" Schema="api" store:Type="Tables" />
           <EntitySet Name="Parameters" EntityType="Self.Parameters" Schema="api" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="api" store:Type="Tables" />
+          <EntitySet Name="Responses" EntityType="Self.Responses" Schema="api" store:Type="Tables" />
           <EntitySet Name="Settings" EntityType="Self.Settings" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrderLineStatuses" EntityType="Self.OrderLineStatuses" Schema="Cms" store:Type="Tables" />
           <EntitySet Name="BrandEquivalents" EntityType="Self.BrandEquivalents" Schema="dbo" store:Type="Tables" />
@@ -375,6 +397,10 @@
           <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="Self.FK__Parameter__Metho__4CCDADF0">
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Parameters" EntitySet="Parameters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Responses__Metho__710B0E66" Association="Self.FK__Responses__Metho__710B0E66">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Responses" EntitySet="Responses" />
           </AssociationSet>
           <AssociationSet Name="FK__Settings__RatesI__6F57D01E" Association="Self.FK__Settings__RatesI__6F57D01E">
             <End Role="Rates" EntitySet="Rates" />
@@ -485,6 +511,11 @@
             <Parameter Name="Region" Mode="In" Type="String" />
             <Parameter Name="ClientGroup" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Responses" EntityType="ex_rmsauto_storeModel.Responses" />
+          <AssociationSet Name="FK__Responses__Metho__710B0E66" Association="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Responses" EntitySet="Responses" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -782,6 +813,7 @@
           <NavigationProperty Name="Parameters" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Methods" ToRole="Parameters" />
           <Property Name="Visible" Type="Boolean" Nullable="false" />
           <Property Name="AllowAnonymous" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Responses" Relationship="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66" FromRole="Methods" ToRole="Responses" />
         </EntityType>
         <EntityType Name="Parameters">
           <Key>
@@ -826,6 +858,28 @@
         <Association Name="UserPermissions">
           <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
           <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Responses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MethodId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Methods" Relationship="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66" FromRole="Responses" ToRole="Methods" />
+        </EntityType>
+        <Association Name="FK__Responses__Metho__710B0E66">
+          <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.Responses" Role="Responses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Responses">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -1121,6 +1175,16 @@
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="spCalcOrder" FunctionName="ex_rmsauto_storeModel.Store.spGetCartSpareParts" />
+          <EntitySetMapping Name="Responses">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Responses">
+              <MappingFragment StoreEntitySet="Responses">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MethodId" ColumnName="MethodId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
