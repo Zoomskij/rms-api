@@ -8,13 +8,17 @@ namespace RMSAutoAPI.Models
 {
     public class OrderPlaced
     {
-        public int OrderId { get; set; }
+		[Description("ID заказа")]
+		public int OrderId { get; set; }
 
-        [Description("Статус")]
+        [Description("Статус заказа:" +
+			"\n0 - заказ полностью размещён" +
+			"\n1 - заказ размещён частично (см. Строки заказа)" +
+			"\n2 - заказ не размещён (см. Строки заказа)")]
         public OrderStatus Status { get; set; }
         [Description("Сумма заказа")]
         public decimal Total { get; set; }
-        [Description("Детали заказа")]
+        [Description("Строки заказа")]
         public List<OrderPlacedLine> OrderPlacedLines { get; set; } = new List<OrderPlacedLine>();
     }
 }

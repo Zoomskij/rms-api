@@ -8,7 +8,7 @@ namespace RMSAutoAPI.Models
 {
     public class Order
     {
-		[Description("ИД заказа")]
+		[Description("ID заказа")]
 		public int OrderId { get; set; }
         [Description("Клиентский номер заказа")]
         public string CustOrderNum { get; set; } = string.Empty;
