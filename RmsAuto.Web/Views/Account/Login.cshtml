@@ -88,13 +88,18 @@
                     location.reload();
                 },
                 error: function (data) {
-                    document.getElementById('is-password-error').style.display = 'block';
-                    return false;
+                    setTimeout(function () {
+                        document.getElementById('is-password-error').style.display = 'block';
+                        return false;
+                    }, 500);
+                    
                 }
             });
         }
         else {
-            document.getElementById('is-password-error').style.display = 'block';
+            setTimeout(function () {
+                document.getElementById('is-password-error').style.display = 'block';
+            }, 500);  
         }
     });
 

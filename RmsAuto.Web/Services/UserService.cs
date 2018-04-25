@@ -27,12 +27,8 @@ namespace RMSAutoAPI.Services
                     isRms = false;
                 }
 
-                var md5Password = GetMD5Hash(password, isRms);
-                var user = await Task.Run<Users>(() =>{
-                    return db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
-                });
-                return user;
-
+                var md5Password = await GetMD5Hash(password, isRms);
+                return db.Users.FirstOrDefault(x => x.Username == login && x.Password == md5Password);
             }
             catch (Exception ex)
             {
@@ -40,15 +36,18 @@ namespace RMSAutoAPI.Services
             }
         }
 
-        public string GetMD5Hash(string input, bool isRms = true)
+        public async Task<string> GetMD5Hash(string input, bool isRms = true)
         {
             if (input == null) throw new ArgumentNullException("input");
             using (MD5 hasher = MD5.Create())
             {
-                if (isRms)
-                    return Convert.ToBase64String(hasher.ComputeHash(Encoding.Default.GetBytes(input)));
-                else
-                    return ComputeHash(hasher, ComputeHash(hasher, input));
+                return await Task.Run<string>(() =>
+                {
+                    if (isRms)
+                        return Convert.ToBase64String(hasher.ComputeHash(Encoding.Default.GetBytes(input)));
+                    else
+                        return ComputeHash(hasher, ComputeHash(hasher, input));
+                });
             }
         }
 

@@ -41,17 +41,19 @@ var app = new Vue({
         },
 
         IsAccess: function (allowAnonymous, methodName) {
-            var isPost = false;
+            var isOrderRole = false;
             for (var i = 0; i < userPermissions.length; ++i) {
                 if (userPermissions[i] === 5) {
-                    isPost = true;
+                    isOrderRole = true;
                 }
             }
 
             if (allowAnonymous === false && token === '')
                 return false;
 
-            if (methodName === "CreateOrder" && isPost === false)
+            if (methodName === "CreateOrder" && isOrderRole === false)
+                return false;
+            if (methodName === "GetOrder" && isOrderRole === false)
                 return false;
 
             return true;

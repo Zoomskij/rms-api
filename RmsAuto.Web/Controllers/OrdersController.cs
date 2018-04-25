@@ -77,8 +77,7 @@ namespace RMSAutoAPI.Controllers
 
         [HttpGet]
         [Route("orders/{orderId}")]
-        //[Authorize]
-        [Authorize(Roles = "Client_SearchApi, NoAccess")]
+        [Authorize(Roles = "Create_Order")]
         public IHttpActionResult GetOrder(int orderId)
         {
             var userName = User.Identity.Name;
@@ -95,7 +94,6 @@ namespace RMSAutoAPI.Controllers
         [HttpPost]
         [Route("orders")]
         [Authorize(Roles = "Create_Order")]
-        //[Authorize]
         public IHttpActionResult CreateOrder([FromBody] OrderHead orderHead)
         {
             if (orderHead == null)
