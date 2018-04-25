@@ -10,6 +10,7 @@ namespace RMSAutoAPI.Models
     {
         public int OrderId { get; set; }
 
+        [Description("Статус")]
         public OrderStatus Status { get; set; }
         [Description("Сумма заказа")]
         public decimal Total { get; set; }

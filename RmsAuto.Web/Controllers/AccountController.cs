@@ -78,8 +78,8 @@ namespace RMSAutoAPI.Controllers
                 var token = JsonConvert.DeserializeObject<Token>(response.Content);
                 var bearerToken = $"{token.TokenType} {token.AccessToken}";
 
-                TempData["bearerToken"] = bearerToken;
-                TempData["Username"] = username;
+                TempData["Token"] = bearerToken;
+                TempData["UserName"] = username;
                 
                 return RedirectToAction("Index", "Home");
             }

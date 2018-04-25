@@ -9,19 +9,10 @@ namespace RMSAutoAPI.Models
 {
     public class OrderLine : Part
     {
-        /// <summary>
-        /// Описание артикула
-        /// </summary>
         [Description("Описание артикула")]
         public string Name { get; set; }
-        /// <summary>
-        /// Заказанное количество
-        /// </summary>
         [Description("Заказанное количество")]
         public int? Count { get; set; }
-        /// <summary>
-        /// Цена
-        /// </summary>
         [Description("Цена")]
         public decimal Price { get; set; }
         [Description("Описание")]

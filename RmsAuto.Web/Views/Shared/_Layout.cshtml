@@ -37,11 +37,11 @@
                     
                     @*<li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>*@
                     
-                    @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentUser))
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.UserName))
                     {
 
                         var ex = " [выход]";
-                        <li class="pull-right">@ViewBag.CurrentUser@Html.ActionLink(ex, "Logout", "Account")</li>
+                        <li class="pull-right">@ViewBag.UserName@Html.ActionLink(ex, "Logout", "Account")</li>
                     }
                     else
                     {
