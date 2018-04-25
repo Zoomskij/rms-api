@@ -19,19 +19,22 @@ namespace RMSAutoAPI.Controllers
     public class AccountController : Controller
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
+        private static List<SelectListItem> franchList = new List<SelectListItem>();
 
         private IUserService _userService;
 
         [HttpGet]
         public ActionResult Login()
         {
-            List<SelectListItem> items = new List<SelectListItem>();
-            var franches = db.spGetFranches().ToList();
-            foreach (var franch in franches)
+            if (!franchList.Any())
             {
-                items.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
+                var franches = db.spGetFranches().ToList();
+                foreach (var franch in franches)
+                {
+                    franchList.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
+                }
             }
-            ViewBag.Partners = items;
+            ViewBag.Partners = franchList;
             return PartialView();
         }
 
