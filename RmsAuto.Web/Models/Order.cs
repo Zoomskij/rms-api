@@ -8,18 +8,19 @@ namespace RMSAutoAPI.Models
 {
     public class Order
     {
-        public int OrderId { get; set; }
-        [Description("Описание")]
+		[Description("ИД заказа")]
+		public int OrderId { get; set; }
+        [Description("Логин")]
         public string Username { get; set; } = string.Empty;
-        [Description("Описание")]
+        [Description("Дата размещения заказа")]
         public DateTime OrderDate { get; set; }
-        [Description("Описание")]
+        [Description("Дата завершения заказа")]
         public DateTime CompletedDate { get; set; }
-        [Description("Описание")]
+        [Description("Статус заказа")]
         public byte Status { get; set; }
-        [Description("Описание")]
+        [Description("Сумма заказа")]
         public decimal Total { get; set; }
-        [Description("Описание")]
+        [Description("Строки заказа")]
         public List<OrderLine> OrderLines { get; set; } = new List<OrderLine>();
     }
 }

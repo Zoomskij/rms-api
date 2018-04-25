@@ -15,7 +15,7 @@ namespace RMSAutoAPI.Models
         public int? Count { get; set; }
         [Description("Цена")]
         public decimal Price { get; set; }
-        [Description("Описание")]
+        [Description("Код позиции")]
         public string Reference { get; set; } = string.Empty;
     }
 }
