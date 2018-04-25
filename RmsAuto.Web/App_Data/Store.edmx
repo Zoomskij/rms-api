@@ -226,7 +226,7 @@
           <Property Name="ScopeType" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="HowKnow" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="RmsStoreID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ManagerId" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ManagerId" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ManagerDeptId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="IsChecked" Type="bit" Nullable="false" />
           <Property Name="IsRestricted" Type="bit" Nullable="false" />
@@ -260,7 +260,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Responses__Metho__710B0E66">
+        <Association Name="FK__Responses__Metho__2D35D25D">
           <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
           <End Role="Responses" Type="Self.Responses" Multiplicity="*" />
           <ReferentialConstraint>
@@ -320,18 +320,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_OrderLineStatusChanges_OrderLines">
-          <End Role="OrderLines" Type="Self.OrderLines" Multiplicity="1" />
-          <End Role="OrderLineStatusChanges" Type="Self.OrderLineStatusChanges" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="OrderLines">
-              <PropertyRef Name="OrderLineID" />
-            </Principal>
-            <Dependent Role="OrderLineStatusChanges">
-              <PropertyRef Name="OrderLineID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_OrderLineStatusChanges_OrderLineStatuses">
           <End Role="OrderLineStatuses" Type="Self.OrderLineStatuses" Multiplicity="1" />
           <End Role="OrderLineStatusChanges" Type="Self.OrderLineStatusChanges" Multiplicity="*" />
@@ -386,19 +374,7 @@
           <Parameter Name="ClientGroup" Type="int" Mode="In" />
           <Parameter Name="Region" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="spGetCartSpareParts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
-          <Parameter Name="Articles" Type="nvarchar(max)" Mode="In" />
-          <Parameter Name="AcctgID" Type="varchar" Mode="In" />
-          <Parameter Name="Region" Type="varchar" Mode="In" />
-          <Parameter Name="ClientGroup" Type="int" Mode="In" />
-        </Function>
         <Function Name="spGetFranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api" />
-        <Function Name="spGetSparePart" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
-          <Parameter Name="Brand" Type="varchar" Mode="In" />
-          <Parameter Name="PartNumber" Type="varchar" Mode="In" />
-          <Parameter Name="SupplierID" Type="int" Mode="In" />
-          <Parameter Name="ClientID" Type="varchar" Mode="In" />
-        </Function>
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
           <Parameter Name="PartNumber" Type="varchar" Mode="In" />
           <Parameter Name="ShowAnalogs" Type="bit" Mode="In" />
@@ -435,7 +411,7 @@
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Parameters" EntitySet="Parameters" />
           </AssociationSet>
-          <AssociationSet Name="FK__Responses__Metho__710B0E66" Association="Self.FK__Responses__Metho__710B0E66">
+          <AssociationSet Name="FK__Responses__Metho__2D35D25D" Association="Self.FK__Responses__Metho__2D35D25D">
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Responses" EntitySet="Responses" />
           </AssociationSet>
@@ -454,10 +430,6 @@
           <AssociationSet Name="FK_OrderLines_Orders" Association="Self.FK_OrderLines_Orders">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderLines" EntitySet="OrderLines" />
-          </AssociationSet>
-          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLines" Association="Self.FK_OrderLineStatusChanges_OrderLines">
-            <End Role="OrderLines" EntitySet="OrderLines" />
-            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderLineStatusChanges_OrderLineStatuses" Association="Self.FK_OrderLineStatusChanges_OrderLineStatuses">
             <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
@@ -646,7 +618,7 @@
           <Property Name="ScopeType" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="HowKnow" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="RmsStoreID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ManagerDeptId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IsChecked" Type="Boolean" Nullable="false" />
           <Property Name="IsRestricted" Type="Boolean" Nullable="false" />
@@ -1197,24 +1169,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spGetCartSpareParts" FunctionName="ex_rmsauto_storeModel.Store.spGetCartSpareParts" />
-          <FunctionImportMapping FunctionImportName="spGetSparePart" FunctionName="ex_rmsauto_storeModel.Store.spGetSparePart">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="ex_rmsauto_storeModel.spGetSparePart_Result">
-                <ScalarProperty Name="Manufacturer" ColumnName="Manufacturer" />
-                <ScalarProperty Name="PartNumber" ColumnName="PartNumber" />
-                <ScalarProperty Name="PartName" ColumnName="PartName" />
-                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
-                <ScalarProperty Name="DeliveryDaysMin" ColumnName="DeliveryDaysMin" />
-                <ScalarProperty Name="DeliveryDaysMax" ColumnName="DeliveryDaysMax" />
-                <ScalarProperty Name="InitialPrice" ColumnName="InitialPrice" />
-                <ScalarProperty Name="FinalPrice" ColumnName="FinalPrice" />
-                <ScalarProperty Name="QtyInStock" ColumnName="QtyInStock" />
-                <ScalarProperty Name="MinOrderQty" ColumnName="MinOrderQty" />
-                <ScalarProperty Name="Region" ColumnName="Region" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="Methods">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Methods">
               <MappingFragment StoreEntitySet="Methods">
@@ -1268,7 +1222,6 @@
               <ScalarProperty Name="ID" ColumnName="PermissionID" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="spCalcOrder" FunctionName="ex_rmsauto_storeModel.Store.spGetCartSpareParts" />
           <EntitySetMapping Name="Responses">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Responses">
               <MappingFragment StoreEntitySet="Responses">
