@@ -80,6 +80,7 @@ namespace RMSAutoAPI.Controllers
 
                 TempData["Token"] = bearerToken;
                 TempData["UserName"] = username;
+                TempData["Code"] = code;
                 
                 return RedirectToAction("Index", "Home");
             }

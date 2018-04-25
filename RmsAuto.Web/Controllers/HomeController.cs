@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using RMSAutoAPI.App_Data;
 using RMSAutoAPI.Helpers;
+using RMSAutoAPI.Infrastructure;
 using RMSAutoAPI.Models;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace RMSAutoAPI.Controllers
     {
         private string _token;
         private string _userName;
+        private string _code;
         public string Token
         {
             get => Session["Token"]?.ToString();
@@ -37,6 +39,16 @@ namespace RMSAutoAPI.Controllers
             }
         }
 
+        public string Code
+        {
+            get => Session["Code"]?.ToString();
+            set
+            {
+                _code = value;
+                Session["Code"] = value;
+            }
+        }
+
         [AllowAnonymous]
         public ActionResult Index()
         {
@@ -44,12 +56,14 @@ namespace RMSAutoAPI.Controllers
             {
                 Token = (string)TempData["Token"];
                 UserName = (string)TempData["UserName"];
+                Code = (string)TempData["Code"];
             }
 
             if ((int?)TempData["logout"] == 1)
             {
                 Token = null;
                 UserName = null;
+                Code = null;
                 TempData["logout"] = null;
             }
 
@@ -76,6 +90,11 @@ namespace RMSAutoAPI.Controllers
                 ViewBag.Models = ModelHelper.InitModels();
                 ViewBag.OrderModel = ModelHelper.InitOrder();
 
+                if (!string.IsNullOrWhiteSpace(Code))
+                {
+                    var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(Code.ToUpper()));
+                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                }
                 var UserPermissions = new List<int>();
                 var userPermissions = db.Users.FirstOrDefault(x => x.Username == UserName)?.Permissions;
                 if (userPermissions != null)
