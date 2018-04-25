@@ -39,8 +39,11 @@ namespace RMSAutoAPI.Helpers
                     parameter.Name = property.Name;
                     switch (property.PropertyType.Name.ToLower())
                     {
+                        case "responsepartnumber":
+                            parameter.Type = "int32";
+                            break;
                         case "nullable`1":
-                            parameter.Type = "int 32 (nullable)";
+                            parameter.Type = "int32 (nullable)";
                             break;
                         case "list`1":
                             parameter.Type = "array[]";
