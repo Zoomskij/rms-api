@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,23 +7,22 @@ namespace RMSAutoAPI.Models
 {
     public class OrderHead
     {
-        [Description("Описание")]
+        [Description("Клиентский номер заказа")]
         public string CustOrderNum { get; set; }
-        [Description("Еще одно описание")]
+        [Description("Примечание к заказу")]
         public string OrderNotes { get; set; }
-        [Description("реакция на частичное размещение. " +
-                    "\n1 - разместить все что разместилось (статусы строк не проверяются, кол-во при надобности уменьшается до возможного или выравнивается по MinQty, цена не проверяется)" +
-                    "\n0 - в случае любой коллизии заказ не размещать (статусы строк не проверяются)," +
-                    "\n2 - статусы строк размещения рассматриваются по отдельности")]
+        [Description("Реакция на возникшие коллизии:" + 
+			"\n0 - в случае любой коллизии заказ не размещать;" +
+			"\n1 - разместить все позиции, кроме отсутствующих в остатках. При этом цена всегда наша текущая, а кол-во при нехватке уменьшается до имеющегося и выравнивается по кратности (поле MinOrderQty в результатах поиска это и есть кратность или 'минимальное количество для заказа');" +
+			"\n2 - реакции на коллизии рассматриваются построчно (в каждой строке задаются свои реакции)")]
         [Required]
         public Reaction ValidationType { get; set; }
-
         [Required]
-        [Description("false - размещать заказ. true - не размещать заказ")]
+        [Description("true - тестовый заказ, не попадает в учётную систему и имеет время жизни ~24ч. (значение по умолчанию)" +
+			"\nfalse - реальный заказ")]
         public bool IsTest { get; set; } = true;
-
         [Required]
-        [Description("Детальки")]
+        [Description("Строки заказа")]
         public List<OrderHeadLine> OrderHeadLines { get; set; }
     }
 }

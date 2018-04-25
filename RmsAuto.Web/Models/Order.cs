@@ -10,7 +10,7 @@ namespace RMSAutoAPI.Models
     {
 		[Description("ИД заказа")]
 		public int OrderId { get; set; }
-        [Description("Внутренний номер заказа партнёра")]
+        [Description("Клиентский номер заказа")]
         public string CustOrderNum { get; set; } = string.Empty;
         [Description("Дата размещения заказа")]
         public DateTime OrderDate { get; set; }
