@@ -233,6 +233,7 @@ namespace RMSAutoAPI.Controllers
                                     if (sparePart.Count > part.QtyInStock)
                                     {
                                         dbOrderLine.Qty = respOrderLine.CountPlaced = part.QtyInStock;
+                                        respOrderLine.Status = ResponsePartNumber.OkCountLess;
                                     }
                                     else
                                     {
@@ -242,12 +243,12 @@ namespace RMSAutoAPI.Controllers
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
                                     dbOrderLine.Qty = respOrderLine.CountPlaced = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
-                                    respOrderLine.Status = ResponsePartNumber.OkCountMore;
+                                    respOrderLine.Status = ResponsePartNumber.OkCountMoreQty;
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
                                     dbOrderLine.Qty = respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
-                                    respOrderLine.Status = ResponsePartNumber.OkCountLess;
+                                    respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
                                     break;
                             }
 
