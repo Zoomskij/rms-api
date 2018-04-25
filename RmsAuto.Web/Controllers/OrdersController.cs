@@ -23,6 +23,7 @@ namespace RMSAutoAPI.Controllers
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
         public static Users CurrentUser { get; set; }
         private Orders _dbOrder;
+        private string _region;
         public Orders DbOrder
         {
             get => _dbOrder;
@@ -43,11 +44,11 @@ namespace RMSAutoAPI.Controllers
         public OrdersController()
         {
             var claims = (ClaimsIdentity)User.Identity;
-            var region = claims.Claims.FirstOrDefault(x => x.Type.Equals("Region"))?.Value;
+            _region = claims.Claims.FirstOrDefault(x => x.Type.Equals("Region"))?.Value;
 
-            if (!string.IsNullOrWhiteSpace(region))
+            if (!string.IsNullOrWhiteSpace(_region))
             {
-                var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(region.ToUpper()));
+                var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(_region.ToUpper()));
                 db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
             }
             else db = new ex_rmsauto_storeEntities();
@@ -118,7 +119,22 @@ namespace RMSAutoAPI.Controllers
                 }
                 orderXml = orderXml.Replace(",", "."); // Fast fix for replacing dots
 
-                var calcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', {CurrentUser.ClientGroup}, NULL");
+                var calcLines = new List<CalcOrderLines>();
+                {
+                    if (string.IsNullOrWhiteSpace(_region))
+                    {
+                        var getcalcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', {CurrentUser.ClientGroup}, NULL");
+                        if (getcalcLines.Any())
+                            calcLines = getcalcLines.ToList();
+                    }
+                    else
+                    {
+                        var getcalcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', {CurrentUser.ClientGroup}, {_region}");
+                        if (getcalcLines.Any())
+                            calcLines = getcalcLines.ToList();
+                    }
+                }
+
 
                 foreach (var sparePart in orderHead.OrderHeadLines)
                 {
