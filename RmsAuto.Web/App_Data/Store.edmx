@@ -122,6 +122,18 @@
           <Property Name="SupplierPriceWithMarkup" Type="decimal" Precision="18" Scale="2" />
           <Property Name="ItemDeliveryType" Type="tinyint" />
         </EntityType>
+        <EntityType Name="OrderLineStatusChanges">
+          <Key>
+            <PropertyRef Name="OrderLineStatusChangeID" />
+          </Key>
+          <Property Name="OrderLineStatusChangeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderLineID" Type="int" Nullable="false" />
+          <Property Name="OrderLineStatus" Type="tinyint" Nullable="false" />
+          <Property Name="StatusChangeInfo" Type="varchar" MaxLength="100" />
+          <Property Name="StatusChangeTime" Type="datetime" Nullable="false" />
+          <Property Name="ClientReaction" Type="tinyint" />
+          <Property Name="ClientReactionTime" Type="datetime" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="OrderID" />
@@ -308,6 +320,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OrderLineStatusChanges_OrderLines">
+          <End Role="OrderLines" Type="Self.OrderLines" Multiplicity="1" />
+          <End Role="OrderLineStatusChanges" Type="Self.OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLines">
+              <PropertyRef Name="OrderLineID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLineStatusChanges_OrderLineStatuses">
+          <End Role="OrderLineStatuses" Type="Self.OrderLineStatuses" Multiplicity="1" />
+          <End Role="OrderLineStatusChanges" Type="Self.OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLineStatuses">
+              <PropertyRef Name="OrderLineStatusID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -388,6 +424,7 @@
           <EntitySet Name="OrderLineStatuses" EntityType="Self.OrderLineStatuses" Schema="Cms" store:Type="Tables" />
           <EntitySet Name="BrandEquivalents" EntityType="Self.BrandEquivalents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderLines" EntityType="Self.OrderLines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderLineStatusChanges" EntityType="Self.OrderLineStatusChanges" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Permutation1C" EntityType="Self.Permutation1C" Schema="dbo" store:Type="Tables" />
@@ -417,6 +454,14 @@
           <AssociationSet Name="FK_OrderLines_Orders" Association="Self.FK_OrderLines_Orders">
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderLines" EntitySet="OrderLines" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLines" Association="Self.FK_OrderLineStatusChanges_OrderLines">
+            <End Role="OrderLines" EntitySet="OrderLines" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLineStatuses" Association="Self.FK_OrderLineStatusChanges_OrderLineStatuses">
+            <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
           </AssociationSet>
           <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
             <End Role="Users" EntitySet="Users" />
@@ -515,6 +560,15 @@
           <AssociationSet Name="FK__Responses__Metho__710B0E66" Association="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66">
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Responses" EntitySet="Responses" />
+          </AssociationSet>
+          <EntitySet Name="OrderLineStatusChanges" EntityType="ex_rmsauto_storeModel.OrderLineStatusChanges" />
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLineStatuses" Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses">
+            <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLines" Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines">
+            <End Role="OrderLines" EntitySet="OrderLines" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
@@ -685,6 +739,7 @@
           <Property Name="ItemDeliveryType" Type="Byte" />
           <NavigationProperty Name="Orders" Relationship="ex_rmsauto_storeModel.FK_OrderLines_Orders" FromRole="OrderLines" ToRole="Orders" />
           <NavigationProperty Name="OrderLineStatuses" Relationship="ex_rmsauto_storeModel.FK_OrderLines_OrderLineStatuses" FromRole="OrderLines" ToRole="OrderLineStatuses" />
+          <NavigationProperty Name="OrderLineStatusChanges" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines" FromRole="OrderLines" ToRole="OrderLineStatusChanges" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -772,6 +827,7 @@
           <Property Name="ClientShow" Type="Boolean" Nullable="false" />
           <Property Name="ClientShowOrder" Type="Int32" Nullable="false" />
           <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLines_OrderLineStatuses" FromRole="OrderLineStatuses" ToRole="OrderLines" />
+          <NavigationProperty Name="OrderLineStatusChanges" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses" FromRole="OrderLineStatuses" ToRole="OrderLineStatusChanges" />
         </EntityType>
         <Association Name="FK_OrderLines_OrderLineStatuses">
           <End Type="ex_rmsauto_storeModel.OrderLineStatuses" Role="OrderLineStatuses" Multiplicity="1" />
@@ -878,6 +934,44 @@
             </Principal>
             <Dependent Role="Responses">
               <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderLineStatusChanges">
+          <Key>
+            <PropertyRef Name="OrderLineStatusChangeID" />
+          </Key>
+          <Property Name="OrderLineStatusChangeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderLineID" Type="Int32" Nullable="false" />
+          <Property Name="OrderLineStatus" Type="Byte" Nullable="false" />
+          <Property Name="StatusChangeInfo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StatusChangeTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClientReaction" Type="Byte" />
+          <Property Name="ClientReactionTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="OrderLineStatuses" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses" FromRole="OrderLineStatusChanges" ToRole="OrderLineStatuses" />
+          <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines" FromRole="OrderLineStatusChanges" ToRole="OrderLines" />
+        </EntityType>
+        <Association Name="FK_OrderLineStatusChanges_OrderLineStatuses">
+          <End Type="ex_rmsauto_storeModel.OrderLineStatuses" Role="OrderLineStatuses" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderLineStatusChanges" Role="OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLineStatuses">
+              <PropertyRef Name="OrderLineStatusID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLineStatusChanges_OrderLines">
+          <End Type="ex_rmsauto_storeModel.OrderLines" Role="OrderLines" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderLineStatusChanges" Role="OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLines">
+              <PropertyRef Name="OrderLineID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1182,6 +1276,19 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="MethodId" ColumnName="MethodId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderLineStatusChanges">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderLineStatusChanges">
+              <MappingFragment StoreEntitySet="OrderLineStatusChanges">
+                <ScalarProperty Name="ClientReactionTime" ColumnName="ClientReactionTime" />
+                <ScalarProperty Name="ClientReaction" ColumnName="ClientReaction" />
+                <ScalarProperty Name="StatusChangeTime" ColumnName="StatusChangeTime" />
+                <ScalarProperty Name="StatusChangeInfo" ColumnName="StatusChangeInfo" />
+                <ScalarProperty Name="OrderLineStatus" ColumnName="OrderLineStatus" />
+                <ScalarProperty Name="OrderLineID" ColumnName="OrderLineID" />
+                <ScalarProperty Name="OrderLineStatusChangeID" ColumnName="OrderLineStatusChangeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

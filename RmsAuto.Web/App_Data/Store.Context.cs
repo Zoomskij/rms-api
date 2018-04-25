@@ -41,6 +41,7 @@ namespace RMSAutoAPI.App_Data
         public virtual DbSet<Permutation1C> Permutation1C { get; set; }
         public virtual DbSet<Permissions> Permissions { get; set; }
         public virtual DbSet<Responses> Responses { get; set; }
+        public virtual DbSet<OrderLineStatusChanges> OrderLineStatusChanges { get; set; }
     
         public virtual ObjectResult<spSearchCrossesWithPriceSVC_Result> spSearchCrossesWithPriceSVC(string partNumber, string manufacturer, Nullable<bool> showAnalogs, string selectedBrands, string acctgID, Nullable<int> clientGroup, string region)
         {

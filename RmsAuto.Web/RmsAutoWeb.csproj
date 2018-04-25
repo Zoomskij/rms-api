@@ -217,6 +217,9 @@
     <Compile Include="App_Data\OrderLines.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\OrderLineStatusChanges.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\OrderLineStatuses.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>

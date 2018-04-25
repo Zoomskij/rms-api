@@ -18,6 +18,7 @@ namespace RMSAutoAPI.App_Data
         public OrderLineStatuses()
         {
             this.OrderLines = new HashSet<OrderLines>();
+            this.OrderLineStatusChanges = new HashSet<OrderLineStatusChanges>();
         }
     
         public byte OrderLineStatusID { get; set; }
@@ -34,5 +35,7 @@ namespace RMSAutoAPI.App_Data
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderLines> OrderLines { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderLineStatusChanges> OrderLineStatusChanges { get; set; }
     }
 }

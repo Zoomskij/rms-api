@@ -28,6 +28,9 @@
         <AssociationConnector Association="ex_rmsauto_storeModel.UserPermissions" />
         <EntityTypeShape EntityType="ex_rmsauto_storeModel.Responses" Width="1.5" PointX="11.625" PointY="4.625" />
         <AssociationConnector Association="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.OrderLineStatusChanges" Width="1.5" PointX="9.875" PointY="9.625" />
+        <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses" />
+        <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
