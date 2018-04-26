@@ -36,8 +36,8 @@ namespace RMSAutoAPI.Controllers
                 _dbOrder.OrderDate = DateTime.Now;
                 _dbOrder.Status = 0;
                 _dbOrder.PaymentMethod = (byte)PaymentMethod.Cash;
-                _dbOrder.ShippingMethod = 0;
-                _dbOrder.StoreNumber = "StoreNumber";
+                _dbOrder.ShippingMethod = 1;
+                _dbOrder.StoreNumber = "1";
             }
         }
 
@@ -105,7 +105,8 @@ namespace RMSAutoAPI.Controllers
             {
                 return Content(HttpStatusCode.BadRequest, "ValidationType should be is [0, 1, 2]");
             }
-
+            int countUp = 0;
+            int countLess = 0;
             DbOrder = new Orders();
             DbOrder.IsTest = orderHead.IsTest;
             var respOrder = new OrderPlaced();
@@ -215,7 +216,9 @@ namespace RMSAutoAPI.Controllers
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
-                            respOrderLine.CountPlaced = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                            countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                            countLess = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                            respOrderLine.CountPlaced = dbOrderLine.Qty = countUp > part.QtyInStock ? countLess : countUp;
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             //Если произошло снижение по остаткам поставщика
                             if (respOrderLine.CountPlaced < sparePart.Count)
@@ -231,8 +234,9 @@ namespace RMSAutoAPI.Controllers
                                 case 0:
                                     if (sparePart.Count > part.QtyInStock)
                                     {
-                                        respOrderLine.CountPlaced = 0;
                                         respOrderLine.Status = ResponsePartNumber.ErrorCount;
+                                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                                        continue;
                                     }
                                     else
                                     {
@@ -253,7 +257,14 @@ namespace RMSAutoAPI.Controllers
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
-                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                                    countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                                    if (countUp > part.QtyInStock)
+                                    {
+                                        respOrderLine.Status = ResponsePartNumber.ErrorCount;
+                                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                                        continue;
+                                    }
+                                    dbOrderLine.Qty = respOrderLine.CountPlaced = countUp;
                                     respOrderLine.Status = ResponsePartNumber.OkCountMoreQty;
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
@@ -366,12 +377,7 @@ namespace RMSAutoAPI.Controllers
         {
             if (!minQty.HasValue) return orderCount;
             var value = orderCount + (orderCount % minQty.Value);
-            if (value < stockCount)
-                return value;
-            else
-            {
-                return stockCount - (stockCount % minQty.Value);
-            }
+            return value;
         }
 
         public int GetLessMinQty(int orderCount, int? minQty, int stockCount)
