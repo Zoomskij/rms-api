@@ -371,7 +371,7 @@ namespace RMSAutoAPI.Controllers
                                     line.OrderHistory = logOrder;
                                 }
                                 db.OrderHistory.Add(logOrder);
-                                db.SaveChangesAsync();
+                                db.SaveChanges();
                             });       
 
                             return Ok(respOrder);
