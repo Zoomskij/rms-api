@@ -101,6 +101,10 @@ namespace RMSAutoAPI.Controllers
             {
                 return Content(HttpStatusCode.BadRequest, "Bad Request");
             }
+            if ((int)orderHead.ValidationType < 0 || (int)orderHead.ValidationType >= 3)
+            {
+                return Content(HttpStatusCode.BadRequest, "ValidationType should be is [0, 1, 2]");
+            }
 
             DbOrder = new Orders();
             DbOrder.IsTest = orderHead.IsTest;
@@ -282,21 +286,23 @@ namespace RMSAutoAPI.Controllers
                             break;
                     }
 
-                    
-                    dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
-                    dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
-                    dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
-                    dbOrderLine.UnitPrice = respOrderLine.PricePlaced;
-                    dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
-                    dbOrderLine.CurrentStatus = 0;
-                    dbOrderLine.Processed = 0;
-                    dbOrderLine.OrderLineStatuses = orderLineStatus;
-                    DbOrder.Total +=  Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
+                    if ((int)orderHead.ValidationType >= 0 && (int)orderHead.ValidationType <= 2)
+                    {
+                        dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
+                        dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
+                        dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
+                        dbOrderLine.UnitPrice = respOrderLine.PricePlaced;
+                        dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
+                        dbOrderLine.CurrentStatus = 0;
+                        dbOrderLine.Processed = 0;
+                        dbOrderLine.OrderLineStatuses = orderLineStatus;
+                        DbOrder.Total += Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
 
-                    DbOrder.OrderLines.Add(dbOrderLine);
-                    
-                    
-                    respOrder.OrderPlacedLines.Add(respOrderLine);
+                        DbOrder.OrderLines.Add(dbOrderLine);
+
+
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                    }
                 }
 
                 DbOrder.CustOrderNum = orderHead.CustOrderNum;
