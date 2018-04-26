@@ -19,6 +19,7 @@ namespace RMSAutoAPI.App_Data
         {
             this.Parameters = new HashSet<Parameters>();
             this.Responses = new HashSet<Responses>();
+            this.Permissions = new HashSet<Permissions>();
         }
     
         public int Id { get; set; }
@@ -36,5 +37,7 @@ namespace RMSAutoAPI.App_Data
         public virtual ICollection<Parameters> Parameters { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Responses> Responses { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Permissions> Permissions { get; set; }
     }
 }

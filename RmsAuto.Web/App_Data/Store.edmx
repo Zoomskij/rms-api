@@ -16,6 +16,14 @@
           <Property Name="OrderID" Type="int" />
           <Property Name="ResponseData" Type="xml" />
         </EntityType>
+        <EntityType Name="MethodPermissions">
+          <Key>
+            <PropertyRef Name="MethodID" />
+            <PropertyRef Name="PermissionID" />
+          </Key>
+          <Property Name="MethodID" Type="int" Nullable="false" />
+          <Property Name="PermissionID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Methods">
           <Key>
             <PropertyRef Name="Id" />
@@ -296,6 +304,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MethodPermissions_Methods">
+          <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
+          <End Role="MethodPermissions" Type="Self.MethodPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MethodPermissions">
+              <PropertyRef Name="MethodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MethodPermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="MethodPermissions" Type="Self.MethodPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MethodPermissions">
+              <PropertyRef Name="PermissionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrderLines_OrderLineStatuses">
           <End Role="OrderLineStatuses" Type="Self.OrderLineStatuses" Multiplicity="1" />
           <End Role="OrderLines" Type="Self.OrderLines" Multiplicity="*" />
@@ -392,6 +424,7 @@
         </Function>
         <EntityContainer Name="ex_rmsauto_storeModelStoreContainer">
           <EntitySet Name="LogRequests" EntityType="Self.LogRequests" Schema="Acctg" store:Type="Tables" />
+          <EntitySet Name="MethodPermissions" EntityType="Self.MethodPermissions" Schema="api" store:Type="Tables" />
           <EntitySet Name="Methods" EntityType="Self.Methods" Schema="api" store:Type="Tables" />
           <EntitySet Name="Parameters" EntityType="Self.Parameters" Schema="api" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="api" store:Type="Tables" />
@@ -422,6 +455,14 @@
           <AssociationSet Name="FK__Settings__UserId__6E63ABE5" Association="Self.FK__Settings__UserId__6E63ABE5">
             <End Role="Users" EntitySet="Users" />
             <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MethodPermissions_Methods" Association="Self.FK_MethodPermissions_Methods">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="MethodPermissions" EntitySet="MethodPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MethodPermissions_Permissions" Association="Self.FK_MethodPermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="MethodPermissions" EntitySet="MethodPermissions" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderLines_OrderLineStatuses" Association="Self.FK_OrderLines_OrderLineStatuses">
             <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
@@ -541,6 +582,10 @@
           <AssociationSet Name="FK_OrderLineStatusChanges_OrderLines" Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines">
             <End Role="OrderLines" EntitySet="OrderLines" />
             <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
+          </AssociationSet>
+          <AssociationSet Name="MethodPermissions" Association="ex_rmsauto_storeModel.MethodPermissions">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Permissions" EntitySet="Permissions" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
@@ -842,6 +887,7 @@
           <Property Name="Visible" Type="Boolean" Nullable="false" />
           <Property Name="AllowAnonymous" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Responses" Relationship="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66" FromRole="Methods" ToRole="Responses" />
+          <NavigationProperty Name="Permissions" Relationship="ex_rmsauto_storeModel.MethodPermissions" FromRole="Methods" ToRole="Permissions" />
         </EntityType>
         <EntityType Name="Parameters">
           <Key>
@@ -882,6 +928,7 @@
           <Property Name="ID" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Users" Relationship="ex_rmsauto_storeModel.UserPermissions" FromRole="Permissions" ToRole="Users" />
+          <NavigationProperty Name="Methods" Relationship="ex_rmsauto_storeModel.MethodPermissions" FromRole="Permissions" ToRole="Methods" />
         </EntityType>
         <Association Name="UserPermissions">
           <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
@@ -946,6 +993,10 @@
               <PropertyRef Name="OrderLineID" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="MethodPermissions">
+          <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="*" />
+          <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
         </Association>
       </Schema>
     </edmx:ConceptualModels>
@@ -1245,6 +1296,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="MethodPermissions" TypeName="ex_rmsauto_storeModel.MethodPermissions" StoreEntitySet="MethodPermissions">
+            <EndProperty Name="Permissions">
+              <ScalarProperty Name="ID" ColumnName="PermissionID" />
+            </EndProperty>
+            <EndProperty Name="Methods">
+              <ScalarProperty Name="Id" ColumnName="MethodID" />
+            </EndProperty>
+          </AssociationSetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

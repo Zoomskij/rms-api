@@ -48,12 +48,16 @@
                                         <div class="opblock-summary-method"> {{ method.Type }} </div>
                                         <div class="opblock-summary-path"> {{ method.Uri }} </div>
                                         <div class="opblock-summary-description"> {{ method.Description }} </div>
-                                        <div v-if="IsAccess(method.AllowAnonymous, method.Name) === false">
-                                            <i class="fa fa-lock" style="font-size:24px; margin-right:5px; color:#666" title="Необходимо авторизоваться"></i>
+
+                                        <div v-if="method.AllowAnonymous === false">
+                                            <div v-if="IsAccess(method.AllowAnonymous, method.Permissions) === false">
+                                                <i class="fa fa-lock" style="font-size:24px; margin-right:5px; color:#666" title="Необходимо авторизоваться"></i>
+                                            </div>
+                                            <div v-if="IsAccess(method.AllowAnonymous, method.Permissions) === true">
+                                                <i class="fa fa-unlock" style="font-size:24px; margin-right:5px; color:#666" title="Доступен для выполнения"></i>
+                                            </div>
                                         </div>
-                                        <div v-if="IsAccess(method.AllowAnonymous, method.Name) === true">
-                                            <i class="fa fa-unlock" style="font-size:24px; margin-right:5px; color:#666" title="Доступен для выполнения"></i>
-                                        </div>
+
                                     </div>
                                     <hr v-bind:class="{'hr-border-get': method.Type === 'GET', 'hr-border-post': method.Type === 'POST'}" />
                                 </a>

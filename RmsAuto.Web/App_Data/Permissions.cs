@@ -18,6 +18,7 @@ namespace RMSAutoAPI.App_Data
         public Permissions()
         {
             this.Users = new HashSet<Users>();
+            this.Methods = new HashSet<Methods>();
         }
     
         public int ID { get; set; }
@@ -25,5 +26,7 @@ namespace RMSAutoAPI.App_Data
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Methods> Methods { get; set; }
     }
 }

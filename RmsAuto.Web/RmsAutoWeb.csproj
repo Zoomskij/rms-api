@@ -288,6 +288,7 @@
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\ApiParameter.cs" />
+    <Compile Include="Models\ApiPermissions.cs" />
     <Compile Include="Models\ApiResponse.cs" />
     <Compile Include="Models\CalcOrderLines.cs" />
     <Compile Include="Models\Order.cs" />

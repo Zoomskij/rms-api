@@ -40,23 +40,17 @@ var app = new Vue({
             });
         },
 
-        IsAccess: function (allowAnonymous, methodName) {
-            var isOrderRole = false;
-            for (var i = 0; i < userPermissions.length; ++i) {
-                if (userPermissions[i] === 5) {
-                    isOrderRole = true;
+        IsAccess: function (allowAnonymous, methodPermissions) {
+            if (allowAnonymous === true) return true;
+            for (var i = 0; i < methodPermissions.length; i++) {
+                for (var j = 0; j < userPermissions.length; j++) {
+                    var a = methodPermissions[i].ID;
+                    if (methodPermissions[i].ID == userPermissions[j]) {
+                        return true;
+                    }  
                 }
             }
-
-            if (allowAnonymous === false && token === '')
-                return false;
-
-            if (methodName === "CreateOrder" && isOrderRole === false)
-                return false;
-            if (methodName === "GetOrder" && isOrderRole === false)
-                return false;
-
-            return true;
+            return false;
         },
 
         loaded: function () {
