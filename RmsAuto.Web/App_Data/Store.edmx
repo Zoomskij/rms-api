@@ -53,6 +53,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Brand" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Article" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SupplierID" Type="int" Nullable="false" />
           <Property Name="OrderId" Type="int" Nullable="false" />
           <Property Name="CountOrder" Type="int" Nullable="false" />
           <Property Name="CountPlaced" Type="int" Nullable="false" />
@@ -290,6 +293,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__OrderHist__Order__4CAE7DB6">
+          <End Role="OrderHistory" Type="Self.OrderHistory" Multiplicity="1" />
+          <End Role="OrderHistoryDetail" Type="Self.OrderHistoryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHistory">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderHistoryDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Parameter__Metho__4CCDADF0">
           <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
           <End Role="Parameters" Type="Self.Parameters" Multiplicity="*" />
@@ -477,6 +492,10 @@
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__OrderHist__Order__49D2110B" Association="Self.FK__OrderHist__Order__49D2110B">
+            <End Role="OrderHistory" EntitySet="OrderHistory" />
+            <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderHist__Order__4CAE7DB6" Association="Self.FK__OrderHist__Order__4CAE7DB6">
             <End Role="OrderHistory" EntitySet="OrderHistory" />
             <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
           </AssociationSet>
@@ -1067,6 +1086,9 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="Reference" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="OrderHistory" Relationship="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" FromRole="OrderHistoryDetail" ToRole="OrderHistory" />
+          <Property Name="Brand" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Article" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK__OrderHist__Order__49D2110B">
           <End Type="ex_rmsauto_storeModel.OrderHistory" Role="OrderHistory" Multiplicity="1" />
@@ -1399,6 +1421,9 @@
           <EntitySetMapping Name="OrderHistoryDetail">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderHistoryDetail">
               <MappingFragment StoreEntitySet="OrderHistoryDetail">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="Article" ColumnName="Article" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
                 <ScalarProperty Name="Reference" ColumnName="Reference" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="PricePlaced" ColumnName="PricePlaced" />

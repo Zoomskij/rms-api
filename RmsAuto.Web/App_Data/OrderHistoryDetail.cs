@@ -22,6 +22,9 @@ namespace RMSAutoAPI.App_Data
         public decimal PricePlaced { get; set; }
         public int Status { get; set; }
         public string Reference { get; set; }
+        public string Brand { get; set; }
+        public string Article { get; set; }
+        public int SupplierID { get; set; }
     
         public virtual OrderHistory OrderHistory { get; set; }
     }
