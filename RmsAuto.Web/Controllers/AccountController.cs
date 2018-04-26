@@ -29,6 +29,7 @@ namespace RMSAutoAPI.Controllers
             if (!franchList.Any())
             {
                 var franches = db.spGetFranches().ToList();
+                if (!franchList.Any())
                 foreach (var franch in franches)
                 {
                     franchList.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
