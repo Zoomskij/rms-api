@@ -296,6 +296,7 @@ namespace RMSAutoAPI.Controllers
                         dbOrderLine.CurrentStatus = 0;
                         dbOrderLine.Processed = 0;
                         dbOrderLine.OrderLineStatuses = orderLineStatus;
+                        dbOrderLine.AcctgOrderLineID = dbOrderLine.OrderLineID * -1;
                         DbOrder.Total += Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
 
                         DbOrder.OrderLines.Add(dbOrderLine);
