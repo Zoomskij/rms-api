@@ -22,8 +22,6 @@ namespace RMSAutoAPI.Models
         [XmlElement("ClientDelivAddr")]
         public string DeliveryAddress { get; set; }
 
-        public string PaymentType { get; set; }
-
         [XmlElement("Line")]
         public OrderLineInfo[] OrderLines { get; set; }
 

@@ -29,7 +29,6 @@ namespace RMSAutoAPI.Helpers
                 CustOrderNum = order.CustOrderNum,
                 OrderDate = order.OrderDate,
                 DeliveryAddress = string.Empty,// order.ShippingAddress,
-                PaymentType = string.Empty, //order.PaymentMethod.ToTextOrName(),
                 EmployeeId = employeeId,
                 OrderNotes = string.Empty, // order.OrderNotes,
                 OrderLines = order.OrderLines.Select<OrderLines, OrderLineInfo>(
