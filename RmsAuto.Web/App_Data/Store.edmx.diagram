@@ -32,6 +32,9 @@
         <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses" />
         <AssociationConnector Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines" />
         <AssociationConnector Association="ex_rmsauto_storeModel.MethodPermissions" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.OrderHistory" Width="1.5" PointX="12.375" PointY="8.375" />
+        <EntityTypeShape EntityType="ex_rmsauto_storeModel.OrderHistoryDetail" Width="1.5" PointX="14.625" PointY="8" />
+        <AssociationConnector Association="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

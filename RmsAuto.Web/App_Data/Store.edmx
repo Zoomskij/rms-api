@@ -39,6 +39,28 @@
           <Property Name="Visible" Type="bit" Nullable="false" />
           <Property Name="AllowAnonymous" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="OrderHistory">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Total" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderHistoryDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="CountOrder" Type="int" Nullable="false" />
+          <Property Name="CountPlaced" Type="int" Nullable="false" />
+          <Property Name="PriceOrder" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="PricePlaced" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Reference" Type="nchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="Parameters">
           <Key>
             <PropertyRef Name="Id" />
@@ -256,6 +278,18 @@
           <Property Name="PassportIssuedBy" Type="varchar" MaxLength="200" />
           <Property Name="PassportWhenIssued" Type="datetime" />
         </EntityType>
+        <Association Name="FK__OrderHist__Order__49D2110B">
+          <End Role="OrderHistory" Type="Self.OrderHistory" Multiplicity="1" />
+          <End Role="OrderHistoryDetail" Type="Self.OrderHistoryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHistory">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderHistoryDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Parameter__Metho__4CCDADF0">
           <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
           <End Role="Parameters" Type="Self.Parameters" Multiplicity="*" />
@@ -426,6 +460,8 @@
           <EntitySet Name="LogRequests" EntityType="Self.LogRequests" Schema="Acctg" store:Type="Tables" />
           <EntitySet Name="MethodPermissions" EntityType="Self.MethodPermissions" Schema="api" store:Type="Tables" />
           <EntitySet Name="Methods" EntityType="Self.Methods" Schema="api" store:Type="Tables" />
+          <EntitySet Name="OrderHistory" EntityType="Self.OrderHistory" Schema="api" store:Type="Tables" />
+          <EntitySet Name="OrderHistoryDetail" EntityType="Self.OrderHistoryDetail" Schema="api" store:Type="Tables" />
           <EntitySet Name="Parameters" EntityType="Self.Parameters" Schema="api" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="api" store:Type="Tables" />
           <EntitySet Name="Responses" EntityType="Self.Responses" Schema="api" store:Type="Tables" />
@@ -440,6 +476,10 @@
           <EntitySet Name="SpareParts" EntityType="Self.SpareParts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__OrderHist__Order__49D2110B" Association="Self.FK__OrderHist__Order__49D2110B">
+            <End Role="OrderHistory" EntitySet="OrderHistory" />
+            <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
+          </AssociationSet>
           <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="Self.FK__Parameter__Metho__4CCDADF0">
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Parameters" EntitySet="Parameters" />
@@ -586,6 +626,12 @@
           <AssociationSet Name="MethodPermissions" Association="ex_rmsauto_storeModel.MethodPermissions">
             <End Role="Methods" EntitySet="Methods" />
             <End Role="Permissions" EntitySet="Permissions" />
+          </AssociationSet>
+          <EntitySet Name="OrderHistory" EntityType="ex_rmsauto_storeModel.OrderHistory" />
+          <EntitySet Name="OrderHistoryDetail" EntityType="ex_rmsauto_storeModel.OrderHistoryDetail" />
+          <AssociationSet Name="FK__OrderHist__Order__49D2110B" Association="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B">
+            <End Role="OrderHistory" EntitySet="OrderHistory" />
+            <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
@@ -998,6 +1044,42 @@
           <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="*" />
           <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
         </Association>
+        <EntityType Name="OrderHistory">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <NavigationProperty Name="OrderHistoryDetail" Relationship="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" FromRole="OrderHistory" ToRole="OrderHistoryDetail" />
+        </EntityType>
+        <EntityType Name="OrderHistoryDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="CountOrder" Type="Int32" Nullable="false" />
+          <Property Name="CountPlaced" Type="Int32" Nullable="false" />
+          <Property Name="PriceOrder" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="PricePlaced" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Reference" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="OrderHistory" Relationship="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" FromRole="OrderHistoryDetail" ToRole="OrderHistory" />
+        </EntityType>
+        <Association Name="FK__OrderHist__Order__49D2110B">
+          <End Type="ex_rmsauto_storeModel.OrderHistory" Role="OrderHistory" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderHistoryDetail" Role="OrderHistoryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHistory">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderHistoryDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1304,6 +1386,30 @@
               <ScalarProperty Name="Id" ColumnName="MethodID" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="OrderHistory">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderHistory">
+              <MappingFragment StoreEntitySet="OrderHistory">
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderHistoryDetail">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderHistoryDetail">
+              <MappingFragment StoreEntitySet="OrderHistoryDetail">
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PricePlaced" ColumnName="PricePlaced" />
+                <ScalarProperty Name="PriceOrder" ColumnName="PriceOrder" />
+                <ScalarProperty Name="CountPlaced" ColumnName="CountPlaced" />
+                <ScalarProperty Name="CountOrder" ColumnName="CountOrder" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

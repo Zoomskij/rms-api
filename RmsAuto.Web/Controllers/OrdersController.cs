@@ -13,6 +13,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace RMSAutoAPI.Controllers
@@ -358,6 +359,21 @@ namespace RMSAutoAPI.Controllers
 
                             respOrder.OrderId = DbOrder.OrderID;
                             respOrder.Status = 0;
+
+                            //Делаем логирование
+                            Task.Run(() =>
+                            {
+                                var logOrder = Mapper.Map<OrderPlaced, OrderHistory>(respOrder);
+                                logOrder.UserId = CurrentUser.UserID;
+                                foreach (var line in logOrder.OrderHistoryDetail)
+                                {
+                                    line.OrderId = logOrder.OrderId;
+                                    line.OrderHistory = logOrder;
+                                }
+                                db.OrderHistory.Add(logOrder);
+                                db.SaveChangesAsync();
+                            });       
+
                             return Ok(respOrder);
                         }
 

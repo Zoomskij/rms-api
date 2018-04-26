@@ -67,6 +67,13 @@ namespace RMSAutoAPI.Infrastructure
                 cfg.CreateMap<Responses, ApiResponse>();
                 cfg.CreateMap<Permissions, ApiPermissions>();
 
+                cfg.CreateMap<OrderPlaced, OrderHistory>()
+                    .ForMember(dest => (int)dest.Status, opt => opt.MapFrom(src => src.Status))
+                    .ForMember(dest => dest.OrderHistoryDetail, opt => opt.MapFrom(src => src.OrderPlacedLines));
+
+                cfg.CreateMap<OrderPlacedLine, OrderHistoryDetail>()
+                        .ForMember(dest => (int)dest.Status, opt => opt.MapFrom(src => src.Status));
+
             });
 
         }
