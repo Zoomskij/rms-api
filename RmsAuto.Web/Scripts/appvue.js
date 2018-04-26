@@ -147,14 +147,7 @@ var app = new Vue({
 
         // Generating request
         request: function (methodName, methodType, url) {
-            var pathname = window.location.pathname;
-            var mainUrl = '';
-            if (pathname === '/') {
-                mainUrl = window.location.href;
-            }
-            else {
-                mainUrl = this.replaceString(pathname, '', window.location.href);
-            }
+            var mainUrl = window.location.origin;
 
             var data = null;
             this.changeVisible(methodName + "_loader");
