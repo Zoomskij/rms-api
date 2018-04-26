@@ -103,6 +103,7 @@ namespace RMSAutoAPI.Controllers
             }
 
             DbOrder = new Orders();
+            DbOrder.IsTest = orderHead.IsTest;
             var respOrder = new OrderPlaced();
             using (var dbTransaction = db.Database.BeginTransaction())
             {
@@ -212,6 +213,12 @@ namespace RMSAutoAPI.Controllers
                             respOrderLine.PriceOrder = sparePart.Price;
                             respOrderLine.CountPlaced = dbOrderLine.Qty = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
+                            //Если произошло снижение по остаткам поставщика
+                            if (respOrderLine.CountPlaced < sparePart.Count)
+                                respOrderLine.Status = ResponsePartNumber.OkCountLess;
+                            //Если произошло выравнивание вверх по MinQty
+                            if (respOrderLine.CountPlaced > sparePart.Count)
+                                respOrderLine.Status = ResponsePartNumber.OkCountMoreQty;
                             break;
                         case Reaction.CheckRow:
                             switch (sparePart.ReactionByCount)
@@ -258,18 +265,18 @@ namespace RMSAutoAPI.Controllers
                                 case 0:
                                     if (sparePart.Price <= part.FinalPrice)
                                     {
+                                        respOrderLine.PricePlaced = sparePart.Price;
+                                    }
+                                    else
+                                    {
                                         respOrderLine.Status = ResponsePartNumber.WrongPrice;
                                         respOrder.OrderPlacedLines.Add(respOrderLine);
                                         continue;
                                     }
-                                    else
-                                    {
-                                        dbOrderLine.UnitPrice = respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
-                                    }
                                     break;
                                 // текущая цена поставщика (без проверки)
                                 case 1:
-                                    dbOrderLine.UnitPrice = respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
+                                    respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
                                     break;
                             }
                             break;
@@ -279,13 +286,12 @@ namespace RMSAutoAPI.Controllers
                     dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
                     dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
                     dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
-                    dbOrderLine.UnitPrice = sparePart != null ? Math.Round(part.FinalPrice.Value, 2) : 0;
+                    dbOrderLine.UnitPrice = respOrderLine.PricePlaced;
                     dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
                     dbOrderLine.CurrentStatus = 0;
                     dbOrderLine.Processed = 0;
                     dbOrderLine.OrderLineStatuses = orderLineStatus;
                     DbOrder.Total +=  Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
-                    DbOrder.IsTest = orderHead.IsTest;
 
                     DbOrder.OrderLines.Add(dbOrderLine);
                     
@@ -302,11 +308,11 @@ namespace RMSAutoAPI.Controllers
                         respOrder.Status = OrderStatus.Error; // заказ не размещен
                 }
 
-                if (orderHead.ValidationType != 0 && !respOrder.OrderPlacedLines.Any())
+                if (orderHead.ValidationType != 0 && !DbOrder.OrderLines.Any())
                 {
                     respOrder.Status = OrderStatus.Error;  // заказ не размещен
                 }
-                if (orderHead.ValidationType != 0 && respOrder.OrderPlacedLines.All(x => x.Status == 0))
+                if (orderHead.ValidationType != 0 && DbOrder.OrderLines.Any() && respOrder.OrderPlacedLines.All(x => x.Status == 0))
                 {
                     respOrder.Status = OrderStatus.OkPart; // заказ размещен частично
                 }
