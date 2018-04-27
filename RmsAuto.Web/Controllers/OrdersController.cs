@@ -130,7 +130,7 @@ namespace RMSAutoAPI.Controllers
                 {
                     if (string.IsNullOrWhiteSpace(_region))
                     {
-                        var getcalcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', {CurrentUser.ClientGroup}, NULL");
+                        var getcalcLines = db.Database.SqlQuery<CalcOrderLines>($"exec api.spCalcOrder '{orderXml}', '{CurrentUser.AcctgID}', NULL, NULL");
                         if (getcalcLines.Any())
                             calcLines = getcalcLines.ToList();
                     }
