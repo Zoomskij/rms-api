@@ -240,7 +240,7 @@ var app = new Vue({
                         resp.html("{\n    \"Message\": \"Method not allowed.\"\n}");
                     }
                     if (jqXHR.status === 400) {
-                        resp.html("{\n    \"Message\": \"" + jqXHR.responseJSON.MessageDetail + "\"\n}");
+                        resp.html("{\n    \"Message\": \"" + errorThrown + "\"\n}");
                     }
                     if (jqXHR.status === 500) {
                         resp.html("{\n    \"Message\":  \"Internal Server Error or Unauthorized Error\"\n}");
