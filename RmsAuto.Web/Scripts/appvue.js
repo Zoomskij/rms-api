@@ -139,6 +139,17 @@ var app = new Vue({
             return fullS;
         },
 
+        escapeSpecialChars: function (str) {
+            return str.replace(/\\n/g, "")
+                .replace(/\\'/g, "\\'")
+                .replace(/\\"/g, '\\"')
+                .replace(/\\&/g, "\\&")
+                .replace(/\\r/g, "\\r")
+                .replace(/\\t/g, " ")
+                .replace(/\\b/g, "\\b")
+                .replace(/\\f/g, "\\f");
+        },
+
         // Generating request
         request: function (methodName, methodType, url) {
             var mainUrl = window.location.origin;
@@ -165,7 +176,13 @@ var app = new Vue({
             if (methodType === "POST") {
                 data = document.getElementById('CreateOrder_OrderHead').value;
                 curl.append(" -d " + JSON.stringify(data, null, 0) + "");
+                var str = JSON.stringify(data, null, 0);
+                var myEscapedJSONString = this.escapeSpecialChars(str);
+                var trimStr = myEscapedJSONString.replace(/\s+/g, ' ').trim();
+
+                curl.append(" -d " + trimStr + "");
             }
+
 
             reqUrl.html(mainUrl + url + "");
 
