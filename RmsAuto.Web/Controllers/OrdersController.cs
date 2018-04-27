@@ -206,12 +206,6 @@ namespace RMSAutoAPI.Controllers
                                 respOrderLine.Status = ResponsePartNumber.ErrorCount;
                                 break;
                             }
-                            if (sparePart.Price <= part.FinalPrice)
-                            {
-                                respOrderLine.Status = ResponsePartNumber.WrongPrice;
-                                respOrder.OrderPlacedLines.Add(respOrderLine);
-                                continue;
-                            }
                             respOrderLine.PricePlaced = sparePart.Price;
                             respOrderLine.CountPlaced = sparePart.Count;
                             break;
@@ -279,16 +273,7 @@ namespace RMSAutoAPI.Controllers
                             {
                                 // Не выше указанной цены
                                 case 0:
-                                    if (sparePart.Price <= part.FinalPrice)
-                                    {
-                                        respOrderLine.PricePlaced = sparePart.Price;
-                                    }
-                                    else
-                                    {
-                                        respOrderLine.Status = ResponsePartNumber.WrongPrice;
-                                        respOrder.OrderPlacedLines.Add(respOrderLine);
-                                        continue;
-                                    }
+                                    respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
                                     break;
                                 // текущая цена поставщика (без проверки)
                                 case 1:
