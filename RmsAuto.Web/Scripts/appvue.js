@@ -175,7 +175,6 @@ var app = new Vue({
             }
             if (methodType === "POST") {
                 data = document.getElementById('CreateOrder_OrderHead').value;
-                curl.append(" -d " + JSON.stringify(data, null, 0) + "");
                 var str = JSON.stringify(data, null, 0);
                 var myEscapedJSONString = this.escapeSpecialChars(str);
                 var trimStr = myEscapedJSONString.replace(/\s+/g, ' ').trim();
