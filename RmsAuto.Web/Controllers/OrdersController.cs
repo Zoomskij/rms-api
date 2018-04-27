@@ -191,6 +191,12 @@ namespace RMSAutoAPI.Controllers
                         respOrder.OrderPlacedLines.Add(respOrderLine);
                         continue;
                     }
+                    if (part.QtyInStock == null)
+                    {
+                        respOrderLine.Status = ResponsePartNumber.NotFound;
+                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                        continue;
+                    }
                     if (part.FinalPrice == null)
                     {
                         respOrderLine.Status = ResponsePartNumber.WrongPrice;
@@ -211,8 +217,8 @@ namespace RMSAutoAPI.Controllers
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
-                            countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
-                            countLess = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                            countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                            countLess = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                             respOrderLine.CountPlaced = countUp > part.QtyInStock ? countLess : countUp;
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             //Если произошло снижение по остаткам поставщика
@@ -242,7 +248,7 @@ namespace RMSAutoAPI.Controllers
                                 case 1:
                                     if (sparePart.Count > part.QtyInStock)
                                     {
-                                        respOrderLine.CountPlaced = part.QtyInStock;
+                                        respOrderLine.CountPlaced = part.QtyInStock.Value;
                                         respOrderLine.Status = ResponsePartNumber.OkCountLess;
                                     }
                                     else
@@ -252,7 +258,7 @@ namespace RMSAutoAPI.Controllers
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
                                 case 2:
-                                    countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                                    countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                                     if (countUp > part.QtyInStock)
                                     {
                                         respOrderLine.Status = ResponsePartNumber.ErrorCount;
@@ -264,7 +270,7 @@ namespace RMSAutoAPI.Controllers
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
-                                    respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                                    respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                                     respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
                                     break;
                             }
@@ -286,8 +292,8 @@ namespace RMSAutoAPI.Controllers
                     if ((int)orderHead.ValidationType >= 0 && (int)orderHead.ValidationType <= 2)
                     {
                         dbOrderLine.Qty = respOrderLine.CountPlaced;
-                        dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
-                        dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
+                        dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin.Value : 0;
+                        dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax.Value : 0;
                         dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
                         dbOrderLine.UnitPrice = respOrderLine.PricePlaced;
                         dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
