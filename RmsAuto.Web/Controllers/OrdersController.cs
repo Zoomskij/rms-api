@@ -206,14 +206,14 @@ namespace RMSAutoAPI.Controllers
                                 respOrderLine.Status = ResponsePartNumber.ErrorCount;
                                 break;
                             }
-                            respOrderLine.PricePlaced = sparePart.Price;
+                            respOrderLine.PricePlaced = Math.Round(part.FinalPrice.Value, 2);
                             respOrderLine.CountPlaced = sparePart.Count;
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
                             countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
                             countLess = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
-                            respOrderLine.CountPlaced = dbOrderLine.Qty = countUp > part.QtyInStock ? countLess : countUp;
+                            respOrderLine.CountPlaced = countUp > part.QtyInStock ? countLess : countUp;
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             //Если произошло снижение по остаткам поставщика
                             if (respOrderLine.CountPlaced < sparePart.Count)
@@ -235,19 +235,19 @@ namespace RMSAutoAPI.Controllers
                                     }
                                     else
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountPlaced = respOrderLine.CountOrder = sparePart.Count;
+                                       respOrderLine.CountPlaced = respOrderLine.CountOrder = sparePart.Count;
                                     }
                                     break;
                                 // Берем сколько есть, но не выше указанного
                                 case 1:
                                     if (sparePart.Count > part.QtyInStock)
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountPlaced = part.QtyInStock;
+                                        respOrderLine.CountPlaced = part.QtyInStock;
                                         respOrderLine.Status = ResponsePartNumber.OkCountLess;
                                     }
                                     else
                                     {
-                                        dbOrderLine.Qty = respOrderLine.CountPlaced = sparePart.Count;
+                                       respOrderLine.CountPlaced = sparePart.Count;
                                     }
                                     break;
                                 // Разрешаем выравнивать вверх по MinQty
@@ -259,12 +259,12 @@ namespace RMSAutoAPI.Controllers
                                         respOrder.OrderPlacedLines.Add(respOrderLine);
                                         continue;
                                     }
-                                    dbOrderLine.Qty = respOrderLine.CountPlaced = countUp;
+                                    respOrderLine.CountPlaced = countUp;
                                     respOrderLine.Status = ResponsePartNumber.OkCountMoreQty;
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 3:
-                                    dbOrderLine.Qty = respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
+                                    respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock);
                                     respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
                                     break;
                             }
@@ -285,6 +285,7 @@ namespace RMSAutoAPI.Controllers
 
                     if ((int)orderHead.ValidationType >= 0 && (int)orderHead.ValidationType <= 2)
                     {
+                        dbOrderLine.Qty = respOrderLine.CountPlaced;
                         dbOrderLine.DeliveryDaysMin = sparePart != null ? part.DeliveryDaysMin : 0;
                         dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax : 0;
                         dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
