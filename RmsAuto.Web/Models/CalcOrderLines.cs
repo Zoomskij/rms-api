@@ -19,5 +19,6 @@ namespace RMSAutoAPI.Models
         public int? QtyInStock { get; set; }
         public int? MinOrderQty { get; set; }
         public decimal? MinPrice { get; set; }
+        public string ReferenceID { get; set; }
     }
 }
