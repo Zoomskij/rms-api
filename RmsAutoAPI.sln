@@ -9,6 +9,7 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		test2-api|Any CPU = test2-api|Any CPU
 		test-api|Any CPU = test-api|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
@@ -16,6 +17,8 @@ Global
 		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.test2-api|Any CPU.ActiveCfg = test2-api|Any CPU
+		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.test2-api|Any CPU.Build.0 = test2-api|Any CPU
 		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.test-api|Any CPU.ActiveCfg = test-api|Any CPU
 		{50D8EA1C-5275-4E85-9313-529BEB5C14D8}.test-api|Any CPU.Build.0 = test-api|Any CPU
 	EndGlobalSection

@@ -217,9 +217,7 @@ namespace RMSAutoAPI.Controllers
                             break;
                         case Reaction.AnyPush:
                             respOrderLine.PriceOrder = sparePart.Price;
-                            countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
-                            countLess = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
-                            respOrderLine.CountPlaced = countUp > part.QtyInStock ? countLess : countUp;
+                            respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             //Если произошло снижение по остаткам поставщика
                             if (respOrderLine.CountPlaced < sparePart.Count)
@@ -384,14 +382,16 @@ namespace RMSAutoAPI.Controllers
         public int GetMoreMinQty(int orderCount, int? minQty, int stockCount)
         {
             if (!minQty.HasValue) return orderCount;
-
-            var value = orderCount + (minQty.Value - (orderCount % minQty.Value));
-            return value;
+            if (minQty.Value == 1) return orderCount;
+            for (int val=orderCount; val<orderCount+100; val++)
+                if ((val % minQty) == 0) return val;
+            return orderCount;
         }
 
         public int GetLessMinQty(int orderCount, int? minQty, int stockCount)
         {
             if (!minQty.HasValue) return orderCount;
+            if (minQty.Value == 1) return orderCount;
             var value = orderCount - (orderCount % minQty.Value);
             if (value < stockCount)
                 return value;
