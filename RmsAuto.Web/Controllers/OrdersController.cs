@@ -384,7 +384,8 @@ namespace RMSAutoAPI.Controllers
         public int GetMoreMinQty(int orderCount, int? minQty, int stockCount)
         {
             if (!minQty.HasValue) return orderCount;
-            var value = orderCount + (orderCount % minQty.Value);
+
+            var value = orderCount + (minQty.Value - (orderCount % minQty.Value));
             return value;
         }
 
