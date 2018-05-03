@@ -328,6 +328,10 @@ namespace RMSAutoAPI.Controllers
                 {
                     respOrder.Status = OrderStatus.OkPart; // заказ размещен частично
                 }
+                if (DbOrder.Total == 0)
+                {
+                    respOrder.Status = OrderStatus.Error;  // заказ не размещен
+                }
 
                 try
                 {
