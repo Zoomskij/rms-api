@@ -47,6 +47,7 @@
           <Property Name="UserId" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderHistoryDetail">
           <Key>
@@ -1072,6 +1073,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="Total" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
           <NavigationProperty Name="OrderHistoryDetail" Relationship="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" FromRole="OrderHistory" ToRole="OrderHistoryDetail" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderHistoryDetail">
           <Key>
@@ -1411,6 +1413,7 @@
           <EntitySetMapping Name="OrderHistory">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderHistory">
               <MappingFragment StoreEntitySet="OrderHistory">
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />

@@ -24,6 +24,7 @@ namespace RMSAutoAPI.App_Data
         public int UserId { get; set; }
         public int Status { get; set; }
         public decimal Total { get; set; }
+        public bool IsTest { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderHistoryDetail> OrderHistoryDetail { get; set; }

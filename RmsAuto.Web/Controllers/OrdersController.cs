@@ -343,6 +343,7 @@ namespace RMSAutoAPI.Controllers
                             {
                                 var logOrder = Mapper.Map<OrderPlaced, OrderHistory>(respOrder);
                                 logOrder.UserId = CurrentUser.UserID;
+                                logOrder.IsTest = DbOrder.IsTest;
                                 foreach (var line in logOrder.OrderHistoryDetail)
                                 {
                                     line.OrderId = logOrder.OrderId;
