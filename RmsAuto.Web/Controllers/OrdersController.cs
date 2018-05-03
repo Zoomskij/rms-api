@@ -216,8 +216,14 @@ namespace RMSAutoAPI.Controllers
                             respOrderLine.CountPlaced = sparePart.Count;
                             break;
                         case Reaction.AnyPush:
-                            respOrderLine.PriceOrder = sparePart.Price;
-                            respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                            var minValue = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                            if (minValue == 0)
+                            {
+                                respOrderLine.Status = ResponsePartNumber.ErrorCount;
+                                respOrder.OrderPlacedLines.Add(respOrderLine);
+                                continue;
+                            }
+                            respOrderLine.CountPlaced = minValue;
                             respOrderLine.PricePlaced = dbOrderLine.UnitPrice = Math.Round(part.FinalPrice.Value, 2);
                             //Если произошло снижение по остаткам поставщика
                             if (respOrderLine.CountPlaced < sparePart.Count)
@@ -256,7 +262,14 @@ namespace RMSAutoAPI.Controllers
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
                                 case 2:
-                                    respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                                    var minValueQty = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
+                                    if (minValueQty == 0)
+                                    {
+                                        respOrderLine.Status = ResponsePartNumber.ErrorCount;
+                                        respOrder.OrderPlacedLines.Add(respOrderLine);
+                                        continue;
+                                    }
+                                    respOrderLine.CountPlaced = minValueQty;
                                     respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
                                     break;
                             }
