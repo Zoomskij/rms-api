@@ -118,7 +118,7 @@ namespace RMSAutoAPI.Controllers
                 var orderXml = string.Empty;
                 foreach (var sparePart in orderHead.OrderHeadLines)
                 {
-                    if (orderHead.ValidationType == Reaction.AnyPush)
+                    if ((orderHead.ValidationType == Reaction.AnyPush) || (orderHead.ValidationType == Reaction.CheckRow && sparePart.ReactionByPrice == 1))
                         orderXml += $"<b S=\"{sparePart.SupplierID}\" M=\"{sparePart.Brand}\" P=\"{sparePart.Article}\" R=\"{sparePart.Reference}\" />";
                     else
                         orderXml += $"<b S=\"{sparePart.SupplierID}\" M=\"{sparePart.Brand}\" P=\"{sparePart.Article}\" C=\"{sparePart.Price.ToString("0.00")}\" R=\"{sparePart.Reference}\" />";
@@ -270,7 +270,9 @@ namespace RMSAutoAPI.Controllers
                                         continue;
                                     }
                                     respOrderLine.CountPlaced = minValueQty;
-                                    respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
+                                    if (minValueQty < sparePart.Count)
+                                        respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
+
                                     break;
                             }
 
