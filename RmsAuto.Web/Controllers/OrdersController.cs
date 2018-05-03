@@ -242,20 +242,8 @@ namespace RMSAutoAPI.Controllers
                                        respOrderLine.CountPlaced = respOrderLine.CountOrder = sparePart.Count;
                                     }
                                     break;
-                                // Берем сколько есть, но не выше указанного
-                                case 1:
-                                    if (sparePart.Count > part.QtyInStock)
-                                    {
-                                        respOrderLine.CountPlaced = part.QtyInStock.Value;
-                                        respOrderLine.Status = ResponsePartNumber.OkCountLess;
-                                    }
-                                    else
-                                    {
-                                       respOrderLine.CountPlaced = sparePart.Count;
-                                    }
-                                    break;
                                 // Разрешаем выравнивать вверх по MinQty
-                                case 2:
+                                case 1:
                                     countUp = GetMoreMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                                     if (countUp > part.QtyInStock)
                                     {
@@ -267,7 +255,7 @@ namespace RMSAutoAPI.Controllers
                                     respOrderLine.Status = ResponsePartNumber.OkCountMoreQty;
                                     break;
                                 // Разрешаем выравнивать вниз по MinQty
-                                case 3:
+                                case 2:
                                     respOrderLine.CountPlaced = GetLessMinQty(sparePart.Count, part.MinOrderQty, part.QtyInStock.Value);
                                     respOrderLine.Status = ResponsePartNumber.OkCountLessQty;
                                     break;
