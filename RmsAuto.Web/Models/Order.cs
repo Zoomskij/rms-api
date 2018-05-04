@@ -16,7 +16,7 @@ namespace RMSAutoAPI.Models
         public DateTime OrderDate { get; set; }
         [Description("Дата завершения заказа")]
         public DateTime CompletedDate { get; set; }
-        [Description("Статус заказа")]
+        [Description("Статус заказа \n1 - новый \n2 - в работе \n3 - завершён")]
         public byte Status { get; set; }
         [Description("Сумма заказа")]
         public decimal Total { get; set; }
