@@ -297,6 +297,7 @@ namespace RMSAutoAPI.Controllers
                         dbOrderLine.DeliveryDaysMax = sparePart != null ? part.DeliveryDaysMax.Value : 0;
                         dbOrderLine.PartName = sparePart != null ? part.PartName : string.Empty;
                         dbOrderLine.UnitPrice = respOrderLine.PricePlaced;
+                        dbOrderLine.SupplierPriceWithMarkup = part.SupplierPriceWithMarkup;
                         dbOrderLine.StrictlyThisNumber = sparePart.StrictlyThisNumber;
                         dbOrderLine.CurrentStatus = 0;
                         dbOrderLine.Processed = 0;

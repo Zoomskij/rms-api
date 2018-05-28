@@ -20,5 +20,6 @@ namespace RMSAutoAPI.Models
         public int? MinOrderQty { get; set; }
         public decimal? MinPrice { get; set; }
         public string ReferenceID { get; set; }
+        public decimal SupplierPriceWithMarkup { get; set; }
     }
 }
