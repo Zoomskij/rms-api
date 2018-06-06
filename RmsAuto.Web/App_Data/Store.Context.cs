@@ -36,6 +36,14 @@ namespace RMSAutoAPI.App_Data
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<SpareParts> SpareParts { get; set; }
         public virtual DbSet<OrderLineStatuses> OrderLineStatuses { get; set; }
+        public virtual DbSet<Methods> Methods { get; set; }
+        public virtual DbSet<Parameters> Parameters { get; set; }
+        public virtual DbSet<Permutation1C> Permutation1C { get; set; }
+        public virtual DbSet<Permissions> Permissions { get; set; }
+        public virtual DbSet<Responses> Responses { get; set; }
+        public virtual DbSet<OrderLineStatusChanges> OrderLineStatusChanges { get; set; }
+        public virtual DbSet<OrderHistory> OrderHistory { get; set; }
+        public virtual DbSet<OrderHistoryDetail> OrderHistoryDetail { get; set; }
     
         public virtual ObjectResult<spSearchCrossesWithPriceSVC_Result> spSearchCrossesWithPriceSVC(string partNumber, string manufacturer, Nullable<bool> showAnalogs, string selectedBrands, string acctgID, Nullable<int> clientGroup, string region)
         {
@@ -115,6 +123,48 @@ namespace RMSAutoAPI.App_Data
                 new ObjectParameter("ClientGroup", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spGetCartSpareParts", articlesParameter, acctgIDParameter, regionParameter, clientGroupParameter);
+        }
+    
+        public virtual ObjectResult<spGetSparePart_Result> spGetSparePart(string brand, string partNumber, Nullable<int> supplierID, string clientID)
+        {
+            var brandParameter = brand != null ?
+                new ObjectParameter("Brand", brand) :
+                new ObjectParameter("Brand", typeof(string));
+    
+            var partNumberParameter = partNumber != null ?
+                new ObjectParameter("PartNumber", partNumber) :
+                new ObjectParameter("PartNumber", typeof(string));
+    
+            var supplierIDParameter = supplierID.HasValue ?
+                new ObjectParameter("SupplierID", supplierID) :
+                new ObjectParameter("SupplierID", typeof(int));
+    
+            var clientIDParameter = clientID != null ?
+                new ObjectParameter("ClientID", clientID) :
+                new ObjectParameter("ClientID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<spGetSparePart_Result>("spGetSparePart", brandParameter, partNumberParameter, supplierIDParameter, clientIDParameter);
+        }
+    
+        public virtual int spCalcOrder(string articles, string acctgID, string region, Nullable<int> clientGroup)
+        {
+            var articlesParameter = articles != null ?
+                new ObjectParameter("Articles", articles) :
+                new ObjectParameter("Articles", typeof(string));
+    
+            var acctgIDParameter = acctgID != null ?
+                new ObjectParameter("AcctgID", acctgID) :
+                new ObjectParameter("AcctgID", typeof(string));
+    
+            var regionParameter = region != null ?
+                new ObjectParameter("Region", region) :
+                new ObjectParameter("Region", typeof(string));
+    
+            var clientGroupParameter = clientGroup.HasValue ?
+                new ObjectParameter("ClientGroup", clientGroup) :
+                new ObjectParameter("ClientGroup", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("spCalcOrder", articlesParameter, acctgIDParameter, regionParameter, clientGroupParameter);
         }
     }
 }

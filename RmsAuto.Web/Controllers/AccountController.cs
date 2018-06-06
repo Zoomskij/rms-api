@@ -7,6 +7,7 @@ using RMSAutoAPI.Models;
 using RMSAutoAPI.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
@@ -18,19 +19,23 @@ namespace RMSAutoAPI.Controllers
     public class AccountController : Controller
     {
         private ex_rmsauto_storeEntities db = new ex_rmsauto_storeEntities();
+        private static List<SelectListItem> franchList = new List<SelectListItem>();
 
         private IUserService _userService;
 
         [HttpGet]
         public ActionResult Login()
         {
-            List<SelectListItem> items = new List<SelectListItem>();
-            var franches = db.spGetFranches().ToList();
-            foreach (var franch in franches)
+            if (!franchList.Any())
             {
-                items.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
+                var franches = db.spGetFranches().ToList();
+                if (!franchList.Any())
+                foreach (var franch in franches)
+                {
+                    franchList.Add(new SelectListItem() { Text = $"{franch.City} {franch.Franch}", Value = franch.InternalFranchName });
+                }
             }
-            ViewBag.Partners = items;
+            ViewBag.Partners = franchList;
             return PartialView();
         }
 
@@ -56,10 +61,10 @@ namespace RMSAutoAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult LoginAuth(string username, string password, string code)
+        public async Task<ActionResult> LoginAuth(string username, string password, string code)
         {
             _userService = new UserService();
-            var _client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
+            var client = new RestClient(WebConfigurationManager.AppSettings["UrlApi"]);
 
             var request = new RestRequest("/api/auth/token", Method.POST);
 
@@ -70,16 +75,16 @@ namespace RMSAutoAPI.Controllers
             request.AddParameter("code", code);
             request.AddParameter("grant_type", "password");
 
-            var response = _client.Execute<JObject>(request);
+            var response = client.Execute<JObject>(request);
 
             if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                var user = _userService.GetUser(username, password, code);
                 var token = JsonConvert.DeserializeObject<Token>(response.Content);
                 var bearerToken = $"{token.TokenType} {token.AccessToken}";
 
-                TempData["bearerToken"] = bearerToken;
-                TempData["Username"] = user.Username;
+                TempData["Token"] = bearerToken;
+                TempData["UserName"] = username;
+                TempData["Code"] = code;
                 
                 return RedirectToAction("Index", "Home");
             }

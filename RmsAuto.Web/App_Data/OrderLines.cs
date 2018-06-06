@@ -14,6 +14,12 @@ namespace RMSAutoAPI.App_Data
     
     public partial class OrderLines
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public OrderLines()
+        {
+            this.OrderLineStatusChanges = new HashSet<OrderLineStatusChanges>();
+        }
+    
         public int OrderLineID { get; set; }
         public Nullable<int> AcctgOrderLineID { get; set; }
         public Nullable<int> ParentOrderLineID { get; set; }
@@ -42,5 +48,7 @@ namespace RMSAutoAPI.App_Data
     
         public virtual Orders Orders { get; set; }
         public virtual OrderLineStatuses OrderLineStatuses { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderLineStatusChanges> OrderLineStatusChanges { get; set; }
     }
 }

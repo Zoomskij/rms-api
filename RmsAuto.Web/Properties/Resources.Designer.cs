@@ -70,6 +70,15 @@ namespace RMSAutoAPI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error Not Found.
+        /// </summary>
+        internal static string ErrorNotFound {
+            get {
+                return ResourceManager.GetString("ErrorNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         internal static string GroupDescription {

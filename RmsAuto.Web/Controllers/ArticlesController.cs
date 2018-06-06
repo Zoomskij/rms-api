@@ -63,7 +63,6 @@ namespace RMSAutoAPI.Controllers
             return region;
         }
 
-
         /*/// <response code="500">Internal Server Error</response> - пока убрал, т.к. хорошо бы добавить обработку ошибок и тогда уже добавить описание всех возможных кодов ошибок*/
         /// <summary>
         /// Возвращает список брендов по артикулу
@@ -118,7 +117,7 @@ namespace RMSAutoAPI.Controllers
         /// <response code="200">OK result</response>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(IEnumerable<PartNumber>))]
+        [ResponseType(typeof(IEnumerable<SparePart>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
         [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
         public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
@@ -143,7 +142,7 @@ namespace RMSAutoAPI.Controllers
                 }
                 _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID, DbName, ServerName);
 
-                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<PartNumber>>(crosses.ToList());
+                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<SparePart>>(crosses.ToList());
 
                 return Ok(crossesMap);
             }

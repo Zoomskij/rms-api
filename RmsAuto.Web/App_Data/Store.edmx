@@ -16,6 +16,67 @@
           <Property Name="OrderID" Type="int" />
           <Property Name="ResponseData" Type="xml" />
         </EntityType>
+        <EntityType Name="MethodPermissions">
+          <Key>
+            <PropertyRef Name="MethodID" />
+            <PropertyRef Name="PermissionID" />
+          </Key>
+          <Property Name="MethodID" Type="int" Nullable="false" />
+          <Property Name="PermissionID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Methods">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Group" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="10" />
+          <Property Name="Name" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Uri" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" />
+          <Property Name="TitleDescription" Type="nvarchar" MaxLength="4000" />
+          <Property Name="Response" Type="nvarchar" MaxLength="255" />
+          <Property Name="Visible" Type="bit" Nullable="false" />
+          <Property Name="AllowAnonymous" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderHistory">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderHistoryDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Brand" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Article" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SupplierID" Type="int" Nullable="false" />
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="CountOrder" Type="int" Nullable="false" />
+          <Property Name="CountPlaced" Type="int" Nullable="false" />
+          <Property Name="PriceOrder" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="PricePlaced" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Reference" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Parameters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MethodId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" />
+          <Property Name="TypeParameter" Type="int" Nullable="false" />
+          <Property Name="IsRequired" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Rates">
           <Key>
             <PropertyRef Name="Id" />
@@ -24,6 +85,15 @@
           <Property Name="PerMinute" Type="int" Nullable="false" />
           <Property Name="PerHour" Type="int" Nullable="false" />
           <Property Name="PerDay" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Responses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MethodId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="4000" />
         </EntityType>
         <EntityType Name="Settings">
           <Key>
@@ -86,6 +156,18 @@
           <Property Name="SupplierPriceWithMarkup" Type="decimal" Precision="18" Scale="2" />
           <Property Name="ItemDeliveryType" Type="tinyint" />
         </EntityType>
+        <EntityType Name="OrderLineStatusChanges">
+          <Key>
+            <PropertyRef Name="OrderLineStatusChangeID" />
+          </Key>
+          <Property Name="OrderLineStatusChangeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderLineID" Type="int" Nullable="false" />
+          <Property Name="OrderLineStatus" Type="tinyint" Nullable="false" />
+          <Property Name="StatusChangeInfo" Type="varchar" MaxLength="100" />
+          <Property Name="StatusChangeTime" Type="datetime" Nullable="false" />
+          <Property Name="ClientReaction" Type="tinyint" />
+          <Property Name="ClientReactionTime" Type="datetime" />
+        </EntityType>
         <EntityType Name="Orders">
           <Key>
             <PropertyRef Name="OrderID" />
@@ -102,6 +184,21 @@
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="CompletedDate" Type="datetime" />
           <Property Name="Total" Type="decimal" Precision="20" Scale="2" Nullable="false" />
+          <Property Name="IsTest" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permutation1C">
+          <Key>
+            <PropertyRef Name="OldSupplierId" />
+          </Key>
+          <Property Name="OldSupplierId" Type="int" Nullable="false" />
+          <Property Name="NewSupplierId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="SpareParts">
           <Key>
@@ -129,6 +226,14 @@
           <Property Name="Region" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="SizeID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserPermissions">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="PermissionID" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="PermissionID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="UserID" />
@@ -155,7 +260,7 @@
           <Property Name="ScopeType" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="HowKnow" Type="nvarchar" MaxLength="255" Nullable="false" />
           <Property Name="RmsStoreID" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="ManagerId" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ManagerId" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ManagerDeptId" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="IsChecked" Type="bit" Nullable="false" />
           <Property Name="IsRestricted" Type="bit" Nullable="false" />
@@ -177,6 +282,54 @@
           <Property Name="PassportIssuedBy" Type="varchar" MaxLength="200" />
           <Property Name="PassportWhenIssued" Type="datetime" />
         </EntityType>
+        <Association Name="FK__OrderHist__Order__49D2110B">
+          <End Role="OrderHistory" Type="Self.OrderHistory" Multiplicity="1" />
+          <End Role="OrderHistoryDetail" Type="Self.OrderHistoryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHistory">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderHistoryDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__OrderHist__Order__4CAE7DB6">
+          <End Role="OrderHistory" Type="Self.OrderHistory" Multiplicity="1" />
+          <End Role="OrderHistoryDetail" Type="Self.OrderHistoryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHistory">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderHistoryDetail">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Parameter__Metho__4CCDADF0">
+          <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
+          <End Role="Parameters" Type="Self.Parameters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Parameters">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Responses__Metho__2D35D25D">
+          <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
+          <End Role="Responses" Type="Self.Responses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Responses">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__Settings__RatesI__6F57D01E">
           <End Role="Rates" Type="Self.Rates" Multiplicity="1" />
           <End Role="Settings" Type="Self.Settings" Multiplicity="*" />
@@ -198,6 +351,30 @@
             </Principal>
             <Dependent Role="Settings">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MethodPermissions_Methods">
+          <End Role="Methods" Type="Self.Methods" Multiplicity="1" />
+          <End Role="MethodPermissions" Type="Self.MethodPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MethodPermissions">
+              <PropertyRef Name="MethodID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MethodPermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="MethodPermissions" Type="Self.MethodPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="MethodPermissions">
+              <PropertyRef Name="PermissionID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -225,6 +402,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_OrderLineStatusChanges_OrderLineStatuses">
+          <End Role="OrderLineStatuses" Type="Self.OrderLineStatuses" Multiplicity="1" />
+          <End Role="OrderLineStatusChanges" Type="Self.OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLineStatuses">
+              <PropertyRef Name="OrderLineStatusID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_Users">
           <End Role="Users" Type="Self.Users" Multiplicity="1" />
           <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
@@ -237,11 +426,35 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="spGetCartSpareParts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
-          <Parameter Name="Articles" Type="nvarchar(max)" Mode="In" />
+        <Association Name="FK_UserPermissions_Permissions">
+          <End Role="Permissions" Type="Self.Permissions" Multiplicity="1" />
+          <End Role="UserPermissions" Type="Self.UserPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Permissions">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="UserPermissions">
+              <PropertyRef Name="PermissionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserPermissions_Users">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="UserPermissions" Type="Self.UserPermissions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="UserPermissions">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="spCalcOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
+          <Parameter Name="OrderXML" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="AcctgID" Type="varchar" Mode="In" />
-          <Parameter Name="Region" Type="varchar" Mode="In" />
           <Parameter Name="ClientGroup" Type="int" Mode="In" />
+          <Parameter Name="Region" Type="varchar" Mode="In" />
         </Function>
         <Function Name="spGetFranches" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api" />
         <Function Name="spSearchBrands" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="api">
@@ -261,14 +474,40 @@
         </Function>
         <EntityContainer Name="ex_rmsauto_storeModelStoreContainer">
           <EntitySet Name="LogRequests" EntityType="Self.LogRequests" Schema="Acctg" store:Type="Tables" />
+          <EntitySet Name="MethodPermissions" EntityType="Self.MethodPermissions" Schema="api" store:Type="Tables" />
+          <EntitySet Name="Methods" EntityType="Self.Methods" Schema="api" store:Type="Tables" />
+          <EntitySet Name="OrderHistory" EntityType="Self.OrderHistory" Schema="api" store:Type="Tables" />
+          <EntitySet Name="OrderHistoryDetail" EntityType="Self.OrderHistoryDetail" Schema="api" store:Type="Tables" />
+          <EntitySet Name="Parameters" EntityType="Self.Parameters" Schema="api" store:Type="Tables" />
           <EntitySet Name="Rates" EntityType="Self.Rates" Schema="api" store:Type="Tables" />
+          <EntitySet Name="Responses" EntityType="Self.Responses" Schema="api" store:Type="Tables" />
           <EntitySet Name="Settings" EntityType="Self.Settings" Schema="api" store:Type="Tables" />
           <EntitySet Name="OrderLineStatuses" EntityType="Self.OrderLineStatuses" Schema="Cms" store:Type="Tables" />
           <EntitySet Name="BrandEquivalents" EntityType="Self.BrandEquivalents" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderLines" EntityType="Self.OrderLines" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderLineStatusChanges" EntityType="Self.OrderLineStatusChanges" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permissions" EntityType="Self.Permissions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Permutation1C" EntityType="Self.Permutation1C" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpareParts" EntityType="Self.SpareParts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserPermissions" EntityType="Self.UserPermissions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__OrderHist__Order__49D2110B" Association="Self.FK__OrderHist__Order__49D2110B">
+            <End Role="OrderHistory" EntitySet="OrderHistory" />
+            <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__OrderHist__Order__4CAE7DB6" Association="Self.FK__OrderHist__Order__4CAE7DB6">
+            <End Role="OrderHistory" EntitySet="OrderHistory" />
+            <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="Self.FK__Parameter__Metho__4CCDADF0">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Parameters" EntitySet="Parameters" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Responses__Metho__2D35D25D" Association="Self.FK__Responses__Metho__2D35D25D">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Responses" EntitySet="Responses" />
+          </AssociationSet>
           <AssociationSet Name="FK__Settings__RatesI__6F57D01E" Association="Self.FK__Settings__RatesI__6F57D01E">
             <End Role="Rates" EntitySet="Rates" />
             <End Role="Settings" EntitySet="Settings" />
@@ -276,6 +515,14 @@
           <AssociationSet Name="FK__Settings__UserId__6E63ABE5" Association="Self.FK__Settings__UserId__6E63ABE5">
             <End Role="Users" EntitySet="Users" />
             <End Role="Settings" EntitySet="Settings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MethodPermissions_Methods" Association="Self.FK_MethodPermissions_Methods">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="MethodPermissions" EntitySet="MethodPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MethodPermissions_Permissions" Association="Self.FK_MethodPermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="MethodPermissions" EntitySet="MethodPermissions" />
           </AssociationSet>
           <AssociationSet Name="FK_OrderLines_OrderLineStatuses" Association="Self.FK_OrderLines_OrderLineStatuses">
             <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
@@ -285,9 +532,21 @@
             <End Role="Orders" EntitySet="Orders" />
             <End Role="OrderLines" EntitySet="OrderLines" />
           </AssociationSet>
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLineStatuses" Association="Self.FK_OrderLineStatusChanges_OrderLineStatuses">
+            <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_Users" Association="Self.FK_Orders_Users">
             <End Role="Users" EntitySet="Users" />
             <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPermissions_Permissions" Association="Self.FK_UserPermissions_Permissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="UserPermissions" EntitySet="UserPermissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserPermissions_Users" Association="Self.FK_UserPermissions_Users">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="UserPermissions" EntitySet="UserPermissions" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -346,6 +605,54 @@
             <Parameter Name="Region" Mode="In" Type="String" />
             <Parameter Name="ClientGroup" Mode="In" Type="Int32" />
           </FunctionImport>
+          <FunctionImport Name="spGetSparePart" ReturnType="Collection(ex_rmsauto_storeModel.spGetSparePart_Result)">
+            <Parameter Name="Brand" Mode="In" Type="String" />
+            <Parameter Name="PartNumber" Mode="In" Type="String" />
+            <Parameter Name="SupplierID" Mode="In" Type="Int32" />
+            <Parameter Name="ClientID" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Methods" EntityType="ex_rmsauto_storeModel.Methods" />
+          <EntitySet Name="Parameters" EntityType="ex_rmsauto_storeModel.Parameters" />
+          <AssociationSet Name="FK__Parameter__Metho__4CCDADF0" Association="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Parameters" EntitySet="Parameters" />
+          </AssociationSet>
+          <EntitySet Name="Permutation1C" EntityType="ex_rmsauto_storeModel.Permutation1C" />
+          <EntitySet Name="Permissions" EntityType="ex_rmsauto_storeModel.Permissions" />
+          <AssociationSet Name="UserPermissions" Association="ex_rmsauto_storeModel.UserPermissions">
+            <End Role="Permissions" EntitySet="Permissions" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+          <FunctionImport Name="spCalcOrder">
+            <Parameter Name="Articles" Mode="In" Type="String" />
+            <Parameter Name="AcctgID" Mode="In" Type="String" />
+            <Parameter Name="Region" Mode="In" Type="String" />
+            <Parameter Name="ClientGroup" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="Responses" EntityType="ex_rmsauto_storeModel.Responses" />
+          <AssociationSet Name="FK__Responses__Metho__710B0E66" Association="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Responses" EntitySet="Responses" />
+          </AssociationSet>
+          <EntitySet Name="OrderLineStatusChanges" EntityType="ex_rmsauto_storeModel.OrderLineStatusChanges" />
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLineStatuses" Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses">
+            <End Role="OrderLineStatuses" EntitySet="OrderLineStatuses" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderLineStatusChanges_OrderLines" Association="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines">
+            <End Role="OrderLines" EntitySet="OrderLines" />
+            <End Role="OrderLineStatusChanges" EntitySet="OrderLineStatusChanges" />
+          </AssociationSet>
+          <AssociationSet Name="MethodPermissions" Association="ex_rmsauto_storeModel.MethodPermissions">
+            <End Role="Methods" EntitySet="Methods" />
+            <End Role="Permissions" EntitySet="Permissions" />
+          </AssociationSet>
+          <EntitySet Name="OrderHistory" EntityType="ex_rmsauto_storeModel.OrderHistory" />
+          <EntitySet Name="OrderHistoryDetail" EntityType="ex_rmsauto_storeModel.OrderHistoryDetail" />
+          <AssociationSet Name="FK__OrderHist__Order__49D2110B" Association="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B">
+            <End Role="OrderHistory" EntitySet="OrderHistory" />
+            <End Role="OrderHistoryDetail" EntitySet="OrderHistoryDetail" />
+          </AssociationSet>
         </EntityContainer>
         <ComplexType Name="spSearchCrossesWithPriceSVC_Result">
           <Property Type="Int32" Name="CrossType" Nullable="false" />
@@ -422,7 +729,7 @@
           <Property Name="ScopeType" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="HowKnow" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="RmsStoreID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ManagerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ManagerDeptId" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="IsChecked" Type="Boolean" Nullable="false" />
           <Property Name="IsRestricted" Type="Boolean" Nullable="false" />
@@ -445,6 +752,7 @@
           <Property Name="PassportWhenIssued" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Settings" Relationship="ex_rmsauto_storeModel.FK__Settings__UserId__6E63ABE5" FromRole="Users" ToRole="Settings" />
           <NavigationProperty Name="Orders" Relationship="ex_rmsauto_storeModel.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
+          <NavigationProperty Name="Permissions" Relationship="ex_rmsauto_storeModel.UserPermissions" FromRole="Users" ToRole="Permissions" />
         </EntityType>
         <Association Name="FK__Settings__UserId__6E63ABE5">
           <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="1" />
@@ -514,6 +822,7 @@
           <Property Name="ItemDeliveryType" Type="Byte" />
           <NavigationProperty Name="Orders" Relationship="ex_rmsauto_storeModel.FK_OrderLines_Orders" FromRole="OrderLines" ToRole="Orders" />
           <NavigationProperty Name="OrderLineStatuses" Relationship="ex_rmsauto_storeModel.FK_OrderLines_OrderLineStatuses" FromRole="OrderLines" ToRole="OrderLineStatuses" />
+          <NavigationProperty Name="OrderLineStatusChanges" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines" FromRole="OrderLines" ToRole="OrderLineStatusChanges" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -533,6 +842,7 @@
           <Property Name="Total" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
           <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLines_Orders" FromRole="Orders" ToRole="OrderLines" />
           <NavigationProperty Name="Users" Relationship="ex_rmsauto_storeModel.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_OrderLines_Orders">
           <End Type="ex_rmsauto_storeModel.Orders" Role="Orders" Multiplicity="1" />
@@ -600,6 +910,7 @@
           <Property Name="ClientShow" Type="Boolean" Nullable="false" />
           <Property Name="ClientShowOrder" Type="Int32" Nullable="false" />
           <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLines_OrderLineStatuses" FromRole="OrderLineStatuses" ToRole="OrderLines" />
+          <NavigationProperty Name="OrderLineStatusChanges" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses" FromRole="OrderLineStatuses" ToRole="OrderLineStatusChanges" />
         </EntityType>
         <Association Name="FK_OrderLines_OrderLineStatuses">
           <End Type="ex_rmsauto_storeModel.OrderLineStatuses" Role="OrderLineStatuses" Multiplicity="1" />
@@ -610,6 +921,186 @@
             </Principal>
             <Dependent Role="OrderLines">
               <PropertyRef Name="CurrentStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="spGetSparePart_Result">
+          <Property Type="String" Name="Manufacturer" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PartNumber" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="PartName" Nullable="false" MaxLength="255" />
+          <Property Type="Int32" Name="SupplierID" Nullable="false" />
+          <Property Type="Int32" Name="DeliveryDaysMin" Nullable="false" />
+          <Property Type="Int32" Name="DeliveryDaysMax" Nullable="true" />
+          <Property Type="Decimal" Name="InitialPrice" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="FinalPrice" Nullable="true" Precision="38" Scale="6" />
+          <Property Type="Int32" Name="QtyInStock" Nullable="true" />
+          <Property Type="Int32" Name="MinOrderQty" Nullable="true" />
+          <Property Type="String" Name="Region" Nullable="false" MaxLength="50" />
+        </ComplexType>
+        <EntityType Name="Methods">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Group" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Uri" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="TitleDescription" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="Response" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Parameters" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Methods" ToRole="Parameters" />
+          <Property Name="Visible" Type="Boolean" Nullable="false" />
+          <Property Name="AllowAnonymous" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Responses" Relationship="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66" FromRole="Methods" ToRole="Responses" />
+          <NavigationProperty Name="Permissions" Relationship="ex_rmsauto_storeModel.MethodPermissions" FromRole="Methods" ToRole="Permissions" />
+        </EntityType>
+        <EntityType Name="Parameters">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MethodId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="TypeParameter" Type="Int32" Nullable="false" />
+          <Property Name="IsRequired" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Methods" Relationship="ex_rmsauto_storeModel.FK__Parameter__Metho__4CCDADF0" FromRole="Parameters" ToRole="Methods" />
+        </EntityType>
+        <Association Name="FK__Parameter__Metho__4CCDADF0">
+          <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.Parameters" Role="Parameters" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Parameters">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Permutation1C">
+          <Key>
+            <PropertyRef Name="OldSupplierId" />
+          </Key>
+          <Property Name="OldSupplierId" Type="Int32" Nullable="false" />
+          <Property Name="NewSupplierId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Permissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Users" Relationship="ex_rmsauto_storeModel.UserPermissions" FromRole="Permissions" ToRole="Users" />
+          <NavigationProperty Name="Methods" Relationship="ex_rmsauto_storeModel.MethodPermissions" FromRole="Permissions" ToRole="Methods" />
+        </EntityType>
+        <Association Name="UserPermissions">
+          <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
+          <End Type="ex_rmsauto_storeModel.Users" Role="Users" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Responses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MethodId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Methods" Relationship="ex_rmsauto_storeModel.FK__Responses__Metho__710B0E66" FromRole="Responses" ToRole="Methods" />
+        </EntityType>
+        <Association Name="FK__Responses__Metho__710B0E66">
+          <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.Responses" Role="Responses" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Methods">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Responses">
+              <PropertyRef Name="MethodId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="OrderLineStatusChanges">
+          <Key>
+            <PropertyRef Name="OrderLineStatusChangeID" />
+          </Key>
+          <Property Name="OrderLineStatusChangeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderLineID" Type="Int32" Nullable="false" />
+          <Property Name="OrderLineStatus" Type="Byte" Nullable="false" />
+          <Property Name="StatusChangeInfo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="StatusChangeTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClientReaction" Type="Byte" />
+          <Property Name="ClientReactionTime" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="OrderLineStatuses" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLineStatuses" FromRole="OrderLineStatusChanges" ToRole="OrderLineStatuses" />
+          <NavigationProperty Name="OrderLines" Relationship="ex_rmsauto_storeModel.FK_OrderLineStatusChanges_OrderLines" FromRole="OrderLineStatusChanges" ToRole="OrderLines" />
+        </EntityType>
+        <Association Name="FK_OrderLineStatusChanges_OrderLineStatuses">
+          <End Type="ex_rmsauto_storeModel.OrderLineStatuses" Role="OrderLineStatuses" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderLineStatusChanges" Role="OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLineStatuses">
+              <PropertyRef Name="OrderLineStatusID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderLineStatusChanges_OrderLines">
+          <End Type="ex_rmsauto_storeModel.OrderLines" Role="OrderLines" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderLineStatusChanges" Role="OrderLineStatusChanges" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderLines">
+              <PropertyRef Name="OrderLineID" />
+            </Principal>
+            <Dependent Role="OrderLineStatusChanges">
+              <PropertyRef Name="OrderLineID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="MethodPermissions">
+          <End Type="ex_rmsauto_storeModel.Methods" Role="Methods" Multiplicity="*" />
+          <End Type="ex_rmsauto_storeModel.Permissions" Role="Permissions" Multiplicity="*" />
+        </Association>
+        <EntityType Name="OrderHistory">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Total" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
+          <NavigationProperty Name="OrderHistoryDetail" Relationship="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" FromRole="OrderHistory" ToRole="OrderHistoryDetail" />
+          <Property Name="IsTest" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderHistoryDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="CountOrder" Type="Int32" Nullable="false" />
+          <Property Name="CountPlaced" Type="Int32" Nullable="false" />
+          <Property Name="PriceOrder" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
+          <Property Name="PricePlaced" Type="Decimal" Nullable="false" Precision="20" Scale="2" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Reference" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="OrderHistory" Relationship="ex_rmsauto_storeModel.FK__OrderHist__Order__49D2110B" FromRole="OrderHistoryDetail" ToRole="OrderHistory" />
+          <Property Name="Brand" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Article" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SupplierID" Type="Int32" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__OrderHist__Order__49D2110B">
+          <End Type="ex_rmsauto_storeModel.OrderHistory" Role="OrderHistory" Multiplicity="1" />
+          <End Type="ex_rmsauto_storeModel.OrderHistoryDetail" Role="OrderHistoryDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHistory">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderHistoryDetail">
+              <PropertyRef Name="OrderId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -777,6 +1268,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
                 <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -834,7 +1326,118 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="spGetCartSpareParts" FunctionName="ex_rmsauto_storeModel.Store.spGetCartSpareParts" />
+          <EntitySetMapping Name="Methods">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Methods">
+              <MappingFragment StoreEntitySet="Methods">
+                <ScalarProperty Name="AllowAnonymous" ColumnName="AllowAnonymous" />
+                <ScalarProperty Name="Visible" ColumnName="Visible" />
+                <ScalarProperty Name="Response" ColumnName="Response" />
+                <ScalarProperty Name="TitleDescription" ColumnName="TitleDescription" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Uri" ColumnName="Uri" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Group" ColumnName="Group" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Parameters">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Parameters">
+              <MappingFragment StoreEntitySet="Parameters">
+                <ScalarProperty Name="IsRequired" ColumnName="IsRequired" />
+                <ScalarProperty Name="TypeParameter" ColumnName="TypeParameter" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MethodId" ColumnName="MethodId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permutation1C">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Permutation1C">
+              <MappingFragment StoreEntitySet="Permutation1C">
+                <ScalarProperty Name="NewSupplierId" ColumnName="NewSupplierId" />
+                <ScalarProperty Name="OldSupplierId" ColumnName="OldSupplierId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Permissions">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Permissions">
+              <MappingFragment StoreEntitySet="Permissions">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="UserPermissions" TypeName="ex_rmsauto_storeModel.UserPermissions" StoreEntitySet="UserPermissions">
+            <EndProperty Name="Users">
+              <ScalarProperty Name="UserID" ColumnName="UserID" />
+            </EndProperty>
+            <EndProperty Name="Permissions">
+              <ScalarProperty Name="ID" ColumnName="PermissionID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Responses">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.Responses">
+              <MappingFragment StoreEntitySet="Responses">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="MethodId" ColumnName="MethodId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderLineStatusChanges">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderLineStatusChanges">
+              <MappingFragment StoreEntitySet="OrderLineStatusChanges">
+                <ScalarProperty Name="ClientReactionTime" ColumnName="ClientReactionTime" />
+                <ScalarProperty Name="ClientReaction" ColumnName="ClientReaction" />
+                <ScalarProperty Name="StatusChangeTime" ColumnName="StatusChangeTime" />
+                <ScalarProperty Name="StatusChangeInfo" ColumnName="StatusChangeInfo" />
+                <ScalarProperty Name="OrderLineStatus" ColumnName="OrderLineStatus" />
+                <ScalarProperty Name="OrderLineID" ColumnName="OrderLineID" />
+                <ScalarProperty Name="OrderLineStatusChangeID" ColumnName="OrderLineStatusChangeID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="MethodPermissions" TypeName="ex_rmsauto_storeModel.MethodPermissions" StoreEntitySet="MethodPermissions">
+            <EndProperty Name="Permissions">
+              <ScalarProperty Name="ID" ColumnName="PermissionID" />
+            </EndProperty>
+            <EndProperty Name="Methods">
+              <ScalarProperty Name="Id" ColumnName="MethodID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="OrderHistory">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderHistory">
+              <MappingFragment StoreEntitySet="OrderHistory">
+                <ScalarProperty Name="IsTest" ColumnName="IsTest" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderHistoryDetail">
+            <EntityTypeMapping TypeName="ex_rmsauto_storeModel.OrderHistoryDetail">
+              <MappingFragment StoreEntitySet="OrderHistoryDetail">
+                <ScalarProperty Name="SupplierID" ColumnName="SupplierID" />
+                <ScalarProperty Name="Article" ColumnName="Article" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="Reference" ColumnName="Reference" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PricePlaced" ColumnName="PricePlaced" />
+                <ScalarProperty Name="PriceOrder" ColumnName="PriceOrder" />
+                <ScalarProperty Name="CountPlaced" ColumnName="CountPlaced" />
+                <ScalarProperty Name="CountOrder" ColumnName="CountOrder" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

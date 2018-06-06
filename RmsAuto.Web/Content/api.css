@@ -73,6 +73,21 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     border-color: #61affe;
 }
 
+.opblock.opblock-post {
+    border-color: #49cc90;
+    background: rgba(73,204,144,.1);
+}
+
+.opblock.opblock-post .opblock-summary-method {
+    background: #49cc90;
+}
+
+.opblock.opblock-post .opblock-summary {
+    border-color: #49cc90;
+}
+
+
+
 .opblock .opblock-summary-method {
     font-size: 14px;
     font-weight: 700;
@@ -168,6 +183,7 @@ a.nostyle, .swagger-ui a.nostyle:visited {
 
 
 .example {
+    display: flex;
     font-size: 12px;
     margin: 0;
     padding: 10px;
@@ -185,6 +201,8 @@ a.nostyle, .swagger-ui a.nostyle:visited {
     font-weight: 600;
     color: #fff;
     text-align: left;
+    overflow-y: auto;
+    max-height: 600px;
 }
 
 button {
@@ -351,8 +369,8 @@ section.models h4 {
 }
 
 .model-title {
+    font-family: Source Code Pro,monospace;
     font-size: 16px;
-    font-family: Titillium Web,sans-serif;
     color: #505050;
 }
 
@@ -402,4 +420,75 @@ section.models h4 span {
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+
+textarea {
+    font-size: 12px;
+    min-height: 534px;
+    height: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    outline: none;
+    background: hsla(0,0%,100%,.8);
+    font-family: Source Code Pro,monospace;
+    font-weight: 600;
+    color: #3b4151;
+    border: initial 1px #41444e;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    min-width:100%;
+}
+
+.body-param {
+    margin-right: -25px;
+}
+
+.hr-border-get {
+    width: 99.5%;
+    margin-top: 0px;
+    margin-bottom: -1px;
+    border-top: 1px solid #61affe;
+}
+
+.hr-border-post {
+    width: 99.5%;
+    margin-top: 0px;
+    margin-bottom: -1px;
+    border-top: 1px solid #49cc90;
+}
+
+is-open {
+    display:block;
+}
+
+.model-toggle {
+    font-size: 10px;
+    position: relative;
+    top: 6px;
+    display: inline-block;
+    margin: auto .3em;
+    cursor: pointer;
+    -webkit-transition: -webkit-transform .15s ease-in;
+    transition: -webkit-transform .15s ease-in;
+    transition: transform .15s ease-in;
+    transition: transform .15s ease-in,-webkit-transform .15s ease-in;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(0deg);
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+}
+
+    .model-toggle:after {
+        display: block;
+        width: 20px;
+        height: 20px;
+        content: "";
+        background-image: url('Img/arrow.png');
+        background-size: 100%;
+    }
+
+.rotate {
+    transform: rotate(90deg);
 }

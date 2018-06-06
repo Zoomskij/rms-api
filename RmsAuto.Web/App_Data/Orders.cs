@@ -32,6 +32,7 @@ namespace RMSAutoAPI.App_Data
         public byte Status { get; set; }
         public Nullable<System.DateTime> CompletedDate { get; set; }
         public decimal Total { get; set; }
+        public bool IsTest { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderLines> OrderLines { get; set; }

@@ -1,15 +1,9 @@
 ﻿@using System.Web.Configuration;
-@using System.ComponentModel;
 @model List<RMSAutoAPI.Models.ApiMethod>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-
 }
-
 <!DOCTYPE html>
-
-
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -17,418 +11,261 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/api.css" rel="stylesheet" />
-
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link rel="icon" href="~/favicon.ico" />
+    <link rel="shortcut icon" href="~/favicon.ico" />
 </head>
 <body>
-
     <br />
-
     <div class="wrapper">
-
         [ Base URL: @WebConfigurationManager.AppSettings["UrlApi"] ]
         <br /><br />
-        @*<td>@ViewBag.Token</td> <br /><br />*@
-
-
-        @*<div>
-            <h2 class="title"> API.RMSAUTO </h2>
-        </div>*@
-
-              <div class="rms-title">
-                  API.RMSAUTO представляет собой REST-сервис.
-                  Для обращения к методам api нужно пройти авторизацию на сервисе посредством персонального логина/пароля.
-                  В ответ будет сгенерирован Bearer токен, который необходимо передавать в HTTP заголовок вызываемого метода.
-				  <br /><br />
-				  ПРИМЕЧАНИЕ: Клиентам наших региональных партнёров для авторизации необходимо дополнительно передать код партнёра
-				  (код партнёра можно получить, воспользовавшись методом /api/Partners).
-              </div>
-
-        <div class="opblock-tag-section">
-            <div style="height: auto; border: none; margin: 0px; padding: 0px;">
-                @foreach (var group in Model.GroupBy(x => x.Group))
-            {
-
-                <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
-                    <a class="nostyle" href="#/@group.Key"><span>@group.Key</span></a>
-                </h4>
-                <hr style="margin-bottom:10px; margin-top:15px;" />
-
-            foreach (var item in Model.Where(x => x.Group.Equals(group.Key)))
-            {
-                <div class="opblock opblock-get" id="operations-Articles-Articles_GetBrands">
-                    <a class="nostyle" href="#/@group.Key/@item.Name" data-bind="click:notify.bind(this,'@item.Name')">
-                        <div class="opblock-summary opblock-summary-get">
-                            <span class="opblock-summary-method">@item.Type</span>
-                            <span class="opblock-summary-path">@item.Uri</span>
-                            <div class="opblock-summary-description">@item.Description</div>
-                        </div>
-                        <hr style="width:99.5%; margin-top:0px; margin-bottom:-1px; border-top: 1px solid #61affe;" />
-                    </a>
-
-                    <div id="@item.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
-                        <div class="opblock-body">
-
-                            <div class="opblock-description-wrapper">
-                                <div class="opblock-description">
-                                    @item.TitleDescription
-                                </div>
-                            </div>
-
-
-                            @*============PARAMETERS=============*@
-                            @if (Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
-                        {
-
-                            var idTryIt = @item.Name + "_tryIt";
-
-                            <div class="opblock-section-header">
-                                <div class="tab-header">
-                                    <span class="opblock-title"><b>Parameters</b></span>
-                                    <button id="@idTryIt" class="btn try-out__btn pull-right" data-bind="click:tryIt.bind(this,'@item.Name')">Try it out</button>
-                                </div>
-                            </div>
-                        foreach (var parameter in Model.Where(x => x.Name.Equals(item.Name)).GroupBy(x => x.Parameters))
-                        {
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    <div class="param-name">Name</div>
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                    <div class="param-name">Description</div>
-                                </div>
-                            </div>
-                            <hr style="margin-top:5px; margin-bottom:10px" />
-                        foreach (var param in parameter.Key)
-                        {
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    <b>@param.Name </b>
-                                    @if (param.IsRequired == true)
-                                {
-                                    <span class="required">&nbsp;*&nbsp;required</span>
-                            }
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                    @param.Description
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    @param.Type
-                                </div>
-                                <div class="col-lg-4 col-md-4 col-xs-4 col-sm-4">
-                                    @if (param.Name != "analogues")
-                                {
-                                    var id = item.Name + "_" + param.Name;
-                                    <input id="@id" style="display:none" type="text" class="" title="" value="" placeholder="@param.Description">
-                            }
-                                    @if (param.Name == "analogues")
-                                {
-                                    var id = item.Name + "_" + param.Name;
-                                    <select id="@id" class="" style="display:none">
-                                        <option value="">--</option>
-                                        <option value="true">true</option>
-                                        <option value="false">false</option>
-                                    </select>
-                            }
-                                </div>
-                            </div>
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    (@Enum.GetName(typeof(TypeParameter), param.TypeParameter))
-                                </div>
-                            </div>
-
-                            <div style="padding-top:20px"></div>
-                    }
-                }
-            }
-            @*onclick="executeMethod()"*@
-            @*==============EXECUTE================*@
-                            @{
-                            var idExecute = @item.Name + "_execute";
-                            }
-                            @if (!Model.FirstOrDefault(x => x.Name.Equals(item.Name)).Parameters.Any())
-                        {
-                            <div class="execute-wrapper">
-                                <button id="@idExecute" class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
-                            </div>
-                    }
-                    else
-                    {
-                        <div id="@idExecute" class="execute-wrapper" style="display:none">
-                            <button class="btn execute opblock-control__btn" data-bind="click: @item.Name" style="width:100%">Execute</button>
-                        </div>
-                }
-                            @{
-                            var idLoader = @item.Name + "_loader";
-                            }
-                            <div id="@idLoader" class="loader" style="display:none">Loading...</div>
-                            @*<div id="loading-container" class="loading-container" style="display:none"><div class="loading"></div></div>*@
-
-                            @*===============RESPONSES===============*@
-                            <div class="opblock-section-header">
-                                <div class="tab-header">
-                                    <span class="opblock-title"><b>Responses</b></span>
-                                </div>
-                            </div>
-
-
-                            @*  CURL *@
-                            @{
-                            var idDivCurl = @item.Name + "_divCurl";
-                            }
-                            <div id="@idDivCurl" style="display:none">
-                                <br />
-                                <div class="execute-wrapper">
-                                    <span class="response-label"> Curl</span>
-                                </div>
-
-                                <div class="execute-wrapper" style="padding-top:0">
-                                    <pre class="example">
-                                                @{ 
-                                                    var idCurl = @item.Name + "_curl";
-                                                }
-                                    <div id="@idCurl" style="margin-top: -40px"></div>
-                                                    
-                                            </pre>
-                                </div>
-                            </div>
-
-                            @*  REQUEST URL *@
-                            @{
-                            var idDivRequestUrl = @item.Name + "_divRequestUrl";
-                            }
-                            <div id="@idDivRequestUrl" style="display:none">
-                                <div class="execute-wrapper">
-                                    <span class="response-label"> Request URL</span>
-                                </div>
-
-                                <div class="execute-wrapper" style="padding-top:0">
-                                    <pre class="example" style="height:30px;">
-                                                @{ 
-                                                    var idRequestUrl = @item.Name + "_request-url";
-                                                }
-                                    <div class="request-url" id="@idRequestUrl" style="margin-top: -40px"></div>
-                                                    
-                                            </pre>
-                                </div>
-                            </div>
-                            @* ====================== *@
-
-
-
-                            <br />
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    <span class="response-label"> Server response</span>
-                                </div>
-                            </div>
-
-                            <br />
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    <b>Code</b>
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                    <b>Details</b>
-                                </div>
-                            </div>
-                            <hr style="margin-top:5px; margin-bottom:10px" />
-
-                            <div style="margin-top:20px"></div>
-
-
-                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
-                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
-                                    @{
-                                    var idCode = item.Name + "_code";
-                                    }
-                                    <div id="@idCode"></div>
-                                </div>
-                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
-                                    <pre class="example" style="margin-right: -25px;">
-
-                                                @{ 
-                                                    var idResp = @item.Name + "_resp";
-                                                }
-                                            
-<div id="@idResp" style="margin-top: -50px; overflow-y:auto; max-height:600px">
-@switch (item.Name)
-{
-    case "GetBrands":
-<span>
-[
-  {
-    "Name": "string",
-    "Description": "string"
-  }
-]
-</span>
-    break;
-case "GetSpareParts":
-<span>
-[
-  {
-    "Brand": "string",
-    "Article": "string",
-    "Name": "string",
-    "Type": 0,
-    "DeliveryQuality": 0,
-    "Count": 0,
-    "DeliveryDaysMin": 0,
-    "DeliveryDaysMax": 0,
-    "Price": 0,
-    "SupplierID": 0,
-    "MinOrderQty": 0
-  }
-]
-</span>                                                     
-    break;
-case "GetPartners":
-<span>
-[
-  {
-    "City": "string",
-    "Code": "string",
-    "Name": "string"
-  }
-]
-</span>
-    break;
-}
-</div>
-
-                                            </pre>
-                                </div>
-                            </div>
-
-                            <div style="padding-bottom:20px"></div>
-                        </div>
-                    </div>
-                </div>
-        }
-    }
-
-
-            </div>
+        <div class="rms-title">
+            API.RMSAUTO представляет собой REST-сервис.
+            Для обращения к методам api нужно пройти авторизацию на сервисе посредством персонального логина/пароля.
+            В ответ будет сгенерирован Bearer токен, который необходимо передавать в HTTP заголовок вызываемого метода.
+            <br /><br />
+            ПРИМЕЧАНИЕ: Клиентам наших региональных партнёров для авторизации необходимо дополнительно передать код партнёра
+            (код партнёра можно получить, воспользовавшись методом /api/Partners).
         </div>
-
-
-
-        @*MODELS*@
-        <section class="models">
-            <div id="models-header" class="models-header">
-                <h4>
-                    <span>Models</span>
-                    <svg width="20" height="20"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#large-arrow-down"></use></svg>
-                </h4>
+        <div id="app">
+            <div class="row fa-3x">
+                <div class="col-md-1 col-md-offset-5">
+                    <i v-show="loading" class="fa fa-spinner fa-spin" style="color: #00539B"></i>
+                </div>
             </div>
-            <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
+            <template>
+                <div class="opblock-tag-section">
+                    <div style="height: auto; border: none; margin: 0px; padding: 0px;">
+                        <div v-for="(method, index) in jsonModel" style="padding-top:5px">
+                            <div v-bind:style="{display: index == 0 || index == 2 || index == 4 ? 'block' : 'none' }">
+                                <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
+                                    <a class="nostyle"><span>{{method.Group}}</span></a>
+                                </h4>
+                                <hr style="margin-bottom:10px; margin-top:0;" />
+                            </div>
+                            <div class="opblock" v-bind:class="{'opblock-get': method.Type === 'GET', 'opblock-post': method.Type === 'POST'}" id="operations">
+                                <a class="nostyle" v-on:click="changeVisible(method.Name)">
+                                    <div class="opblock-summary opblock-summary-get">
+                                        <div class="opblock-summary-method"> {{ method.Type }} </div>
+                                        <div class="opblock-summary-path"> {{ method.Uri }} </div>
+                                        <div class="opblock-summary-description"> {{ method.Description }} </div>
 
-                @foreach (var method in Model)
-                {
-                <div id="model-Brand" class="model-container">
-                    <div class="model-box">
-                        <p><span class="model-title"> @method.Response.GetType().Name</span> { </p>
-                        @foreach (var property in @method.Response.GetType().GetProperties())
-                        {
-                        <table class="properties">
-                            <tr>
-                                <td valign="top" width="150">
-                                    <span class="prop-name">@property.Name </span>
-                                </td>
-                                <td valign="top">
-                                    <span class="model">
-                                        <span class="prop">
-                                            <span class="prop-type">
-                                                @if (property.PropertyType.Name.ToLower().Equals("nullable`1"))
-                                                {
-                                                    <span>int32 (nullable)</span>
-                                                }
-                                                else if (property.PropertyType.Name.ToLower().Equals("sparepartitemtype"))
-                                                {
-                                                    <span>int32 </span>
-                                                }
-                                                else if (property.PropertyType.Name.ToLower().Equals("quality"))
-                                                {
-                                                    <span>int32 </span>
-                                                }
-                                                else
-                                                {
-                                                    @property.PropertyType.Name.ToLower()
-                                                }
-
-                                            </span>
-                                            <div class="markdown">
-                                                <span>
-                                                    @{
-                                                    if (method.Response.GetType().Name.Equals("Brand"))
-                                                    {
-                                                        var prop = typeof(RMSAutoAPI.Models.Brand).GetProperty(property.Name);
-                                                        if (prop != null)
-                                                        {
-                                                            var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                                                            <p>@attribute.Description</p>
-                                                    }
-                                                }
-
-                                                if (method.Response.GetType().Name.Equals("PartNumber"))
-                                                {
-                                                    var prop = typeof(RMSAutoAPI.Models.PartNumber).GetProperty(property.Name);
-                                                    if (prop != null)
-                                                    {
-                                                        var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                                                        <p>@attribute.Description</p>
-                                                }
-                                            }
-
-                                            if (method.Response.GetType().Name.Equals("Partner"))
-                                            {
-                                                var prop = typeof(RMSAutoAPI.Models.Partner).GetProperty(property.Name);
-                                                if (prop != null)
-                                                {
-                                                    var attribute = (System.ComponentModel.DescriptionAttribute)prop.GetCustomAttributes(typeof(DescriptionAttribute), true)[0];
-                                                    <p>@attribute.Description</p>
-                                            }
-                                        }
-
-                                                    }
-                                                </span>
-
+                                        <div v-if="method.AllowAnonymous === false">
+                                            <div v-if="IsAccess(method.AllowAnonymous, method.Permissions) === false">
+                                                <i class="fa fa-lock" style="font-size:24px; margin-right:5px; color:#666" title="Необходимо авторизоваться"></i>
                                             </div>
-                                        </span>
-                                    </span>
-                                </td>
-                            </tr>
-                        </table>
-                }
-                        }
+                                            <div v-if="IsAccess(method.AllowAnonymous, method.Permissions) === true">
+                                                <i class="fa fa-unlock" style="font-size:24px; margin-right:5px; color:#666" title="Доступен для выполнения"></i>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <hr v-bind:class="{'hr-border-get': method.Type === 'GET', 'hr-border-post': method.Type === 'POST'}" />
+                                </a>
+                                <div v-bind:id="method.Name" style="height: auto; border: none; margin: 0px; padding: 0px; display:none;">
+                                    <div class="opblock-body">
+                                        <div class="opblock-description-wrapper">
+                                            <div class="opblock-description">
+                                                {{method.TitleDescription}}
+                                            </div>
+                                        </div>
+                                        <div class="opblock-section-header">
+                                            <div class="tab-header">
+                                                <span style="vertical-align: -webkit-baseline-middle;" class="opblock-title"><b>Parameters</b></span>
+                                                <button v-bind:id="method.Name + '_tryIt'" class="btn try pull-right" v-on:click="tryIt(method.Name)">Try it out</button>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                <div class="param-name">Name</div>
+                                            </div>
+                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                <div class="param-name">Description</div>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-top:5px; margin-bottom:10px" />
+                                        <div v-for="parameter in method.Parameters">
+                                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                    <a v-if="parameter.Type === 'object'" v-on:click="ShowModel(parameter.Name)" v-bind:href="'#' + parameter.Name">
+                                                        <b>{{parameter.Name}}</b>
+                                                    </a>
+                                                    <b v-if="parameter.Type !== 'object'">{{parameter.Name}} </b>
+                                                    <span v-if="parameter.IsRequired" class="required"> * required</span>
+                                                </div>
+                                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                    {{parameter.Description}}
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                                <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                    {{parameter.Type}}<br />
+                                                    <span v-if="parameter.TypeParameter === 1">(path)</span>
+                                                    <span v-if="parameter.TypeParameter === 2">(query)</span>
+                                                    <span v-if="parameter.TypeParameter === 3">(body)</span>
+                                                </div>
+                                                <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                    <div v-if="parameter.TypeParameter === 3" style="margin-right:-25px;">
+                                                        <textarea v-bind:id="method.Name + '_' + parameter.Name" style="width:100%;display:none"></textarea>
+                                                    </div>
+                                                    <span v-if="parameter.Name !== 'analogues'">
+                                                        <input v-bind:id="method.Name + '_' + parameter.Name" style="display:none" type="text" class="" title="" value="" v-bind:placeholder="parameter.Description">
+                                                    </span>
+                                                    <span v-if="parameter.Name === 'analogues'">
+                                                        <select v-bind:id="method.Name + '_' + parameter.Name" class="" style="display:none">
+                                                            <option value="">--</option>
+                                                            <option value="true">true</option>
+                                                            <option value="false">false</option>
+                                                        </select>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style="padding-top:20px"></div>
+                                        </div>
+                                        @*  END PARAMETERS *@
+
+                                        <div class="execute-wrapper">
+                                            <button v-bind:id="method.Name + '_execute'" class="btn execute" v-on:click="select(method.Name)" style="width:100%; display:none">
+                                                Execute
+                                            </button>
+                                        </div>
+                                        <div v-bind:id="method.Name + '_loader'" class="loader" style="display:none">Loading...</div>
+                                        <div class="opblock-section-header">
+                                            <div class="tab-header">
+                                                <span style="vertical-align: -webkit-baseline-middle;" class="opblock-title"><b>Responses</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                <div class="param-name">Name</div>
+                                            </div>
+                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                <div class="param-name">Description</div>
+                                            </div>
+                                        </div>
+                                        <div v-for="response in method.Responses" class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                <a v-on:click="ShowModel(response.Name)" v-bind:href="'#' + response.Name">
+                                                    <b>{{response.Name}}</b>
+                                                </a>
+                                            </div>
+                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                {{response.Description}}
+                                            </div>
+                                            <br /><br />
+                                        </div>
+                                        <div v-bind:id="method.Name + '_divCurl'" style="display:none; margin-top:-30px;">
+                                            <br />
+                                            <div class="execute-wrapper">
+                                                <span class="response-label"> Curl</span>
+                                            </div>
+                                            <div class="execute-wrapper" style="padding-top:0;max-height:600px">
+                                                <pre class="example">
+                                                <div v-bind:id="method.Name + '_curl'" style="max-height:600px"></div>             
+                                            </pre>
+                                            </div>
+                                        </div>
+                                        <div v-bind:id="method.Name + '_divRequestUrl'" style="display:none">
+                                            <div class="execute-wrapper">
+                                                <span class="response-label"> Request URL</span>
+                                            </div>
+                                            <div class="execute-wrapper" style="padding-top:0">
+                                                <pre class="example">
+                                                <div class="request-url" v-bind:id="method.Name + '_request-url'"></div>               
+                                            </pre>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                <b>Code</b>
+                                            </div>
+                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                <b>Details</b>
+                                            </div>
+                                        </div>
+                                        <hr style="margin-top:5px; margin-bottom:10px" />
+                                        <div style="margin-top:20px"></div>
+                                        <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12 row">
+                                            <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
+                                                <div v-bind:id="method.Name + '_code'">200</div>
+                                            </div>
+                                            <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
+                                                <pre class="example" style="margin-right: -25px;">
+                                                <div v-bind:id="method.Name + '_resp'" style="max-height:600px"></div>
+                                            </pre>
+                                            </div>
+                                        </div>
+                                        <div style="padding-bottom:20px"></div>
+                                    </div>
+                                </div>
+                                @*END BODY*@
+                            </div>
+                        </div>
                     </div>
                 </div>
-        }
-            </div>
-        </section>
-
+                <section class="models">
+                    <div id="models-header" class="models-header">
+                        <h4>
+                            <span>Models</span>
+                        </h4>
+                    </div>
+                    <div id="all-models" style="height: auto; border: none; margin: 0px; padding: 0px; display:block;">
+                        <div v-for="model in models">
+                            <div class="model-container">
+                                <div class="model-box">
+                                    <span v-on:click="ShowModel(model.Name)" style="cursor: pointer;">
+                                        <span class="model-title"> {{ model.Name }}  </span>
+                                        <span class="model-toggle" v-bind:id="model.Name + '_arrow'"></span>
+                                    </span>
+                                    {
+                                    <span v-bind:id="model.Name + '_toggles'">. . .</span>
+                                    <div v-bind:id="model.Name" style="display:none">
+                                        <div v-for="parameter in model.Parameters">
+                                            <table class="properties">
+                                                <tr>
+                                                    <td valign="top" width="150">
+                                                        <span class="prop-name">{{parameter.Name}} </span>
+                                                        <span style="color:red" v-show="parameter.IsRequired" title="обязательое поле">*</span>
+                                                    </td>
+                                                    <td valign="top">
+                                                        <div class="model">
+                                                            <div class="prop">
+                                                                <span class="prop-type">
+                                                                    {{parameter.Type}}
+                                                                </span>
+                                                                <div class="markdown">
+                                                                    <span style="white-space: pre-line">{{parameter.Description}}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </template>
+        </div>
     </div> @*End wrapper*@
-
-
-
-
-    @*<ul data-bind="foreach: methods">
-        <strong data-bind="text: Name"></strong>
-
-    </ul>*@
-
     <script type="text/javascript">
         var jsonModel = @Html.Raw(Json.Encode(@Model));
+        var orderModel = @Html.Raw(Json.Encode(@ViewBag.OrderModel));
+        var models = @Html.Raw(Json.Encode(@ViewBag.Models));
         var token = @Html.Raw(Json.Encode(@ViewBag.Token));
+        var userPermissions = @Html.Raw(Json.Encode(@ViewBag.UserPermissions));
     </script>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
-    <script src="~/Scripts/app.js"></script>
-
+    <script src="~/Scripts/vue.min.js"></script>
+    <script src="~/Scripts/appvue.min.js"></script>
+    <script src="~/Scripts/app.min.js"></script>
 </body>
 </html>

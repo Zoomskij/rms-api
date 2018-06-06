@@ -1,6 +1,12 @@
-﻿using RMSAutoAPI.Models;
+﻿using AutoMapper;
+using RMSAutoAPI.App_Data;
+using RMSAutoAPI.Helpers;
+using RMSAutoAPI.Infrastructure;
+using RMSAutoAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -11,61 +17,96 @@ namespace RMSAutoAPI.Controllers
 {
     public class HomeController : Controller
     {
-        public static string Token { get; set; }
-        public static string CurrentUser { get; set; }
+        private string _token;
+        private string _userName;
+        private string _code;
+        public string Token
+        {
+            get => Session["Token"]?.ToString();
+            set
+            {
+                _token = value;
+                Session["Token"] = value;
+            }
+        }
+        public string UserName
+        {
+            get => Session["UserName"]?.ToString();
+            set
+            {
+                _userName = value;
+                Session["UserName"] = value;
+            }
+        }
 
+        public string Code
+        {
+            get => Session["Code"]?.ToString();
+            set
+            {
+                _code = value;
+                Session["Code"] = value;
+            }
+        }
+
+        [AllowAnonymous]
         public ActionResult Index()
         {
-            if (!string.IsNullOrWhiteSpace((string)TempData["bearerToken"]) && !TempData["bearerToken"].ToString().Equals(Token))
+            if (!string.IsNullOrWhiteSpace((string)TempData["Token"]) && !TempData["Token"].ToString().Equals(Token))
             {
-                Token = (string)TempData["bearerToken"];
-				CurrentUser = (string)TempData["Username"];
+                Token = (string)TempData["Token"];
+                UserName = (string)TempData["UserName"];
+                Code = (string)TempData["Code"];
             }
+
             if ((int?)TempData["logout"] == 1)
             {
-                Token = string.Empty;
-				CurrentUser = string.Empty;
+                Token = null;
+                UserName = null;
+                Code = null;
+                TempData["logout"] = null;
             }
 
-            ViewBag.CurrentUser = CurrentUser;
-            ViewBag.Token = Token;
+            ViewBag.UserName = UserName;
+            ViewBag.Token = Token ?? string.Empty;
 
-            if (!string.IsNullOrWhiteSpace(ViewBag.Token))
-                Token = ViewBag.Token;
-            //return result;
+            using (var db = new ex_rmsauto_storeEntities())
+            {
+                var getMethods = db.Methods.Where(x => x.Visible == true).ToList();
+                var methods = Mapper.Map<List<Methods>, List<ApiMethod>>(getMethods);
+                foreach (var method in methods)
+                {
+                    switch (method.Name)
+                    {
+                        case "GetBrands": method.Response = new Brand(); break;
+                        case "GetSpareParts": method.Response = new SparePart(); break;
+                        case "GetOrders": method.Response = new List<Order>(); break;
+                        case "GetOrder": method.Response = new Order(); break;
+                        case "CreateOrder": method.Response = new OrderPlaced(); break;
+                        case "GetPartners": method.Response = new Partner(); break;
+                    }
+                }
 
-            var methods = new List<ApiMethod>();
-            methods.Add(new ApiMethod() { Type = "GET", Name = "GetBrands", Uri = "/api/articles/{article}/brands", Group = "Articles", });
-            methods.Add(new ApiMethod() { Type = "GET", Name = "GetSpareParts", Uri = "/api/articles/{article}/brand/{brand}", Group = "Articles" });
-            methods.Add(new ApiMethod() { Type = "GET", Name = "GetOrder", Uri = "/api/orders/{orderId}", Group = "Orders" });
-            methods.Add(new ApiMethod() { Type = "GET", Name = "GetPartners", Uri = "/api/partners", Group = "Partners" });
+                ViewBag.Models = ModelHelper.InitModels();
+                ViewBag.OrderModel = ModelHelper.InitOrder();
 
-            methods[0].Response = new Brand();
-            methods[0].Description = "Возвращает список брендов по артикулу";
-            methods[0].TitleDescription = "Возвращает только те бренды по которым имеются в наличие детали (на складе или у транзитных поставщиков). Для авторизации в HTTP-заголовок необходимо передавать пару key = “Authorization” value = “Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%”";
-            methods[0].Parameters.Add(new ApiParameter() { Name = "article", Description = "Артикул (номер запчасти)", IsRequired = true, Type = "string", TypeParameter = TypeParameter.path });
-            methods[0].Parameters.Add(new ApiParameter() { Name = "analogues", Description = "Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.", IsRequired = false, Type = "boolean", TypeParameter = TypeParameter.query });
+                if (!string.IsNullOrWhiteSpace(Code))
+                {
+                    var currentFranch = db.spGetFranches().FirstOrDefault(x => x.InternalFranchName.ToUpper().Equals(Code.ToUpper()));
+                    db.ChangeDatabase(initialCatalog: $"ex_{currentFranch.DbName}_store", dataSource: $"{currentFranch.ServerName}");
+                }
+                var UserPermissions = new List<int>();
+                var userPermissions = db.Users.FirstOrDefault(x => x.Username == UserName)?.Permissions;
+                if (userPermissions != null)
+                {
+                    foreach (var up in userPermissions)
+                        UserPermissions.Add(up.ID);
+                    ViewBag.UserPermissions = UserPermissions;
+                }
+                else ViewBag.UserPermissions = new List<int>();
 
-            ////////////
-            methods[1].Response = new PartNumber();
-            methods[1].Description = "Возвращает список запчастей";
-            methods[1].TitleDescription = "Для авторизации в HTTP-заголовок необходимо передавать пару key = “Authorization” value = “Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%”";
-            methods[1].Parameters.Add(new ApiParameter() { Name = "article", Description = "Артикул (номер запчасти)", IsRequired = true, Type = "string", TypeParameter = TypeParameter.path });
-            methods[1].Parameters.Add(new ApiParameter() { Name = "brand", Description = "Бренд", IsRequired = true, Type = "string", TypeParameter = TypeParameter.path });
-            methods[1].Parameters.Add(new ApiParameter() { Name = "analogues", Description = "Искать аналоги. False - поиск без аналогов (значение по умолчанию). True - поиск с аналогами.", IsRequired = false, Type = "boolean", TypeParameter = TypeParameter.query });
-            /////
-            methods[2].Response = new PartNumber();
-            methods[2].Description = "Возвращает информацию по заказу";
-            methods[2].TitleDescription = "Для авторизации в HTTP-заголовок необходимо передавать пару key = “Authorization” value = “Bearer %ВАШ АВТОРИЗАЦИОННЫЙ ТОКЕН%”";
-            methods[2].Parameters.Add(new ApiParameter() { Name = "orderId", Description = "ID заказа", IsRequired = true, Type = "int", TypeParameter = TypeParameter.path });
-
-
-            ////////
-            methods[3].Response = new Partner();
-            methods[3].Description = "Возвращает список партнёров";
-            methods[3].TitleDescription = "Для авторизации клиентов наших региональных партнёров необходимо передавать код партнёра, полученный в этом методе (параметр Code)";
-
-            return View(methods);
+                return View(methods);
+            }
         }
     }
 }

@@ -211,7 +211,19 @@
     <Compile Include="App_Data\LogRequests.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\Methods.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\OrderHistory.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\OrderHistoryDetail.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\OrderLines.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\OrderLineStatusChanges.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Data\OrderLineStatuses.cs">
@@ -220,10 +232,25 @@
     <Compile Include="App_Data\Orders.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
+    <Compile Include="App_Data\Parameters.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\Permissions.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\Permutation1C.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\Responses.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
     <Compile Include="App_Data\SpareParts.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Data\spGetFranches_Result.cs">
+      <DependentUpon>Store.tt</DependentUpon>
+    </Compile>
+    <Compile Include="App_Data\spGetSparePart_Result.cs">
       <DependentUpon>Store.tt</DependentUpon>
     </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -245,6 +272,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ModelHelper.cs" />
+    <Compile Include="Helpers\OrderHelper.cs" />
     <Compile Include="Helpers\RequestDelimeter.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Infrastructure\AutoMapperWebConfiguration.cs" />
@@ -265,15 +294,45 @@
     </Compile>
     <Compile Include="Infrastructure\ConnectionTools.cs" />
     <Compile Include="Models\ApiParameter.cs" />
+    <Compile Include="Models\ApiPermissions.cs" />
+    <Compile Include="Models\ApiResponse.cs" />
+    <Compile Include="Models\CalcOrderLines.cs" />
+    <Compile Include="Models\Order.cs" />
+    <Compile Include="Models\OrderHead.cs" />
+    <Compile Include="Models\OrderHeadLine.cs" />
+    <Compile Include="Models\OrderLine.cs" />
+    <Compile Include="Models\OrderPlacedLine.cs" />
+    <Compile Include="Models\OrderStatus.cs" />
+    <Compile Include="Models\Orders\AcctgError.cs" />
+    <Compile Include="Models\Orders\AcctgException.cs" />
+    <Compile Include="Models\Orders\AltNameAttribute.cs" />
+    <Compile Include="Models\Orders\ArticleInfo.cs" />
     <Compile Include="Models\Brand.cs" />
     <Compile Include="Models\ApiMethod.cs" />
-    <Compile Include="Models\OrderPartNumbers.cs" />
+    <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\Orders\CommonDac.cs" />
+    <Compile Include="Models\Orders\CustomStringWriter.cs" />
+    <Compile Include="Models\Orders\EnumHelpers.cs" />
+    <Compile Include="Models\Orders\Envelope.cs" />
+    <Compile Include="Models\Orders\MessageSerializer.cs" />
+    <Compile Include="Models\Orders\OrderHandlingInfo.cs" />
+    <Compile Include="Models\Orders\OrderInfo.cs" />
+    <Compile Include="Models\Orders\OrderLineHandlingInfo.cs" />
+    <Compile Include="Models\Orders\OrderLineInfo.cs" />
+    <Compile Include="Models\Orders\ProxyType.cs" />
+    <Compile Include="Models\Orders\SendOrderEnvelope.cs" />
+    <Compile Include="Models\Orders\SendOrderResultsEnvelope.cs" />
+    <Compile Include="Models\Orders\ServiceMethodAttribute.cs" />
+    <Compile Include="Models\Orders\ServiceMethodInfo.cs" />
+    <Compile Include="Models\Orders\ServiceProxy.cs" />
+    <Compile Include="Models\Orders\TextAttribute.cs" />
+    <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\Part.cs" />
     <Compile Include="Models\PaymentMethod.cs" />
-    <Compile Include="Models\ResponsePartNumber.cs" />
-    <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderResponsePartNumbers.cs" />
+    <Compile Include="Models\StatusSparePart.cs" />
+    <Compile Include="Models\OrderPlaced.cs" />
     <Compile Include="Models\Partner.cs" />
-    <Compile Include="Models\PartNumber.cs" />
+    <Compile Include="Models\SparePart.cs" />
     <Compile Include="Models\LoginModel.cs" />
     <Compile Include="Models\Reaction.cs" />
     <Compile Include="Models\SparePartItemType.cs" />
@@ -332,8 +391,13 @@
     <Content Include="Content\api.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\Img\arrow.png" />
     <Content Include="Content\login.css" />
+    <Content Include="Content\navbar.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -348,6 +412,9 @@
       <LastGenOutput>Log.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\app.min.js" />
+    <Content Include="Scripts\appvue.js" />
+    <Content Include="Scripts\appvue.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -364,6 +431,11 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Store.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <Content Include="fonts\FontAwesome.otf" />
+    <Content Include="fonts\fontawesome-webfont.woff2" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -394,6 +466,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Store.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\vue-preload.js" />
+    <Content Include="Scripts\vue.js" />
+    <Content Include="Scripts\vue.min.js" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -415,6 +490,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
     <None Include="Web.test-api.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.test2-api.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
@@ -447,6 +525,16 @@
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'test-api|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\RMSAutoAPI.xml</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'test2-api|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>

@@ -78,7 +78,7 @@ namespace RMSAutoAPI
 
             try
             {
-                var user = _userService.GetUser(context.UserName, context.Password, SelectedRegion);
+                var user = await _userService.GetUser(context.UserName, context.Password, SelectedRegion);
 
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
@@ -87,26 +87,32 @@ namespace RMSAutoAPI
 
                 var rolesTechnicalNamesUser = new List<string>();
 
-                switch (user.UserRole)
+                foreach (var permission in user.Permissions)
                 {
-                    case 0:
-                        identity.AddClaim(new Claim(ClaimTypes.Role, "Client"));
-                        break;
-                    case 1:
-                        identity.AddClaim(new Claim(ClaimTypes.Role, "Manager"));
-                        break;
-					case 2:
-						identity.AddClaim(new Claim(ClaimTypes.Role, "LimitedManager"));
-						break;
-					case 3:
-						identity.AddClaim(new Claim(ClaimTypes.Role, "NoAccess"));
-						break;
-					case 4:
-						identity.AddClaim(new Claim(ClaimTypes.Role, "Client_SearchApi"));
-						break;
-				}
+                    switch (permission.ID)
+                    {
+                        case 0:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "Client"));
+                            break;
+                        case 1:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "Manager"));
+                            break;
+                        case 2:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "LimitedManager"));
+                            break;
+                        case 3:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "NoAccess"));
+                            break;
+                        case 4:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "Client_SearchApi"));
+                            break;
+                        case 5:
+                            identity.AddClaim(new Claim(ClaimTypes.Role, "Create_Order"));
+                            break;
+                    }
+                }
+  
                 identity.AddClaim(new Claim("Region", SelectedRegion));
-
                
                 var principal = new GenericPrincipal(identity, rolesTechnicalNamesUser.ToArray());
 

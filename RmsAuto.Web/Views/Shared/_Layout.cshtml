@@ -7,6 +7,18 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="~/Content/api.css" rel="stylesheet" />
+    <link href="~/Content/navbar.css" rel="stylesheet" />
+    <style>
+
+        .nav > li {
+            padding: 15px 5px;
+            color: #fff;
+        }
+        .nav > li > a {
+            display:initial !important;
+            padding: 0 0 !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -24,17 +36,16 @@
                 <ul class="nav navbar-nav row pull-right">
                     
                     @*<li>@Html.ActionLink("Статистика", "Index", "Stats", new { currentUser = ViewBag.CurrentUser }, null)</li>*@
-
-
-                    @if (!string.IsNullOrWhiteSpace(ViewBag.CurrentUser))
+                    
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.UserName))
                     {
 
-                        var ex = (string)(@ViewBag.CurrentUser + " Выход");
-                        <li class="pull-right">@Html.ActionLink(ex, "Logout", "Account")</li>
+                        var ex = " [выход]";
+                        <li class="pull-right">@ViewBag.UserName@Html.ActionLink(ex, "Logout", "Account")</li>
                     }
                     else
                     {
-                        <li class="pull-right"> @Html.ActionLink("Вход ", "Login", "Account", null, new { @class = "modal-link" })</li>
+                        <li class="pull-right"> @Html.ActionLink("вход ", "Login", "Account", null, new { @class = "modal-link" })</li>
                     }
 
                 </ul>
@@ -80,6 +91,14 @@
             width: 600px !important;
             margin: 30px auto !important;
             background-color: white;
+        }
+        .fade {
+            opacity: 0;
+            -webkit-transition: opacity 0.01s linear;
+            -moz-transition: opacity 0.01s linear;
+            -ms-transition: opacity 0.01s linear;
+            -o-transition: opacity 0.01s linear;
+            transition: opacity 0.01s linear;
         }
     </style>
 
