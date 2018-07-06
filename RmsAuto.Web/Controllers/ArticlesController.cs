@@ -119,7 +119,7 @@ namespace RMSAutoAPI.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SparePart>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
-        [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
+        [Route("articles/{article:maxlength(50)}/brand/{*brand:maxlength(50)}")]
         public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
         {
             var mainBrand = db.BrandEquivalents.FirstOrDefault(x => x.Equivalent.Equals(brand))?.Brand;
