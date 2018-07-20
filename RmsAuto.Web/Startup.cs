@@ -105,8 +105,9 @@ namespace RMSAutoAPI
                             break;
                     }
                 }
-  
-                identity.AddClaim(new Claim("Region", SelectedRegion));
+
+                if (!string.IsNullOrWhiteSpace(SelectedRegion))
+                    identity.AddClaim(new Claim("Region", SelectedRegion));
                
                 var principal = new GenericPrincipal(identity, rolesTechnicalNamesUser.ToArray());
 

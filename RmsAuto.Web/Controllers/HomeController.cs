@@ -78,6 +78,7 @@ namespace RMSAutoAPI.Controllers
                 {
                     switch (method.Name)
                     {
+                        case "GetToken": method.Response = new Token(); break;
                         case "GetBrands": method.Response = new Brand(); break;
                         case "GetSpareParts": method.Response = new SparePart(); break;
                         case "GetOrders": method.Response = new List<Order>(); break;
@@ -104,9 +105,22 @@ namespace RMSAutoAPI.Controllers
                     ViewBag.UserPermissions = UserPermissions;
                 }
                 else ViewBag.UserPermissions = new List<int>();
+                methods = SortMethods(methods);
 
                 return View(methods);
             }
+        }
+        public List<ApiMethod> SortMethods(List<ApiMethod> methods)
+        {
+            List<ApiMethod> sortedMethods = new List<ApiMethod>();
+            var getTokenMethod = methods.FirstOrDefault(x => x.Name == "GetToken");
+            if (getTokenMethod != null)
+                sortedMethods.Add(getTokenMethod);
+            foreach (var method in methods.Where(x => x.Name != "GetToken"))
+            {
+                sortedMethods.Add(method);
+            }
+            return sortedMethods;
         }
     }
 }

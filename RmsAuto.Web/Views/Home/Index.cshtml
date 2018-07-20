@@ -38,7 +38,7 @@
                 <div class="opblock-tag-section">
                     <div style="height: auto; border: none; margin: 0px; padding: 0px;">
                         <div v-for="(method, index) in jsonModel" style="padding-top:5px">
-                            <div v-bind:style="{display: index == 0 || index == 2 || index == 4 ? 'block' : 'none' }">
+                            <div v-bind:style="{display: index == 0 || index == 1 || index == 3 || index == 5  ? 'block' : 'none' }">
                                 <h4 class="opblock-tag no-desc" id="operations-tag-Articles">
                                     <a class="nostyle"><span>{{method.Group}}</span></a>
                                 </h4>
@@ -102,8 +102,8 @@
                                                 <div class="col-lg-2 col-md-2 col-xs-2 col-sm-2">
                                                     {{parameter.Type}}<br />
                                                     <span v-if="parameter.TypeParameter === 1">(path)</span>
-                                                    <span v-if="parameter.TypeParameter === 2">(query)</span>
-                                                    <span v-if="parameter.TypeParameter === 3">(body)</span>
+                                                    <span v-if="parameter.TypeParameter === 2 && method.Name !== 'GetToken'">(query)</span>
+                                                    <span v-if="parameter.TypeParameter === 3 || method.Name === 'GetToken'">(body)</span>
                                                 </div>
                                                 <div class="col-lg-10 col-md-10 col-xs-10 col-sm-10">
                                                     <div v-if="parameter.TypeParameter === 3" style="margin-right:-25px;">
@@ -265,7 +265,7 @@
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/vue.min.js"></script>
-    <script src="~/Scripts/appvue.min.js"></script>
-    <script src="~/Scripts/app.min.js"></script>
+    <script src="~/Scripts/appvue.js"></script>
+    <script src="~/Scripts/app.js"></script>
 </body>
 </html>

@@ -27,6 +27,7 @@ namespace RMSAutoAPI.Helpers
             objModels.Add(new OrderPlaced());
             objModels.Add(new OrderPlacedLine());
             objModels.Add(new Partner());
+            objModels.Add(new Token());
 
             var models = new List<Model>();
             foreach (var response in objModels)

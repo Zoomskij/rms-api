@@ -30,7 +30,7 @@
     var odJson = JSON.stringify(orderModel, null, 2);
 
     document.getElementById('CreateOrder_OrderHead').value = odJson;
-
+    document.getElementById('GetToken_grant_type').value = "password";
     for (var i = 0; i < jsonModel.length; i++) {
         var parameters = jsonModel[i].Response;
         for (var j = 0; j < Object.keys(parameters).length; j++) {
