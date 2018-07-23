@@ -1,20 +1,20 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.ComponentModel;
 
 namespace RMSAutoAPI.Models
 {
-    public partial class Token
+	public partial class Token
     {
         [JsonProperty("access_token")]
+		[Description("Авторизационный токен")]
         public string AccessToken { get; set; }
 
-        [JsonProperty("token_type")]
-        public string TokenType { get; set; }
+		[JsonProperty("token_type")]
+		[Description("Тип токена")]
+		public string TokenType { get; set; }
 
         [JsonProperty("expires_in")]
-        public long ExpiresIn { get; set; }
+		[Description("Время жизни токена (сек)")]
+		public long ExpiresIn { get; set; }
     }
 }
