@@ -184,7 +184,7 @@ namespace RMSAutoAPI.Controllers
                         continue;
                     }
 
-                    var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID && x.ReferenceID == sparePart.Reference);
+                    var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand.ToUpper() && x.PartNumber == sparePart.Article.ToUpper() && x.SupplierID == sparePart.SupplierID && x.ReferenceID == sparePart.Reference);
                     if (part == null)
                     {
                         respOrderLine.Status = ResponsePartNumber.NotFound;
