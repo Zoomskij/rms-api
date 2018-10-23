@@ -142,7 +142,8 @@ namespace RMSAutoAPI.Controllers
                 }
                 _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID, DbName, ServerName);
 
-                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<SparePart>>(crosses.ToList());
+                // По быстрому отключил нашу уценку (склады 1212 и 1215)
+                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<SparePart>>(crosses.Where(x => x.SupplierID != 1212 && x.SupplierID != 1215).ToList());
 
                 return Ok(crossesMap);
             }
