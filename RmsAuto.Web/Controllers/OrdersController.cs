@@ -111,6 +111,10 @@ namespace RMSAutoAPI.Controllers
             DbOrder = new Orders();
             DbOrder.IsTest = orderHead.IsTest;
             var respOrder = new OrderPlaced();
+
+            // Данный идентификатор служит для первоначальной вставки в AcctgOrderLineID. 
+            // Он должен быть уникальным в рамках одного заказа у каждой строки.
+            int acctgTempId = -1000;
             using (var dbTransaction = db.Database.BeginTransaction())
             {
                 var orderLineStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
@@ -302,13 +306,13 @@ namespace RMSAutoAPI.Controllers
                         dbOrderLine.CurrentStatus = 0;
                         dbOrderLine.Processed = 0;
                         dbOrderLine.OrderLineStatuses = orderLineStatus;
-                        dbOrderLine.AcctgOrderLineID = dbOrderLine.OrderLineID * -1;
+                        dbOrderLine.AcctgOrderLineID = acctgTempId;
                         DbOrder.Total += Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
 
                         DbOrder.OrderLines.Add(dbOrderLine);
 
-
                         respOrder.OrderPlacedLines.Add(respOrderLine);
+                        acctgTempId--;
                     }
                 }
 
