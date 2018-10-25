@@ -83,6 +83,11 @@ namespace RMSAutoAPI.Controllers
         public IHttpActionResult GetOrder(int orderId)
         {
             var userName = User.Identity.Name;
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 5))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
 
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId && x.UserID == CurrentUser.UserID);
             if (order == null) return Content(HttpStatusCode.NotFound, Resources.ErrorNotFound); 
@@ -98,6 +103,12 @@ namespace RMSAutoAPI.Controllers
         [Authorize(Roles = "Create_Order")]
         public IHttpActionResult CreateOrder([FromBody] OrderHead orderHead)
         {
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 5))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
+
             if (orderHead == null)
             {
                 return Content(HttpStatusCode.BadRequest, "Bad Request");

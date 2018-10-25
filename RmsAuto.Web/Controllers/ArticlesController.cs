@@ -79,6 +79,11 @@ namespace RMSAutoAPI.Controllers
         public IHttpActionResult GetBrands(string article, bool analogues = false)
         {
             var region = Init();
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 3 || x.ID == 4))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
 
             if (CurrentSettings != null)
             {
@@ -125,6 +130,11 @@ namespace RMSAutoAPI.Controllers
             var mainBrand = db.BrandEquivalents.FirstOrDefault(x => x.Equivalent.Equals(brand))?.Brand;
             mainBrand = string.IsNullOrWhiteSpace(mainBrand) ? brand : mainBrand;
             var region = Init();
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 3 || x.ID == 4))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
 
             if (CurrentSettings != null)
             {
