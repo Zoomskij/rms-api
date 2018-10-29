@@ -47,7 +47,7 @@ var app = new Vue({
                     var a = methodPermissions[i].ID;
                     if (methodPermissions[i].ID == userPermissions[j]) {
                         return true;
-                    }  
+                    }
                 }
             }
             return false;
@@ -55,8 +55,8 @@ var app = new Vue({
 
         loaded: function () {
             this.isArticleGroup = false,
-            this.isOrderGroup = false,
-            this.isPartnerGroup = false
+                this.isOrderGroup = false,
+                this.isPartnerGroup = false
         },
 
         ShowModel: function (str) {
@@ -95,6 +95,11 @@ var app = new Vue({
             this.changeVisible(str + "_orderId");
             this.changeVisible(str + "_OrderHead");
 
+            this.changeVisible(str + "_Username");
+            this.changeVisible(str + "_Password");
+            this.changeVisible(str + "_Code");
+            this.changeVisible(str + "_grant_type");
+
             var bTryit = document.getElementById(str + "_tryIt");
             if (bTryit !== null) {
                 if (bTryit.innerHTML === 'Try it out') {
@@ -109,7 +114,7 @@ var app = new Vue({
         },
 
         syntaxHighlight: function (json) {
-            if(typeof json !== 'string') {
+            if (typeof json !== 'string') {
                 json = JSON.stringify(json, undefined, 2);
             }
             json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -131,7 +136,7 @@ var app = new Vue({
         },
 
         replaceString: function (oldS, newS, fullS) {
-            for(var i = 0; i<fullS.length; ++i) {
+            for (var i = 0; i < fullS.length; ++i) {
                 if (fullS.substring(i, i + oldS.length) === oldS) {
                     fullS = fullS.substring(0, i) + newS + fullS.substring(i + oldS.length, fullS.length);
                 }
@@ -168,18 +173,25 @@ var app = new Vue({
 
             curl.html("curl -X " + methodType + " \"" + mainUrl + "" + url + "\"");
             curl.append(" -H \"accept: application/json\"");
-            if(token !== "") {
+            if (token !== "") {
                 if (methodName !== "GetPartners" && methodName !== "GetOrders") {
                     curl.append(" -H \"authorization: " + token + "\"");
                 }
             }
-            if (methodType === "POST") {
+            if (methodName === "CreateOrder") {
                 data = document.getElementById('CreateOrder_OrderHead').value;
                 var str = JSON.stringify(data, null, 0);
                 var myEscapedJSONString = this.escapeSpecialChars(str);
                 var trimStr = myEscapedJSONString.replace(/\s+/g, ' ').trim();
 
                 curl.append(" -d " + trimStr + "");
+            }
+
+            if (methodName === "GetToken") {
+                var username = document.getElementById("GetToken_Username").value;
+                var password = document.getElementById("GetToken_Password").value;
+                var internalCode = document.getElementById("GetToken_Code").value;
+                data = { "username": username, "password": password, "code": internalCode, "grant_type": "password" };
             }
 
 
@@ -252,7 +264,7 @@ var app = new Vue({
         },
 
         validation: function (input) {
-            if(input.value === "") {
+            if (input.value === "") {
                 input.classList.add("invalid");
                 input.oninput = function () {
                     input.classList.remove("invalid");
@@ -263,6 +275,7 @@ var app = new Vue({
         },
 
         select: function (event) {
+            if (event === "GetToken") { this.GetToken(); }
             if (event === "GetBrands") { this.GetBrands(); }
             if (event === "GetSpareParts") { this.GetSpareParts(); }
             if (event === "GetOrders") { this.GetOrders(); }
@@ -333,7 +346,12 @@ var app = new Vue({
         GetPartners: function () {
             var url = "/api/Partners/";
             this.request("GetPartners", "GET", url);
+        },
+
+        GetToken: function () {
+            var url = "/api/auth/token";
+            this.request("GetToken", "POST", url);
         }
     }
-          
+
 })

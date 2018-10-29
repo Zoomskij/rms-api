@@ -61,6 +61,15 @@ namespace RMSAutoAPI.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Доступ запрещен.
+        /// </summary>
+        internal static string ErrorAccessDenied {
+            get {
+                return ResourceManager.GetString("ErrorAccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Превышен лимит запросов.
         /// </summary>
         internal static string ErrorMaxRequests {

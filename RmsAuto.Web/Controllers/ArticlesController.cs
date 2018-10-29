@@ -79,6 +79,11 @@ namespace RMSAutoAPI.Controllers
         public IHttpActionResult GetBrands(string article, bool analogues = false)
         {
             var region = Init();
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 3 || x.ID == 4))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
 
             if (CurrentSettings != null)
             {
@@ -119,12 +124,17 @@ namespace RMSAutoAPI.Controllers
         [HttpGet]
         [ResponseType(typeof(IEnumerable<SparePart>))]
         [Authorize(Roles = "Client_SearchApi, NoAccess")]
-        [Route("articles/{article:maxlength(50)}/brand/{brand:maxlength(50)}")]
+        [Route("articles/{article:maxlength(50)}/brand/{*brand:maxlength(50)}")]
         public IHttpActionResult GetSpareParts(string article, string brand, bool analogues = false)
         {
             var mainBrand = db.BrandEquivalents.FirstOrDefault(x => x.Equivalent.Equals(brand))?.Brand;
             mainBrand = string.IsNullOrWhiteSpace(mainBrand) ? brand : mainBrand;
             var region = Init();
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 3 || x.ID == 4))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
 
             if (CurrentSettings != null)
             {
@@ -142,7 +152,8 @@ namespace RMSAutoAPI.Controllers
                 }
                 _log.Add(article, brand, HttpContext.Current.Request.UserHostAddress, Resources.LogTypePartNumber, CurrentUser.AcctgID, DbName, ServerName);
 
-                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<SparePart>>(crosses.ToList());
+                // По быстрому отключил нашу уценку (склады 1212 и 1215)
+                var crossesMap = Mapper.Map<List<spSearchCrossesWithPriceSVC_Result>, List<SparePart>>(crosses.Where(x => x.SupplierID != 1212 && x.SupplierID != 1215).ToList());
 
                 return Ok(crossesMap);
             }

@@ -83,6 +83,11 @@ namespace RMSAutoAPI.Controllers
         public IHttpActionResult GetOrder(int orderId)
         {
             var userName = User.Identity.Name;
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 5))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
 
             var order = db.Orders.FirstOrDefault(x => x.OrderID == orderId && x.UserID == CurrentUser.UserID);
             if (order == null) return Content(HttpStatusCode.NotFound, Resources.ErrorNotFound); 
@@ -98,6 +103,12 @@ namespace RMSAutoAPI.Controllers
         [Authorize(Roles = "Create_Order")]
         public IHttpActionResult CreateOrder([FromBody] OrderHead orderHead)
         {
+            //Если токен еще не истек, а мы забрали права доступа то отсеиваем пользователя
+            if (!CurrentUser.Permissions.Any(x => x.ID == 5))
+            {
+                return Content(HttpStatusCode.Forbidden, Resources.ErrorAccessDenied);
+            }
+
             if (orderHead == null)
             {
                 return Content(HttpStatusCode.BadRequest, "Bad Request");
@@ -111,6 +122,10 @@ namespace RMSAutoAPI.Controllers
             DbOrder = new Orders();
             DbOrder.IsTest = orderHead.IsTest;
             var respOrder = new OrderPlaced();
+
+            // Данный идентификатор служит для первоначальной вставки в AcctgOrderLineID. 
+            // Он должен быть уникальным в рамках одного заказа у каждой строки.
+            int acctgTempId = -1000;
             using (var dbTransaction = db.Database.BeginTransaction())
             {
                 var orderLineStatus = db.OrderLineStatuses.FirstOrDefault(x => x.OrderLineStatusID == 10);
@@ -184,7 +199,7 @@ namespace RMSAutoAPI.Controllers
                         continue;
                     }
 
-                    var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand && x.PartNumber == sparePart.Article && x.SupplierID == sparePart.SupplierID && x.ReferenceID == sparePart.Reference);
+                    var part = calcLines.FirstOrDefault(x => x.Manufacturer == sparePart.Brand.ToUpper() && x.PartNumber == sparePart.Article.ToUpper() && x.SupplierID == sparePart.SupplierID && x.ReferenceID == sparePart.Reference);
                     if (part == null)
                     {
                         respOrderLine.Status = ResponsePartNumber.NotFound;
@@ -302,13 +317,13 @@ namespace RMSAutoAPI.Controllers
                         dbOrderLine.CurrentStatus = 0;
                         dbOrderLine.Processed = 0;
                         dbOrderLine.OrderLineStatuses = orderLineStatus;
-                        dbOrderLine.AcctgOrderLineID = dbOrderLine.OrderLineID * -1;
+                        dbOrderLine.AcctgOrderLineID = acctgTempId;
                         DbOrder.Total += Math.Round(part.FinalPrice.Value, 2) * dbOrderLine.Qty;
 
                         DbOrder.OrderLines.Add(dbOrderLine);
 
-
                         respOrder.OrderPlacedLines.Add(respOrderLine);
+                        acctgTempId--;
                     }
                 }
 

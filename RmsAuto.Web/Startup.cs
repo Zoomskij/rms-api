@@ -27,12 +27,6 @@ namespace RMSAutoAPI
             ConfigureOAuth(app);
             app.UseCors(Microsoft.Owin.Cors.CorsOptions.AllowAll);
             app.UseWebApi(config);
-
-            app.UseCookieAuthentication(new CookieAuthenticationOptions()
-            {
-                AuthenticationType = "ApplicationCookie",
-                LoginPath = new PathString("/Account/Index"),
-            });
         }
 
         // Настройка времени жиз
@@ -111,8 +105,9 @@ namespace RMSAutoAPI
                             break;
                     }
                 }
-  
-                identity.AddClaim(new Claim("Region", SelectedRegion));
+
+                if (!string.IsNullOrWhiteSpace(SelectedRegion))
+                    identity.AddClaim(new Claim("Region", SelectedRegion));
                
                 var principal = new GenericPrincipal(identity, rolesTechnicalNamesUser.ToArray());
 
